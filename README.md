@@ -1,8 +1,8 @@
 ## Установка
 
-Для работы требуется библиотека eigen:
+Для работы требуется git, cmake, а также библиотека eigen:
 ```
-apt-get install libeigen3-dev
+apt-get install git cmake libeigen3-dev
 ```
 
 скачивание и сборка проекта:
