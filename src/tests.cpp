@@ -2,10 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "FunctionProducer.h"
-#include "ModelFunction.h"
-#include "ModelFunction3.h"
-#include "LagrangeMultiplier.h"
+#include "FunctionProducers.h"
 
 template<int N>
 vect<N> getRandomPoint(vect<N> const& lower_bound, vect<N> const&  upper_bound)
@@ -107,5 +104,5 @@ TEST(FunctionProducer, LagrangeMultiplier)
     auto lower_bound = make_vect(-2., -2., -2.);
     auto upper_bound = make_vect(2., 2., 2.);
 
-    testProducer(make_lagrange(ModelFunction(), SqrVectorNorm<2>() + Constant<2>(-1.)), lower_bound, upper_bound, 1000);
+    testProducer(make_lagrange(ModelFunction(), SqrNorm<2>() + Constant<2>(-1.)), lower_bound, upper_bound, 1000);
 }

@@ -7,6 +7,7 @@
 #include "InPolar.h"
 #include "LagrangeMultiplier.h"
 #include "AffineTransformation.h"
+#include "Desturbed.h"
 
 #include "SqrNorm.h"
 #include "Constant.h"
