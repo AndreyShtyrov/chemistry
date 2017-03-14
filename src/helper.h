@@ -8,6 +8,7 @@
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
+#include <boost/format.hpp>
 
 using namespace std;
 
@@ -50,6 +51,15 @@ inline vector<double> arange(size_t size)
     return range;
 }
 
+inline vector<double> linspace(double from, double to, size_t iters) {
+    assert(iters > 1);
+
+    vector<double> result;
+    for (size_t i = 0; i < iters; i++)
+        result.push_back(from + (to - from) / (iters - 1) * i);
+    return result;
+}
+
 template<int N, int M>
 matrix<N, M> make_random_matrix()
 {
@@ -67,6 +77,14 @@ vect<N> make_random_vect()
 };
 
 template<int N>
+vect<N> make_constant_vect(double constant)
+{
+    vect<N> v;
+    v.setConstant(constant);
+    return v;
+}
+
+template<int N>
 vect<N> eye(size_t i)
 {
     vect<N> result;
@@ -75,4 +93,26 @@ vect<N> eye(size_t i)
 
     return result;
 };
+
+template<typename T, typename... Ts>
+struct first_type
+{
+    using type = T;
+};
+template<typename... Ts> using first_type_t = typename first_type<Ts...>::type;
+
+template<typename T, typename... Ts>
+struct last_type
+{
+    using type = typename last_type<Ts...>::type;
+};
+
+template<typename T>
+struct last_type<T>
+{
+    using type = T;
+};
+
+template<typename... Ts>
+using last_type_t = typename last_type<Ts...>::type;
 

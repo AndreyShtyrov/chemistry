@@ -33,6 +33,11 @@ public:
         return axis;
     }
 
+    void plot(string const& axis, vector<double> const& ys)
+    {
+        plot(axis, arange(ys.size()), ys);
+    }
+
     void plot(string const& axis, vector<double> const& xs, vector<double> const& ys)
     {
         auto vxs = create_array(xs);

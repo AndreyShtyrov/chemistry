@@ -1,11 +1,19 @@
 #include "helper.h"
 
+#include <boost/format.hpp>
+#include <boost/lexical_cast.hpp>
+#include <Eigen/LU>
+#include <optimization/GradientLengthStopCriteria.h>
+#include <optimization/GradientOptimization.h>
+
 #include "linearization.hpp"
 #include "FunctionProducers.h"
 #include "PythongraphicsFramework.h"
-#include "GradientDescent.h"
+
+#include "optimization/optimizations.h"
 
 using namespace std;
+using namespace optimization;
 
 constexpr double EPS = 1e-7;
 
@@ -49,7 +57,7 @@ vector<vect<FuncT::N>> shs(FuncT& func, Optimizer1T optimizer1, Optimizer2T opti
         auto polars = make_polar(func, deltaR * (i + 1));
         lastPolar = optimizer1(polars, lastPolar).back();
 
-        pos = polars.fromPolar(lastPolar);
+        pos = polars.transform(lastPolar);
 
         double curValue = func(pos);
         if (curValue < lastValue) {
@@ -113,96 +121,48 @@ string draw3dPlot(FuncT&& func, vect<2> from, vect<2> to, size_t iters)
     return axis;
 }
 
-int main() {
-    auto model = ModelFunction();
-//    auto model = SqrVectorNorm<1>();
-    constexpr int N = model.N;
-
-    auto axis = draw3dPlot(model, make_vect(-1.5, -1.5), make_vect(1.5, 1.5), 250);
-
-    auto func = make_lagrange(model, SqrNorm<N>() + Constant<N>(-1.));
-//    draw3dPlot(func, make_vect(-1.5, -1.5), make_vect(1.5, 1.5), 250);
-//    auto axis = draw3dPlot(model, make_vect(-1, -1), make_vect(1, 1), 250);
-//    auto axis = drawPlot(model, make_vect(-1, -1), make_vect(1, 1), 250);
-    auto path = HessianGradientDescent<func.N>(0.001)(func, 0.001 * make_random_vect<func.N>());
-    {
-        vector<double> xs;
-        vector<double> ys;
-        for (auto p : path)
-            xs.push_back(p(0)), ys.push_back(p(1));
-        framework.plot(axis, xs, ys);
-    }
+template<int N>
+vect<N> getRandomPoint(vect<N> const& lowerBound, vect<N> const&  upperBound)
+{
+    auto p = make_random_vect<N>();
+    return lowerBound.array() + p.array() * (upperBound.array() - lowerBound.array());
 }
 
-int main2() {
-//    auto func = make_desturbed(ModelFunction());
-    auto func = ModelFunction3(5.);
-    auto contourAxis = framework.newPlot();
-    {
-        vector<double> xs, ys, zs;
-        for (size_t x = 0; x < N; x++)
-            for (size_t y = 0; y < N; y++) {
-                double vx = MIN_X + x * DX;
-                double vy = MIN_Y + y * DY;
-                double vz = func({vx, vy});
+template<int N>
+string to_chemcraft_coords(vector<size_t> const& sizes, vect<N> p)
+{
+    assert(N == sizes.size() * 3);
 
-                xs.push_back(vx);
-                ys.push_back(vy);
-                zs.push_back(vz);
-            }
+    stringstream result;
+    for (size_t i = 0; i < sizes.size(); i++)
+        result << boost::format("%1%\t%2%\t%3%\t%4%") % sizes[i] % p(i * 3 + 0) % p(i * 3 + 1) % p(i * 3 + 2) << endl;
+    return result.str();
+}
 
-        framework.contour(contourAxis, reshape(xs, N), reshape(ys, N), reshape(zs, N), 250);
-    }
+int main()
+{
+    vector<size_t> weights = {8, 1, 1};
+    auto func = fix_atom_symmetry(GaussianProducer<9>(weights));
 
-    auto hess = func.hess({0., 0.});
-    auto A = linearization(hess);
-    auto func2 = make_affine_transfomation(func, A);
-    auto path = shs(func2, Adam<1>(), NesterovGradientDescent<2>(), 0.1, {0, 0});
+//    vect<func.N> v = make_constant_vect<func.N>(1.) - 2 * make_random_vect<func.N>();
+    vect<func.N> v = make_vect(1.04218, 0.31040, 1.00456);
+//    vect<func.N> v = make_vect(0.99662, -0.24003, 0.96729);
+    cout << to_chemcraft_coords(weights, func.transform(v)) << endl;
 
-    cerr << "!" << endl;
+//    auto hess = func.hess(v);
+//    auto A = linearization(hess);
+//    auto func2 = make_affine_transfomation(func, v, A);
+//    auto polar = make_polar(func2, 0.2);
 
-    {
-        vector<double> xs, ys, zs;
-        for (size_t x = 0; x < N; x++)
-            for (size_t y = 0; y < N; y++) {
-                double vx = MIN_X + x * DX;
-                double vy = MIN_Y + y * DY;
-                double vz = func2({vx, vy});
+    FollowGradientDeltaStrategy<func.N> followGradient;
+    auto stopStrategy = make_atomic_stop_strategy(0.018, 0.012, func);
 
-                xs.push_back(vx);
-                ys.push_back(vy);
-                zs.push_back(vz);
-            }
+    auto optimizer = make_gradient_descent(followGradient, stopStrategy);
+    auto path = optimizer(func, v);
 
-        auto axis = framework.newPlot();
-        framework.contour(axis, reshape(xs, N), reshape(ys, N), reshape(zs, N), 250);
-        xs.clear(), ys.clear();
-        for (auto const& p : path)
-            xs.push_back(p(0)), ys.push_back(p(1));
-        framework.plot(axis, xs, ys);
-    }
-
-    {
-        vector<double> xs, ys;
-        for (auto const& p : path) {
-            auto pNew = A * p;
-            xs.push_back(pNew(0)), ys.push_back(pNew(1));
-        }
-        framework.plot(contourAxis, xs, ys);
-    }
-
-    {
-        vector<double> xs, ys, zs;
-        for (auto const& p : path) {
-            xs.push_back(p.norm());
-            ys.push_back(func2.grad(p).norm());
-            zs.push_back(func2(p));
-        }
-
-        auto axis = framework.newPlot();
-        framework.plot(axis, xs, ys);
-        framework.plot(axis, xs, zs);
-    }
+    cout << path.size() << endl;
+    cout << path.back().transpose() << endl;
+    cout << to_chemcraft_coords(weights, func.transform(path.back())) << endl;
 
     return 0;
 }

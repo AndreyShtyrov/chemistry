@@ -16,12 +16,12 @@ public:
 
     virtual double operator()(vect<N> const& phi) override
     {
-        return mFunc(fromPolar(phi));
+        return mFunc(transform(phi));
     }
 
     virtual vect<N> grad(vect<N> const& phi) override
     {
-        auto grad = mFunc.grad(fromPolar(phi));
+        auto grad = mFunc.grad(transform(phi));
 
         vect<N> result;
         result.setZero();
@@ -56,7 +56,7 @@ public:
         assert(false);
     }
 
-    vect<N + 1> fromPolar(vect<N> const &phi)
+    vect<N + 1> transform(vect<N> const &phi)
     {
         vect<N + 1> x;
         double sinProduct = 1;

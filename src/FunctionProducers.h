@@ -8,8 +8,10 @@
 #include "LagrangeMultiplier.h"
 #include "AffineTransformation.h"
 #include "Desturbed.h"
+#include "FixValues.h"
 
 #include "SqrNorm.h"
 #include "Constant.h"
 #include "ModelFunction.h"
 #include "ModelFunction3.h"
+#include "GaussianProducer.h"

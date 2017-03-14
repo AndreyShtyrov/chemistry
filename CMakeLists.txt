@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(sphere)
+project(chemistry)
 
 set(CMAKE_CXX_FLAGS "-Wall -Werror -std=c++14")
+
+SET(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 
 find_package(Eigen3 REQUIRED)
 
@@ -22,11 +24,13 @@ endif()
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src ${CMAKE_BINARY_DIR}/googletest-build)
 
+include_directories(${SOURCE_DIR})
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+#include_directories(${SRC)
 SET(SOURCE_FILES src/PythongraphicsFramework.cpp)
 
-add_executable(sphere src/main.cpp ${SOURCE_FILES})
-add_executable(run_tests src/tests.cpp ${SOURCE_FILES})
+add_executable(chemistry ${SOURCE_DIR}/main.cpp ${SOURCE_FILES})
+add_executable(run_tests ${SOURCE_DIR}/tests.cpp ${SOURCE_FILES})
 
 target_link_libraries(run_tests gtest_main)
