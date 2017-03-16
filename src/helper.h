@@ -9,6 +9,7 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <boost/format.hpp>
+#include <boost/type_index.hpp>
 
 using namespace std;
 
