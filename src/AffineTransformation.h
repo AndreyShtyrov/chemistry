@@ -30,9 +30,14 @@ public:
         return mBasisT * mFunc.hess(transform(x)) * mBasis;
     }
 
-    vect<N> transform(vect<N> const& x)
+    vect<N> transform(vect<N> const& x) const
     {
         return mBasis * x + mDelta;
+    }
+
+    FuncT const& getInnerFunction() const
+    {
+        return mFunc;
     }
 
 private:
@@ -53,5 +58,5 @@ template<typename FuncT>
 auto prepare_for_polar(FuncT&& func, vect<decay_t<FuncT>::N> const& v)
 {
     auto A = linearization(func.hess(v));
-    return make_affine_transfomation(func, -v, A);
+    return make_affine_transfomation(func, v, A);
 }

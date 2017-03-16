@@ -159,13 +159,11 @@ testOptimizer(FuncT& func, DeltaStrategyT&& deltaStrategy, StopStrategyT&& stopS
     return make_tuple(arange(vals.size()), vals);
 };
 
-template<typename FuncT, int N, typename AtomicFuncT, typename... FuncsT>
-vect<N> optimize(FuncT& func, vect<N> const& x, AtomicFuncT&& atomicFunc, FuncsT&& ... funcs)
+template<typename FuncT>
+vect<FuncT::N> optimize(FuncT& func, vect<FuncT::N> const& x)
 {
     auto optimizer = make_gradient_descent(FollowGradientDeltaStrategy<FuncT::N>(),
-                                           make_atomic_stop_strategy(0.00045, 0.0003, 0.018, 0.012,
-                                                                     forward<AtomicFuncT>(atomicFunc),
-                                                                     forward<FuncsT>(funcs)...));
+                                           make_atomic_stop_strategy(0.00045, 0.0003, 0.018, 0.012, func));
     return optimizer(func, x).back();
 };
 
@@ -173,28 +171,20 @@ vect<N> optimize(FuncT& func, vect<N> const& x, AtomicFuncT&& atomicFunc, FuncsT
 
 int main()
 {
+    auto v = make_vect(1.04218, 0.31040, 1.00456);
+
     vector<size_t> weights = {8, 1, 1};
     auto atomicFunc = GaussianProducer<9>(weights);
     auto func = fix_atom_symmetry(atomicFunc);
-    auto  stopStrategy = make_atomic_stop_strategy(0, 0, 0, 0, func);
 
-    cout << decay_t<decltype(stopStrategy)>::ExtractorType::applyTransformation(make_vect(1.04218, 0.31040, 1.00456), func);
-//    cout << func::Ex
-//
-//    vect<func.N> local_minima = optimize(func, make_vect(1.04218, 0.31040, 1.00456), atomicFunc, func);
-//    cout << func.grad(local_minima).transpose() << endl << endl << func.hess(local_minima) << endl << endl;
-//
-//    cout << "local minima point:\n" << to_chemcraft_coords(weights, func.transform(local_minima)) << endl;
+    auto local_minima = optimize(func, v);
+    cout << boost::format("local minima:\n%1%\ngradient: %2%\nhessian:\n%3%\n\n") %
+            to_chemcraft_coords(weights, func.transform(local_minima))
+            % func.grad(local_minima).transpose()
+            % func.hess(local_minima);
 
-//    auto linear_hess = prepare_for_polar(func, local_minima);
-////    vect<func.N> v = make_constant_vect<func.N>(1.) - 2 * make_random_vect<func.N>();
-//    vect<func.N> v = make_vect(1.04218, 0.31040, 1.00456);
-////    vect<func.N> v = make_vect(0.99662, -0.24003, 0.96729);
-//    cout << to_chemcraft_coords(weights, func.transform(v)) << endl;
-//
-////
-////    cout << path.size() << endl;
-////    cout << path.back().transpose() << endl;
+//    auto linear_hessian = prepare_for_polar(func, v);
+//    auto stopStrategy = make_atomic_stop_strategy(0, 0, 0, 0, linear_hessian);
 
     return 0;
 }
