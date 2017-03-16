@@ -35,6 +35,26 @@ public:
         return mLastHess;
     };
 
+    vect<N> const& getLastPos() const
+    {
+        return mLastPos;
+    }
+
+    double getLastValue() const
+    {
+        return mLastValue;
+    }
+
+    vect<N> getLastGrad() const
+    {
+        return mLastGrad;
+    }
+
+    matrix<N, N> getLastHess() const
+    {
+        return mLastHess;
+    }
+
 public:
     vector<size_t> mCharges;
 
@@ -93,8 +113,6 @@ public:
                 mLastHess(i, j) *= MAGIC_CONSTANT * MAGIC_CONSTANT;
                 mLastHess(j, i) = mLastHess(i, j);
             }
-
-//        cerr << mLastValue << endl << mLastGrad.transpose() << endl << endl << mLastHess << endl;
     }
 
     void processNewPos(vect<N> const& x)

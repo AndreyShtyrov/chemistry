@@ -1,7 +1,7 @@
  Entering Gaussian System, Link 0=/home/george/soft/gauss/g09/g09
  Initial command:
- /home/george/soft/gauss/g09/l1.exe "/home/george/soft/gauss/scr/Gau-13968.inp" -scrdir="/home/george/soft/gauss/scr/"
- Entering Link 1 = /home/george/soft/gauss/g09/l1.exe PID=     13970.
+ /home/george/soft/gauss/g09/l1.exe "/home/george/soft/gauss/scr/Gau-26644.inp" -scrdir="/home/george/soft/gauss/scr/"
+ Entering Link 1 = /home/george/soft/gauss/g09/l1.exe PID=     26646.
   
  Copyright (c) 1988,1990,1992,1993,1995,1998,2003,2009,2013,
             Gaussian, Inc.  All Rights Reserved.
@@ -74,7 +74,7 @@
  
  ******************************************
  Gaussian 09:  AM64L-G09RevD.01 24-Apr-2013
-                15-Mar-2017 
+                16-Mar-2017 
  ******************************************
  %nproc=5
  Will use up to    5 processors via shared memory.
@@ -248,7 +248,7 @@
  Approx polarizability:   7.814  -1.000   7.495   0.000   0.000   0.757
  Calling FoFJK, ICntrl=    100127 FMM=F ISym2X=0 I1Cent= 0 IOpClX= 0 NMat=1 NMatS=1 NMatT=0.
  Full mass-weighted force constant matrix:
- Low frequencies --- -299.4458   -0.0018    0.0008    0.0010   76.1985  396.9650
+ Low frequencies --- -299.4458    0.0008    0.0009    0.0014   76.1985  396.9650
  Low frequencies --- 1728.9786 3390.5627 3479.1408
  Diagonal vibrational polarizability:
         0.1354840       0.1814747       0.0000000
@@ -370,7 +370,7 @@
  Predicted change in Energy=-6.389661D-04
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
 
- 1\1\GINC-GEORGE-MAIN\Freq\RB3LYP\3-21G\H2O1\GEORGE\15-Mar-2017\0\\# B3
+ 1\1\GINC-GEORGE-MAIN\Freq\RB3LYP\3-21G\H2O1\GEORGE\16-Mar-2017\0\\# B3
  lyp/3-21g nosym freq\\hessian\\0,1\O,0.,0.,0.\H,1.0020532,0.,0.\H,-0.1
  593074,0.9894061,0.\\Version=AM64L-G09RevD.01\HF=-75.9733181\RMSD=9.58
  6e-09\RMSF=5.866e-03\ZeroPoint=0.0195888\Thermal=0.0224233\Dipole=0.58
@@ -387,9 +387,28 @@
  ,0.00818930,0.,0.00797993,0.00192213,0.\\\@
 
 
- FLOATING POINT NUMBERS ARE LIKE SANDPILES:
- EVERY TIME THAT YOU MOVE ONE, YOU LOSE A LITTLE SAND 
- AND YOU PICK UP A LITTLE DIRT.
- Job cpu time:       0 days  0 hours  0 minutes 21.2 seconds.
+ A ROPE OVER THE TOP OF A FENCE HAS THE SAME LENGTH ON EACH SIDE.
+ WEIGHS 1/3 POUND PER FOOT.  ON ONE END HANGS A MONKEY HOLDING A
+ BANANA, AND ON THE OTHER END A WEIGHT EQUAL TO THE WEIGHT
+ OF THE MONKEY.  THE BANANA WEIGHS TWO OUNCES PER INCH.
+ THE ROPE IS AS LONG AS THE AGE OF THE MONKEY, 
+ AND THE WEIGHT OF THE MONKEY (IN OUNCES) IS AS MUCH
+ AS THE AGE OF THE MONKEY'S MOTHER.  THE COMBINED AGES OF MONKEY
+ AND MOTHER ARE THIRTY YEARS.  HALF THE WEIGHT OF THE MONKEY,
+  PLUS THE WEIGHT OF THE BANANA, IS ONE FOURTH AS MUCH AS THE WEIGHT
+ OF THE WEIGHT AND THE ROPE.
+ THE MONKEY'S MOTHER IS HALF AS OLD AS THE MONKEY WILL BE
+ WHEN IT IS 3 TIMES AS OLD AS ITS MOTHER WAS WHEN
+ SHE WAS HALF AS OLD AS THE MONKEY WILL BE WHEN IT IS
+ AS OLD AS ITS MOTHER WILL BE WHEN SHE IS 4 TIMES AS
+ OLD AS THE MONKEY WAS WHEN IT WAS TWICE AS OLD AS 
+ ITS MOTHER WAS WHEN SHE WAS ONE THIRD AS OLD AS THE
+ MONKEY WAS WHEN IT WAS AS OLD AS ITS MOTHER WAS WHEN 
+ SHE WAS 3 TIMES AS OLD AS THE MONKEY WAS WHEN IT WAS AS OLD AS ITS
+ MOTHER WAS WHEN SHE WAS 3 TIMES AS OLD AS THE MONKEY 
+ WAS WHEN IT WAS ONE FOURTH WAS OLD AS IT IS NOW.
+
+ HOW LONG IS THE BANANA?
+ Job cpu time:       0 days  0 hours  0 minutes 20.5 seconds.
  File lengths (MBytes):  RWF=      5 Int=      0 D2E=      0 Chk=      1 Scr=      1
- Normal termination of Gaussian 09 at Wed Mar 15 01:22:56 2017.
+ Normal termination of Gaussian 09 at Thu Mar 16 21:24:22 2017.

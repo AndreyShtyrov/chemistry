@@ -10,6 +10,13 @@
 #include "History.h"
 #include "GradientLengthStopCriteria.h"
 
+#include "FollowGradientDeltaStrategy.h"
+
+#include "AtomicStopStrategy.h"
+#include "DeltaNormStopStrategy.h"
+#include "GradientNormStopStrategy.h"
+#include "HistoryStrategyWrapper.h"
+
 namespace optimization
 {
     template<template<int, typename> typename OptimizerT, typename CriteriaT>

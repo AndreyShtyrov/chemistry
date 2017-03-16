@@ -10,9 +10,10 @@ class AffineTransformation : public FunctionProducer<FuncT::N>
 public:
     using FunctionProducer<FuncT::N>::N;
 
-    AffineTransformation(FuncT const& func, vect<N> const& delta, matrix<N, N> const& basis)
-            : mFunc(func), mDelta(delta), mBasis(basis), mBasisT(basis.transpose())
-    { }
+    AffineTransformation(FuncT func, vect<N> delta, matrix<N, N> const& basis) : mFunc(move(func)), mDelta(move(delta)),
+                                                                                 mBasis(basis),
+                                                                                 mBasisT(basis.transpose())
+    {}
 
     virtual double operator()(vect<N> const& x) override
     {
@@ -41,8 +42,16 @@ private:
     matrix<N, N> mBasisT;
 };
 
-template <typename FuncT>
-AffineTransformation<FuncT> make_affine_transfomation(FuncT const& func, vect<FuncT::N> const& delta, matrix<FuncT::N, FuncT::N> const& A)
+template<typename FuncT>
+auto make_affine_transfomation(FuncT&& func, vect<decay_t<FuncT>::N> delta,
+                               matrix<decay_t<FuncT>::N, decay_t<FuncT>::N> const& A)
 {
-    return AffineTransformation<FuncT>(func, delta, A);
+    return AffineTransformation<decay_t<FuncT>>(forward<FuncT>(func), move(delta), A);
+}
+
+template<typename FuncT>
+auto prepare_for_polar(FuncT&& func, vect<decay_t<FuncT>::N> const& v)
+{
+    auto A = linearization(func.hess(v));
+    return make_affine_transfomation(func, -v, A);
 }

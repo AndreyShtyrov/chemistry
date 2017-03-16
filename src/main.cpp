@@ -24,9 +24,9 @@ constexpr double calculate_delta(double min, double max, int n)
 
 constexpr double MAX_VAL = 1;
 constexpr double MIN_X = -MAX_VAL;
-constexpr double MAX_X =  MAX_VAL;
+constexpr double MAX_X = MAX_VAL;
 constexpr double MIN_Y = -MAX_VAL;
-constexpr double MAX_Y =  MAX_VAL;
+constexpr double MAX_Y = MAX_VAL;
 
 constexpr size_t N = 250;
 constexpr double DX = calculate_delta(MIN_X, MAX_X, N);
@@ -41,7 +41,9 @@ vect<N> optimize(vect<N> pos, vect<N> grad, matrix<N, N> hess)
 }
 
 template<typename FuncT, typename Optimizer1T, typename Optimizer2T>
-vector<vect<FuncT::N>> shs(FuncT& func, Optimizer1T optimizer1, Optimizer2T optimizer2, double deltaR, vect<FuncT::N> pos) {
+vector<vect<FuncT::N>>
+shs(FuncT& func, Optimizer1T optimizer1, Optimizer2T optimizer2, double deltaR, vect<FuncT::N> pos)
+{
     vector<vect<FuncT::N>> path;
     path.push_back(pos);
 
@@ -122,7 +124,7 @@ string draw3dPlot(FuncT&& func, vect<2> from, vect<2> to, size_t iters)
 }
 
 template<int N>
-vect<N> getRandomPoint(vect<N> const& lowerBound, vect<N> const&  upperBound)
+vect<N> getRandomPoint(vect<N> const& lowerBound, vect<N> const& upperBound)
 {
     auto p = make_random_vect<N>();
     return lowerBound.array() + p.array() * (upperBound.array() - lowerBound.array());
@@ -139,30 +141,51 @@ string to_chemcraft_coords(vector<size_t> const& sizes, vect<N> p)
     return result.str();
 }
 
+struct PlotInfo
+{
+    vector<double> xs, ys;
+};
+
+
+template<typename FuncT, typename DeltaStrategyT, typename StopStrategyT, int N>
+tuple<vector<double>, vector<double>>
+testOptimizer(FuncT& func, DeltaStrategyT&& deltaStrategy, StopStrategyT&& stopStrategy, vect<N> const& p)
+{
+    auto optimizer = make_gradient_descent(make_history_strategy(forward<DeltaStrategyT>(deltaStrategy)),
+                                           forward<StopStrategyT>(stopStrategy));
+    auto path = optimizer(func, p);
+    auto vals = optimizer.getDeltaStrategy().getValues();
+
+    return make_tuple(arange(vals.size()), vals);
+};
+
+template<typename FuncT, int N, typename... FuncsT>
+vect<N> optimize(FuncT& func, vect<N> const& x, FuncsT&& ... funcs)
+{
+    auto optimizer = make_gradient_descent(FollowGradientDeltaStrategy<FuncT::N>(),
+                                           make_atomic_stop_strategy(0.018, 0.012, forward<FuncsT>(funcs)...));
+    return optimizer(func, x).back();
+};
+
 int main()
 {
     vector<size_t> weights = {8, 1, 1};
     auto func = fix_atom_symmetry(GaussianProducer<9>(weights));
 
-//    vect<func.N> v = make_constant_vect<func.N>(1.) - 2 * make_random_vect<func.N>();
-    vect<func.N> v = make_vect(1.04218, 0.31040, 1.00456);
-//    vect<func.N> v = make_vect(0.99662, -0.24003, 0.96729);
-    cout << to_chemcraft_coords(weights, func.transform(v)) << endl;
+    vect<func.N> local_minima = optimize(func, make_vect(1.04218, 0.31040, 1.00456), func);
+    cout << func.grad(local_minima).transpose() << endl << endl << func.hess(local_minima) << endl << endl;
 
-//    auto hess = func.hess(v);
-//    auto A = linearization(hess);
-//    auto func2 = make_affine_transfomation(func, v, A);
-//    auto polar = make_polar(func2, 0.2);
+    cout << "local minima point:\n" << to_chemcraft_coords(weights, func.transform(local_minima)) << endl;
 
-    FollowGradientDeltaStrategy<func.N> followGradient;
-    auto stopStrategy = make_atomic_stop_strategy(0.018, 0.012, func);
-
-    auto optimizer = make_gradient_descent(followGradient, stopStrategy);
-    auto path = optimizer(func, v);
-
-    cout << path.size() << endl;
-    cout << path.back().transpose() << endl;
-    cout << to_chemcraft_coords(weights, func.transform(path.back())) << endl;
+//    auto linear_hess = prepare_for_polar(func, local_minima);
+////    vect<func.N> v = make_constant_vect<func.N>(1.) - 2 * make_random_vect<func.N>();
+//    vect<func.N> v = make_vect(1.04218, 0.31040, 1.00456);
+////    vect<func.N> v = make_vect(0.99662, -0.24003, 0.96729);
+//    cout << to_chemcraft_coords(weights, func.transform(v)) << endl;
+//
+////
+////    cout << path.size() << endl;
+////    cout << path.back().transpose() << endl;
 
     return 0;
 }
