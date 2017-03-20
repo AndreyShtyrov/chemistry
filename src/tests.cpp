@@ -22,6 +22,7 @@ void testGradient(FuncT func, vect<N> const& lowerBound, vect<N> const& upperBou
             vect<N> e = delta * eye<N>(j);
             double predicted = 0.5 * (func(p + e) - func(p - e)) / delta;
             ASSERT_LE(abs(grad(j) - predicted), eps);
+            cerr << abs(grad(j) - predicted) << ' ' << grad(j) << ' ' << predicted << endl;
         }
     }
 };
@@ -60,10 +61,11 @@ TEST(FunctionProducer, ModelFunction)
 TEST(FunctionProducer, InNewBasis)
 {
     auto A = make_random_matrix<2, 2>();
+    auto b = make_random_vect<2>();
     auto lowerBound = make_vect(-1., -1.);
     auto upperBound = make_vect(1., 1.);
 
-    testProducer(AffineTransformation<ModelFunction>(ModelFunction(), A), lowerBound, upperBound, 1000);
+    testProducer(AffineTransformation<ModelFunction>(ModelFunction(), b, A), lowerBound, upperBound, 1000);
 }
 
 TEST(FunctionProducer, PolarCoordinates)
@@ -72,7 +74,7 @@ TEST(FunctionProducer, PolarCoordinates)
     auto upperBound = make_vect(2 * M_PI);
 
     for (int ri = 0; ri < 10; ri++)
-        testGradient(make_polar(ModelFunction(), (ri + 1) * 0.2), lowerBound, upperBound, 1000);
+        testGradient(makePolar(ModelFunction(), (ri + 1) * 0.2), lowerBound, upperBound, 1000);
 }
 
 TEST(FunctionProducer, Desturbed)
@@ -125,4 +127,19 @@ TEST(FunctionProducer, FixValues)
     vect<3> upperBound =  1 * ones;
 
     testProducer(fix_atom_symmetry(GaussianProducer<9>({8, 1, 1})), lowerBound, upperBound, 1, 1e-4, 1e-3);
+}
+
+TEST(FunctionProducer, Stack) {
+    auto startPoint = make_vect(1.04218, 0.31040, 1.00456);
+
+    vector<size_t> weights = {8, 1, 1};
+    auto atomicFunc = GaussianProducer<9>(weights);
+    auto func = fix_atom_symmetry(atomicFunc);
+    auto linear_hessian = prepareForPolar(func, startPoint);
+    auto polar = makePolar(linear_hessian, 0.3);
+
+    auto lowerBound = make_vect(0., -M_PI / 2);
+    auto upperBound = make_vect(2 * M_PI, M_PI / 2);
+
+    testGradient(polar, lowerBound, upperBound, 10, 1e-4, 1e-3);
 }

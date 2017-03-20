@@ -14,7 +14,7 @@ namespace optimization
         using TupleType = typename NextStactExtractor::TupleType;
         using AtomicType = typename NextStactExtractor::AtomicType;
 
-        static AtomicType const&  extractAtomicFunc(T const& t)
+        static AtomicType const& extractAtomicFunc(T const& t)
         {
             return NextStactExtractor::extractAtomicFunc(t.getInnerFunction());
         }
@@ -84,13 +84,16 @@ namespace optimization
 
         bool operator()(size_t iter, vect<N> const& p, vect<N> const& grad, vect<N> const& delta)
         {
+            if (iter > 150)
+                return true;
+
             auto x0 = ExtractorType::applyTransformation(p, mFunc);
             auto x1 = ExtractorType::applyTransformation(p + delta, mFunc);
 
             assert((x0 - mAtomicFunc.getLastPos()).norm() < 1e-7);
 
-            return check(mAtomicFunc.getLastGrad(), mMaxForce, mMaxAtomDelta) &&
-                   check(x1 - x0, mMaxAtomDelta, mRmsAtomDelta);
+            return check(x1 - x0, mMaxAtomDelta, mRmsAtomDelta) &&
+                   check(mAtomicFunc.getLastGrad(), mMaxForce, mRmsForce);
         }
 
     private:
@@ -103,9 +106,15 @@ namespace optimization
     };
 
     template<typename FuncT>
-    auto make_atomic_stop_strategy(double maxForce, double rmsForce, double maxAtomDelta, double rmsAtomDelta,
-                                   FuncT const& func)
+    auto makeAtomicStopStrategy(double maxForce, double rmsForce, double maxAtomDelta, double rmsAtomDelta,
+                                FuncT const& func)
     {
         return AtomicStopStrategy<FuncT>(maxForce, rmsForce, maxAtomDelta, rmsAtomDelta, func);
+    }
+
+    template<typename FuncT>
+    auto makeStandardAtomicStopStrategy(FuncT const& func)
+    {
+        return makeAtomicStopStrategy(0.00045, 0.0003, 0.018, 0.012, func);
     }
 }

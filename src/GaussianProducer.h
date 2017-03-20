@@ -4,6 +4,72 @@
 
 #include "FunctionProducer.h"
 
+string const GAUSSIAN_SCF_HEADER = "%nproc=3\n"
+   "%chk=chk\n"
+   "%mem=1000mb\n"
+   "# B3lyp/3-21g nosym scf\n"
+   "\n"
+   "\n"
+   "0 1";
+
+
+string const GAUSSIAN_FORCE_HEADER = "%nproc=3\n"
+   "%chk=chk\n"
+   "%mem=1000mb\n"
+   "# B3lyp/3-21g nosym force\n"
+   "\n"
+   "\n"
+   "0 1";
+
+string const GAUSSIAN_HESS_HEADER = "%nproc=3\n"
+   "%chk=chk\n"
+   "%mem=1000mb\n"
+   "# B3lyp/3-21g nosym freq\n"
+   "\n"
+   "\n"
+   "0 1";
+
+template<typename T>
+class Cache
+{
+public:
+    Cache() : mIsEmpty(true)
+    { }
+
+    template<typename U>
+    explicit Cache(U&& value) : mIsEmpty(false), mValue(forward<U>(value))
+    { }
+
+    void set()
+    {
+        mIsEmpty = false;
+    }
+
+    T const& get() const
+    {
+        return mValue;
+    }
+
+    T& get()
+    {
+        return mValue;
+    }
+
+    void clear()
+    {
+        mIsEmpty = true;
+    }
+
+    bool empty() const
+    {
+        return mIsEmpty;
+    }
+
+private:
+    bool mIsEmpty;
+    T mValue;
+};
+
 template<int N_DIMS>
 class GaussianProducer : public FunctionProducer<N_DIMS>
 {
@@ -12,27 +78,33 @@ public:
 
     using FunctionProducer<N_DIMS>::N;
 
-    GaussianProducer(vector<size_t> const& charges) : mCharges(charges)
+    GaussianProducer(vector<size_t> charges) : mCharges(move(charges))
     {
-        assert(charges.size() * 3 == N);
+        assert(mCharges.size() * 3 == N);
     }
 
     virtual double operator()(vect<N> const& x)
     {
-        processNewPos(x);
-        return mLastValue;
+        if (testCache(mValue, x))
+            return mValue.get();
+        processNewPos(x, false, false);
+        return mValue.get();
     }
 
     virtual vect<N> grad(vect<N> const& x)
     {
-        processNewPos(x);
-        return mLastGrad;
+        if (testCache(mGrad, x))
+            return mGrad.get();
+        processNewPos(x, true, false);
+        return mGrad.get();
     }
 
     virtual matrix<N, N> hess(vect<N> const& x)
     {
-        processNewPos(x);
-        return mLastHess;
+        if (testCache(mHess, x))
+            return mHess.get();
+        processNewPos(x, true, true);
+        return mHess.get();
     };
 
     vect<N> const& getLastPos() const
@@ -40,36 +112,41 @@ public:
         return mLastPos;
     }
 
-    double getLastValue() const
+    double const& getLastValue() const
     {
-        return mLastValue;
+        return mValue.get();
     }
 
-    vect<N> getLastGrad() const
+    vect<N> const& getLastGrad() const
     {
-        return mLastGrad;
+        return mGrad.get();
     }
 
-    matrix<N, N> getLastHess() const
+    matrix<N, N> const& getLastHess() const
     {
-        return mLastHess;
+        return mHess.get();
     }
 
 public:
     vector<size_t> mCharges;
 
-    void createInputFile(vect<N> const& x)
+    template<typename T>
+    bool testCache(Cache<T> const& cache, vect<N> const& x)
+    {
+        return mLastPos == x && !cache.empty();
+    }
+
+    void createInputFile(vect<N> const& x, bool withGrad, bool withHess)
     {
         ofstream f("tmp.inp");
         f.precision(7);
-        f << "%nproc=5\n"
-                "%chk=chk\n"
-                "%mem=1000mb\n"
-                "# B3lyp/3-21g nosym  freq\n"
-                "\n"
-                "hessian\n"
-                "\n"
-                "0 1" << endl;
+        if (withHess)
+            f << GAUSSIAN_HESS_HEADER << endl;
+        else if (withGrad)
+            f << GAUSSIAN_FORCE_HEADER  << endl;
+        else
+            f << GAUSSIAN_SCF_HEADER << endl;
+
         for (size_t i = 0; i < mCharges.size(); i++) {
             f << mCharges[i];
             for (size_t j = 0; j < 3; j++)
@@ -87,7 +164,7 @@ public:
         }
     }
 
-    void parseOutput()
+    void parseOutput(bool withGrad, bool withHess)
     {
         ifstream f("chk.fchk");
 
@@ -96,38 +173,51 @@ public:
             getline(f, s);
         stringstream ss(s);
         ss >> s >> s >> s;
-        ss >> mLastValue;
 
-        while (!boost::starts_with(s, "Cartesian Gradient"))
-            getline(f, s);
-        for (size_t i = 0; i < N; i++) {
-            f >> mLastGrad(i);
-            mLastGrad(i) *= MAGIC_CONSTANT;
+        ss >> mValue.get();
+        mValue.set();
+
+        if (withGrad) {
+            while (!boost::starts_with(s, "Cartesian Gradient"))
+                getline(f, s);
+
+            vect<N>& grad = mGrad.get();
+            for (size_t i = 0; i < N; i++) {
+                f >> grad(i);
+                grad(i) *= MAGIC_CONSTANT;
+            }
+            mGrad.set();
         }
 
-        while (!boost::starts_with(s, "Cartesian Force Constants"))
-            getline(f, s);
-        for (size_t i = 0; i < N; i++)
-            for (size_t j = 0; j <= i; j++) {
-                f >> mLastHess(i, j);
-                mLastHess(i, j) *= MAGIC_CONSTANT * MAGIC_CONSTANT;
-                mLastHess(j, i) = mLastHess(i, j);
-            }
+        if (withHess) {
+            while (!boost::starts_with(s, "Cartesian Force Constants"))
+                getline(f, s);
+
+            matrix<N, N>& hess = mHess.get();
+            for (size_t i = 0; i < N; i++)
+                for (size_t j = 0; j <= i; j++) {
+                    f >> hess(i, j);
+                    hess(i, j) *= MAGIC_CONSTANT * MAGIC_CONSTANT;
+                    hess(j, i) = hess(i, j);
+                }
+            mHess.set();
+        }
     }
 
-    void processNewPos(vect<N> const& x)
+    void processNewPos(vect<N> const& x, bool withGrad, bool withHess)
     {
-        if (mLastPos != x) {
-            mLastPos = x;
-            createInputFile(x);
-            runGaussian();
-            parseOutput();
-            system("rm *.chk");
-        }
+        mValue.clear();
+        mGrad.clear();
+        mHess.clear();
+
+        mLastPos = x;
+        createInputFile(x, withGrad, withHess);
+        runGaussian();
+        parseOutput(withGrad, withHess);
     }
 
     vect<N> mLastPos;
-    double mLastValue;
-    vect<N> mLastGrad;
-    matrix<N, N> mLastHess;
+    Cache<double> mValue;
+    Cache<vect<N>> mGrad;
+    Cache<matrix<N, N>> mHess;
 };

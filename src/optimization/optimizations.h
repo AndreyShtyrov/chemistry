@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GradientDescent.h"
 #include "MomentumGradientDescent.h"
 #include "NesterovGradientDescent.h"
 #include "Adagrad.h"
@@ -10,12 +9,18 @@
 #include "History.h"
 #include "GradientLengthStopCriteria.h"
 
+#include "GradientDescent.h"
+#include "SecondOrderGradientDescent.h"
+
 #include "FollowGradientDeltaStrategy.h"
+#include "HessianDeltaStrategy.h"
+#include "QuasiNewtonDeltaStrategy.h"
 
 #include "AtomicStopStrategy.h"
 #include "DeltaNormStopStrategy.h"
 #include "GradientNormStopStrategy.h"
 #include "HistoryStrategyWrapper.h"
+#include "StopStrategy.h"
 
 namespace optimization
 {

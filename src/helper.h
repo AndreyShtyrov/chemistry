@@ -78,7 +78,7 @@ vect<N> make_random_vect()
 };
 
 template<int N>
-vect<N> make_constant_vect(double constant)
+vect<N> makeConstantVect(double constant)
 {
     vect<N> v;
     v.setConstant(constant);
@@ -95,25 +95,33 @@ vect<N> eye(size_t i)
     return result;
 };
 
-template<typename T, typename... Ts>
-struct first_type
+template<int N>
+matrix<N, N> identity()
 {
-    using type = T;
-};
-template<typename... Ts> using first_type_t = typename first_type<Ts...>::type;
-
-template<typename T, typename... Ts>
-struct last_type
-{
-    using type = typename last_type<Ts...>::type;
+    matrix<N, N> result;
+    result.setIdentity();
+    return result;
 };
 
-template<typename T>
-struct last_type<T>
-{
-    using type = T;
-};
-
-template<typename... Ts>
-using last_type_t = typename last_type<Ts...>::type;
+//template<typename T, typename... Ts>
+//struct first_type
+//{
+//    using type = T;
+//};
+//template<typename... Ts> using first_type_t = typename first_type<Ts...>::type;
+//
+//template<typename T, typename... Ts>
+//struct last_type
+//{
+//    using type = typename last_type<Ts...>::type;
+//};
+//
+//template<typename T>
+//struct last_type<T>
+//{
+//    using type = T;
+//};
+//
+//template<typename... Ts>
+//using last_type_t = typename last_type<Ts...>::type;
 

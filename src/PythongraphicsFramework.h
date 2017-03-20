@@ -6,7 +6,9 @@ class PythongraphicsFramework
 {
 public:
     PythongraphicsFramework(string const& filePath) : mOutput(filePath), mCounter(0)
-    { }
+    {
+        mOutput.precision(10);
+    }
 
     string newPlot(string title="''")
     {
@@ -80,12 +82,12 @@ public:
         mOutput << axis << ".scatter(" << vxs << ", " << vys << ", color='r')" << endl;
     }
 
-    void scatter(vector<double> const& xs, vector<double> const& ys)
-    {
-        auto vxs = create_array(xs);
-        auto vys = create_array(ys);
-        mOutput << "plt.plot(" << vxs << ", " << vys << ")" << endl;
-    }
+//    void scatter(vector<double> const& xs, vector<double> const& ys)
+//    {
+//        auto vxs = create_array(xs);
+//        auto vys = create_array(ys);
+//        mOutput << "plt.plot(" << vxs << ", " << vys << ")" << endl;
+//    }
 
     string create_array(vector<double> const& xs)
     {

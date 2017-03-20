@@ -1,12 +1,14 @@
 #include "helper.h"
 
+ofstream out;
+
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <Eigen/LU>
 #include <optimization/GradientLengthStopCriteria.h>
 #include <optimization/GradientOptimization.h>
 
-#include "linearization.hpp"
+#include "linearization.h"
 #include "FunctionProducers.h"
 #include "PythongraphicsFramework.h"
 
@@ -34,12 +36,6 @@ constexpr double DY = calculate_delta(MIN_Y, MAX_Y, N);
 
 constexpr size_t PHI = 1000;
 
-template<int N>
-vect<N> optimize(vect<N> pos, vect<N> grad, matrix<N, N> hess)
-{
-    return pos - hess.inverse() * grad;
-}
-
 template<typename FuncT, typename Optimizer1T, typename Optimizer2T>
 vector<vect<FuncT::N>>
 shs(FuncT& func, Optimizer1T optimizer1, Optimizer2T optimizer2, double deltaR, vect<FuncT::N> pos)
@@ -56,7 +52,7 @@ shs(FuncT& func, Optimizer1T optimizer1, Optimizer2T optimizer2, double deltaR, 
     for (int i = 0; i < 20; ++i) {
 //        cerr << "!" << endl;
 
-        auto polars = make_polar(func, deltaR * (i + 1));
+        auto polars = makePolar(func, deltaR * (i + 1));
         lastPolar = optimizer1(polars, lastPolar).back();
 
         pos = polars.transform(lastPolar);
@@ -131,60 +127,174 @@ vect<N> getRandomPoint(vect<N> const& lowerBound, vect<N> const& upperBound)
 }
 
 template<int N>
-string to_chemcraft_coords(vector<size_t> const& sizes, vect<N> p)
+string to_chemcraft_coords(vector<size_t> const& sizes, vect<N> p, double globalDx=0)
 {
     assert(N == sizes.size() * 3);
 
     stringstream result;
     for (size_t i = 0; i < sizes.size(); i++)
-        result << boost::format("%1%\t%2%\t%3%\t%4%") % sizes[i] % p(i * 3 + 0) % p(i * 3 + 1) % p(i * 3 + 2) << endl;
+        result << boost::format("%1%\t%2%\t%3%\t%4%") % sizes[i] % (p(i * 3 + 0) + globalDx) % p(i * 3 + 1) % p(i * 3 + 2) << endl;
     return result.str();
 }
 
-struct PlotInfo
-{
-    vector<double> xs, ys;
-};
-
-
-template<typename FuncT, typename DeltaStrategyT, typename StopStrategyT, int N>
+template<template<typename, typename> typename OptimizerT, typename DeltaStrategyT, typename StopStrategyT, typename FuncT, int N>
 tuple<vector<double>, vector<double>>
-testOptimizer(FuncT& func, DeltaStrategyT&& deltaStrategy, StopStrategyT&& stopStrategy, vect<N> const& p)
+testOptimizer(DeltaStrategyT&& deltaStrategy, StopStrategyT&& stopStrategy, FuncT& func, vect<N> const& p)
 {
-    auto optimizer = make_gradient_descent(make_history_strategy(forward<DeltaStrategyT>(deltaStrategy)),
-                                           forward<StopStrategyT>(stopStrategy));
+    auto optimizer = OptimizerT<HistoryStrategyWrapper<decay_t<DeltaStrategyT>>, decay_t<StopStrategyT>>(
+       make_history_strategy(forward<DeltaStrategyT>(deltaStrategy)), forward<StopStrategyT>(stopStrategy));
     auto path = optimizer(func, p);
     auto vals = optimizer.getDeltaStrategy().getValues();
 
     return make_tuple(arange(vals.size()), vals);
 };
 
-template<typename FuncT>
-vect<FuncT::N> optimize(FuncT& func, vect<FuncT::N> const& x)
-{
-    auto optimizer = make_gradient_descent(FollowGradientDeltaStrategy<FuncT::N>(),
-                                           make_atomic_stop_strategy(0.00045, 0.0003, 0.018, 0.012, func));
-    return optimizer(func, x).back();
-};
-
-#include <typeinfo>
-
-int main()
+void standardOptimizationTest()
 {
     auto v = make_vect(1.04218, 0.31040, 1.00456);
+//    auto v = make_vect(1.00335, -0.140611, 0.993603);
 
     vector<size_t> weights = {8, 1, 1};
     auto atomicFunc = GaussianProducer<9>(weights);
     auto func = fix_atom_symmetry(atomicFunc);
 
-    auto local_minima = optimize(func, v);
+    auto axis = framework.newPlot();
+    vector<double> path, vals;
+
+    tie(path, vals) = testOptimizer<GradientDescent>(QuasiNewtonDeltaStrategy<func.N, DFP>(),
+                                                     makeAtomicStopStrategy(0.00045, 0.0003, 0.018, 0.012, func), func,
+                                                     v);
+    framework.plot(axis, arange(vals.size()), vals);
+
+    tie(path, vals) = testOptimizer<SecondOrderGradientDescent>(HessianDeltaStrategy<func.N>(),
+                                                                makeAtomicStopStrategy(0.00045, 0.0003, 0.018, 0.012,
+                                                                                       func), func, v);
+    framework.plot(axis, arange(vals.size()), vals);
+
+    tie(path, vals) = testOptimizer<GradientDescent>(FollowGradientDeltaStrategy<func.N>(),
+                                                     makeAtomicStopStrategy(0.00045, 0.0003, 0.018, 0.012, func), func,
+                                                     v);
+    framework.plot(axis, arange(vals.size()), vals);
+};
+
+template<typename T>
+auto optimize(T& func, vect<T::N> const& x)
+{
+    return makeGradientDescent(QuasiNewtonDeltaStrategy<T::N, BFGS>(), makeStandardAtomicStopStrategy(func))(func, x);
+//    return makeGradientDescent(FollowGradientDeltaStrategy<T::N>(), makeStandardAtomicStopStrategy(func))(func, x).back();
+};
+
+
+int main()
+{
+    auto start_point = make_vect(1.04218, 0.31040, 1.00456);
+
+    vector<size_t> weights = {8, 1, 1};
+    auto atomicFunc = GaussianProducer<9>(weights);
+    auto func = fix_atom_symmetry(atomicFunc);
+
+    auto local_minima = optimize(func, start_point).back();
+
     cout << boost::format("local minima:\n%1%\ngradient: %2%\nhessian:\n%3%\n\n") %
-            to_chemcraft_coords(weights, func.transform(local_minima))
-            % func.grad(local_minima).transpose()
-            % func.hess(local_minima);
+            to_chemcraft_coords(weights, func.transform(local_minima)) % func.grad(local_minima).transpose() %
+            func.hess(local_minima);
 
-//    auto linear_hessian = prepare_for_polar(func, v);
-//    auto stopStrategy = make_atomic_stop_strategy(0, 0, 0, 0, linear_hessian);
 
-    return 0;
+    auto linear_hessian = prepareForPolar(func, local_minima);
+    auto zero = makeConstantVect<linear_hessian.N>(0.);
+    cout << linear_hessian.grad(zero).transpose() << endl << endl << linear_hessian.hess(zero) << endl;
+
+    out = ofstream("a.out");
+
+    double firstR = 0.3;
+    double deltaR = 0.1;
+    auto polar = makePolar(linear_hessian, firstR);
+
+    for (size_t iter = 0; iter < 10; iter++) {
+        auto deltaStrategy = QuasiNewtonDeltaStrategy<polar.N, BFGS>();
+        auto stopStrategy = StopStrategy(0.0001, 0.001);
+//        auto polar_minima = makeGradientDescent(deltaStrategy, stopStrategy)(polar, make_vect(5.24, 0.96)).back();
+//        auto polar_minima = makeGradientDescent(deltaStrategy, stopStrategy)(polar, make_vect(0.73, 0.17)).back();
+        auto polar_minima = makeGradientDescent(deltaStrategy, stopStrategy)(polar, make_vect(5.5, -1.1)).back();
+//        auto polar_minima = makeGradientDescent(deltaStrategy, stopStrategy)(polar, make_random_vect<polar.N>()).back();
+
+        cerr << boost::format("polar minima:\n\t%1%\n") % polar_minima;
+        out << endl;
+
+        vector<vect<linear_hessian.N>> path;
+        path.push_back(polar.transform(polar_minima));
+
+        double lastValue = polar(polar_minima);
+        vect<polar.N> lastPoint = polar_minima;
+
+        vector<double> polarValues;
+        vector<vect<polar.N>> polarPath;
+        polarPath.push_back(lastPoint);
+
+        for (size_t i = 1; i < 20; ++i) {
+            auto polar2 = makePolar(linear_hessian, firstR + deltaR * i);
+
+            auto deltaStrategy = QuasiNewtonDeltaStrategy<polar2.N, BFGS>(0.5);
+            auto stopStrategy = StopStrategy(0.0001, 0.001);
+            auto nextPoint = makeGradientDescent(deltaStrategy, stopStrategy)(polar2, lastPoint).back();
+
+            double curValue = polar2(nextPoint);
+
+            path.push_back(polar2.transform(nextPoint));
+            polarPath.push_back(nextPoint);
+            polarValues.push_back(curValue);
+
+            {
+                vector<double> xs, ys;
+                for (auto polarPoint : polarPath)
+                    xs.push_back(polarPoint(0)), ys.push_back(polarPoint(1));
+                framework.scatter(framework.newPlot(), xs, ys);
+            }
+            framework.plot(framework.newPlot(), arange(polarValues.size()), polarValues);
+
+            cerr << "new value: " << curValue << endl;
+            auto hess = linear_hessian.hess(path.back());
+            auto A = linearization(hess);
+            cerr << A.transpose() * hess * A << endl << endl;
+            cerr << "Chemcraft coords:" << endl;
+            cerr << to_chemcraft_coords(weights, func.transform(linear_hessian.transform(path.back()))) << endl;
+
+            if (curValue < lastValue) {
+//                break;
+            }
+
+            lastValue = curValue;
+            lastPoint = nextPoint;
+        }
+
+        {
+            vector<double> xs, ys;
+            for (auto polarPoint : polarPath)
+                xs.push_back(polarPoint(0)), ys.push_back(polarPoint(1));
+            framework.scatter(framework.newPlot(), xs, ys);
+        }
+
+        auto pathToMin = optimize(linear_hessian, path.back());
+        path.insert(path.end(), pathToMin.begin(), pathToMin.end());
+
+        vector<double> vals;
+        for (auto point : path) {
+            vals.push_back(linear_hessian(point));
+        }
+        framework.plot(framework.newPlot(), arange(vals.size()), vals);
+
+
+        cerr << endl << endl << endl;
+        for (auto point : path)
+        {
+            static int i = 0;
+            cout << to_chemcraft_coords(weights, func.transform(linear_hessian.transform(point)), 10 * i) << endl;
+            ++i;
+        }
+
+
+        break;
+    }
+
+
 }

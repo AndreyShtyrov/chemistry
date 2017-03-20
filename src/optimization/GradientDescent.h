@@ -25,8 +25,10 @@ namespace optimization
             for (size_t iter = 0;; iter++) {
                 path.push_back(p0);
 
-                auto val = func(p0);
                 auto grad = func.grad(p0);
+                auto val = func(p0);
+
+                cerr << "current value " << val << endl;
 
                 auto delta = mDeltaStrategy(iter, p0, val, grad);
                 if (mStopStrategy(iter, p0, grad, delta))
@@ -54,7 +56,7 @@ namespace optimization
     };
 
     template<typename DeltaStrategyT, typename StopStrategyT>
-    auto make_gradient_descent(DeltaStrategyT&& deltaStrategyT, StopStrategyT&& stopStrategyT)
+    auto makeGradientDescent(DeltaStrategyT&& deltaStrategyT, StopStrategyT&& stopStrategyT)
     {
         return GradientDescent<decay_t<DeltaStrategyT>, decay_t<StopStrategyT>>(forward<DeltaStrategyT>(deltaStrategyT),
                                                                                 forward<StopStrategyT>(stopStrategyT));

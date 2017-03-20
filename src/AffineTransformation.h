@@ -3,6 +3,7 @@
 #include "helper.h"
 
 #include "FunctionProducer.h"
+#include "linearization.h"
 
 template<typename FuncT>
 class AffineTransformation : public FunctionProducer<FuncT::N>
@@ -55,7 +56,7 @@ auto make_affine_transfomation(FuncT&& func, vect<decay_t<FuncT>::N> delta,
 }
 
 template<typename FuncT>
-auto prepare_for_polar(FuncT&& func, vect<decay_t<FuncT>::N> const& v)
+auto prepareForPolar(FuncT&& func, vect<decay_t<FuncT>::N> const& v)
 {
     auto A = linearization(func.hess(v));
     return make_affine_transfomation(func, v, A);

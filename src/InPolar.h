@@ -56,7 +56,7 @@ public:
         assert(false);
     }
 
-    vect<N + 1> transform(vect<N> const &phi)
+    vect<N + 1> transform(vect<N> const &phi) const
     {
         vect<N + 1> x;
         double sinProduct = 1;
@@ -69,13 +69,18 @@ public:
         return x;
     }
 
+    FuncT const& getInnerFunction() const
+    {
+        return mFunc;
+    }
+
 public:
     FuncT mFunc;
     double mR;
 };
 
 template<typename FuncT>
-InPolar<FuncT> make_polar(FuncT const& func, double r)
+InPolar<FuncT> makePolar(FuncT const& func, double r)
 {
     return InPolar<FuncT>(func, r);
 }
