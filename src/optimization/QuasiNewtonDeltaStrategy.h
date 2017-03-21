@@ -35,8 +35,6 @@ namespace optimization {
         QuasiNewtonDeltaStrategy(double speed=1.) : mSpeed(speed)
         {
             mB.setIdentity();
-            mH.setIdentity();
-
             out.precision(15);
         }
 
@@ -59,7 +57,7 @@ namespace optimization {
             if (iter)
                 updater.template update<N>(mB, mLastDelta, grad - mLastGrad);
 
-            int const N = 10;
+            int const N = -1;
 
             if (iter == N + 1) {
                 cout << "B before hessian gradient descent:" << endl << mB << endl << endl;
@@ -67,7 +65,7 @@ namespace optimization {
                 cout << A.transpose() * mB * A << endl << endl << endl;
             }
 
-            if (iter > N)
+            if ((int) iter > N)
                 mLastDelta = -mSpeed * makeGood(mB.inverse()) * grad, cerr << "\t!";
             else
                 mLastDelta = -0.025  * mSpeed * grad, cerr << "\t";
@@ -79,10 +77,15 @@ namespace optimization {
             return mLastDelta;
         }
 
+        void initializeHessian(matrix<N, N> hess)
+        {
+            mB = move(hess);
+        }
+
     private:
         double mSpeed;
         matrix<N, N> mB;
-        matrix<N, N> mH;
+//        matrix<N, N> mH;
         vect<N> mLastDelta;
         vect<N> mLastGrad;
         UpdaterT updater;

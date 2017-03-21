@@ -185,7 +185,7 @@ auto optimize(T& func, vect<T::N> const& x)
 };
 
 
-int main()
+void fullShs()
 {
     auto start_point = make_vect(1.04218, 0.31040, 1.00456);
 
@@ -236,6 +236,7 @@ int main()
 
             auto deltaStrategy = QuasiNewtonDeltaStrategy<polar2.N, BFGS>(0.5);
             auto stopStrategy = StopStrategy(0.0001, 0.001);
+//            deltaStrategy.initializeHessian(polar2.hess(lastPoint));
             auto nextPoint = makeGradientDescent(deltaStrategy, stopStrategy)(polar2, lastPoint).back();
 
             double curValue = polar2(nextPoint);
@@ -292,9 +293,47 @@ int main()
             ++i;
         }
 
-
         break;
     }
+}
 
+void firstRadiusPolarPicture()
+{
+    auto start_point = make_vect(1.04218, 0.31040, 1.00456);
 
+    vector<size_t> weights = {8, 1, 1};
+    auto atomicFunc = GaussianProducer<9>(weights);
+    auto func = fix_atom_symmetry(atomicFunc);
+
+    auto localMinima = optimize(func, start_point).back();
+
+    cout << boost::format("local minima:\n%1%\ngradient: %2%\nhessian:\n%3%\n\n") %
+            to_chemcraft_coords(weights, func.transform(localMinima)) % func.grad(localMinima).transpose() %
+            func.hess(localMinima);
+
+    auto linearHess = prepareForPolar(func, localMinima);
+    auto zero = makeConstantVect<linearHess.N>(0.);
+    cout << linearHess.grad(zero).transpose() << endl << endl << linearHess.hess(zero) << endl;
+
+    out = ofstream("a.out");
+
+    double firstR = 0.3;
+    auto polar = makePolar(linearHess, firstR);
+
+    for (size_t iter = 0; iter < 10; iter++) {
+        auto startingPoint = make_random_vect<polar.N>();
+
+        auto deltaStrategy = QuasiNewtonDeltaStrategy<polar.N, BFGS>();
+        auto stopStrategy = StopStrategy(0.000001, 0.00001);
+        auto polarMinima = makeGradientDescent(deltaStrategy, stopStrategy)(polar, startingPoint).back();
+
+        cout << boost::format("polar minima:\n\t%1%\n") % polarMinima.transpose();
+        out << endl;
+    }
+}
+
+int main()
+{
+    firstRadiusPolarPicture();
+    return 0;
 }
