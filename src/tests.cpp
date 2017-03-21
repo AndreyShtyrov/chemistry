@@ -68,13 +68,15 @@ TEST(FunctionProducer, InNewBasis)
     testProducer(AffineTransformation<ModelFunction>(ModelFunction(), b, A), lowerBound, upperBound, 1000);
 }
 
-TEST(FunctionProducer, PolarCoordinates)
+TEST(FunctionProducer, InPolar)
 {
-    auto lowerBound = make_vect(0.);
-    auto upperBound = make_vect(2 * M_PI);
+    using FunctionType = ModelMultidimensionalFunction;
+
+    auto lowerBound = makeConstantVect<FunctionType::N - 1>(0.);
+    auto upperBound = makeConstantVect<FunctionType::N - 1>(2 * M_PI);
 
     for (int ri = 0; ri < 10; ri++)
-        testGradient(makePolar(ModelFunction(), (ri + 1) * 0.2), lowerBound, upperBound, 1000);
+        testGradient(makePolar(FunctionType(), (ri + 1) * 0.2), lowerBound, upperBound, 1000);
 }
 
 TEST(FunctionProducer, Desturbed)
@@ -141,5 +143,5 @@ TEST(FunctionProducer, Stack) {
     auto lowerBound = make_vect(0., -M_PI / 2);
     auto upperBound = make_vect(2 * M_PI, M_PI / 2);
 
-    testGradient(polar, lowerBound, upperBound, 10, 1e-4, 1e-3);
+    testGradient(polar, lowerBound, upperBound, 100, 1e-4, 1e-3);
 }

@@ -15,3 +15,4 @@
 #include "ModelFunction.h"
 #include "ModelFunction3.h"
 #include "GaussianProducer.h"
+#include "ModelMultidimensionalFunction.h"
