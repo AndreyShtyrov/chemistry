@@ -62,7 +62,7 @@ inline vector<double> linspace(double from, double to, size_t iters) {
 }
 
 template<int N, int M>
-matrix<N, M> make_random_matrix()
+matrix<N, M> makeRandomMatrix()
 {
     matrix<N, N> matr;
     matr.setRandom();
@@ -70,7 +70,7 @@ matrix<N, M> make_random_matrix()
 };
 
 template<int N>
-vect<N> make_random_vect()
+vect<N> makeRandomVect()
 {
     vect<N> v;
     v.setRandom();
@@ -94,6 +94,15 @@ vect<N> eye(size_t i)
 
     return result;
 };
+
+
+template<int N, int M>
+matrix<N, M> makeConstantMatrix(double constant)
+{
+    matrix<N, M> m;
+    m.setConstant(constant);
+    return m;
+}
 
 template<int N>
 matrix<N, N> identity()

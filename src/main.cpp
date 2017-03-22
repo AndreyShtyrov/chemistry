@@ -122,7 +122,7 @@ string draw3dPlot(FuncT&& func, vect<2> from, vect<2> to, size_t iters)
 template<int N>
 vect<N> getRandomPoint(vect<N> const& lowerBound, vect<N> const& upperBound)
 {
-    auto p = make_random_vect<N>();
+    auto p = makeRandomVect<N>();
     return lowerBound.array() + p.array() * (upperBound.array() - lowerBound.array());
 }
 
@@ -156,7 +156,7 @@ void standardOptimizationTest()
 
     vector<size_t> weights = {8, 1, 1};
     auto atomicFunc = GaussianProducer<9>(weights);
-    auto func = fix_atom_symmetry(atomicFunc);
+    auto func = fixAtomSymmetry(atomicFunc);
 
     auto axis = framework.newPlot();
     vector<double> path, vals;
@@ -191,7 +191,7 @@ void fullShs()
 
     vector<size_t> weights = {8, 1, 1};
     auto atomicFunc = GaussianProducer<9>(weights);
-    auto func = fix_atom_symmetry(atomicFunc);
+    auto func = fixAtomSymmetry(atomicFunc);
 
     auto local_minima = optimize(func, start_point).back();
 
@@ -303,7 +303,7 @@ void firstRadiusPolarPicture()
 
     vector<size_t> weights = {8, 1, 1};
     auto atomicFunc = GaussianProducer<9>(weights);
-    auto func = fix_atom_symmetry(atomicFunc);
+    auto func = fixAtomSymmetry(atomicFunc);
 
     auto localMinima = optimize(func, start_point).back();
 
@@ -321,7 +321,7 @@ void firstRadiusPolarPicture()
     auto polar = makePolar(linearHess, firstR);
 
     for (size_t iter = 0; iter < 10; iter++) {
-        auto startingPoint = make_random_vect<polar.N>();
+        auto startingPoint = makeRandomVect<polar.N>();
 
         auto deltaStrategy = QuasiNewtonDeltaStrategy<polar.N, BFGS>();
         auto stopStrategy = StopStrategy(0.000001, 0.00001);

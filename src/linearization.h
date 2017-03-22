@@ -14,7 +14,6 @@ template<int N>
 matrix<N, N> linearization(matrix<N, N> m)
 {
     Eigen::JacobiSVD<matrix<N, N>> d(m, Eigen::ComputeFullU | Eigen::ComputeFullV);
-
     cerr << "singular values: " << d.singularValues().transpose() << endl;
     return d.matrixU() * isqrt(matrix<N, N>(d.singularValues().asDiagonal()));
 }

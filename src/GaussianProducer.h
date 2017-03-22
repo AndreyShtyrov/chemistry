@@ -29,6 +29,9 @@ string const GAUSSIAN_HESS_HEADER = "%nproc=3\n"
    "\n"
    "0 1";
 
+class GaussianException : public exception
+{ };
+
 template<typename T>
 class Cache
 {
@@ -139,7 +142,7 @@ public:
     void createInputFile(vect<N> const& x, bool withGrad, bool withHess)
     {
         ofstream f("tmp.inp");
-        f.precision(7);
+        f.precision(30);
         if (withHess)
             f << GAUSSIAN_HESS_HEADER << endl;
         else if (withGrad)
@@ -159,8 +162,7 @@ public:
     void runGaussian()
     {
         if (system("mg09D tmp.inp tmp.out > /dev/null") || system("formchk chk.chk > /dev/null")) {
-            cerr << "Error" << endl;
-            exit(-1);
+            throw GaussianException();
         }
     }
 

@@ -49,8 +49,8 @@ private:
 };
 
 template<typename FuncT>
-auto make_affine_transfomation(FuncT&& func, vect<decay_t<FuncT>::N> delta,
-                               matrix<decay_t<FuncT>::N, decay_t<FuncT>::N> const& A)
+auto makeAffineTransfomation(FuncT&& func, vect<decay_t<FuncT>::N> delta,
+                             matrix<decay_t<FuncT>::N, decay_t<FuncT>::N> const& A)
 {
     return AffineTransformation<decay_t<FuncT>>(forward<FuncT>(func), move(delta), A);
 }
@@ -59,5 +59,5 @@ template<typename FuncT>
 auto prepareForPolar(FuncT&& func, vect<decay_t<FuncT>::N> const& v)
 {
     auto A = linearization(func.hess(v));
-    return make_affine_transfomation(func, v, A);
+    return makeAffineTransfomation(func, v, A);
 }

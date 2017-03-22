@@ -71,7 +71,6 @@ public:
     }
 
 private:
-
     FuncT mFunc;
     array<size_t, N_FIXED> mPoss;
     array<double, N_FIXED> mVals;
@@ -84,8 +83,9 @@ auto fix(FuncT&& func, array<size_t, N_FIXED> const& poss, array<double, N_FIXED
 };
 
 template<typename FuncT>
-auto fix_atom_symmetry(FuncT&& func)
+auto fixAtomSymmetry(FuncT&& func)
 {
+//    return fix<7>(forward<FuncT>(func), {0, 1, 2, 3, 4, 5, 8}, {0., 0., 0., 1., 0., 0., 0.});
     return fix<6>(forward<FuncT>(func), {0, 1, 2, 4, 5, 8}, {0., 0., 0., 0., 0., 0.});
 };
 

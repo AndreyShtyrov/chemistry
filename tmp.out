@@ -1,7 +1,7 @@
  Entering Gaussian System, Link 0=/home/george/soft/gauss/g09/g09
  Initial command:
- /home/george/soft/gauss/g09/l1.exe "/home/george/soft/gauss/scr/Gau-26129.inp" -scrdir="/home/george/soft/gauss/scr/"
- Entering Link 1 = /home/george/soft/gauss/g09/l1.exe PID=     26131.
+ /home/george/soft/gauss/g09/l1.exe "/home/george/soft/gauss/scr/Gau-30227.inp" -scrdir="/home/george/soft/gauss/scr/"
+ Entering Link 1 = /home/george/soft/gauss/g09/l1.exe PID=     30229.
   
  Copyright (c) 1988,1990,1992,1993,1995,1998,2003,2009,2013,
             Gaussian, Inc.  All Rights Reserved.
@@ -74,7 +74,7 @@
  
  ******************************************
  Gaussian 09:  AM64L-G09RevD.01 24-Apr-2013
-                21-Mar-2017 
+                22-Mar-2017 
  ******************************************
  %nproc=3
  Will use up to    3 processors via shared memory.
