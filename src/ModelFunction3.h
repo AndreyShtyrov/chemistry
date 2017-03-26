@@ -20,7 +20,7 @@ public:
 
     virtual vect<N> grad(vect<N> const& x)
     {
-        return make_vect(x(0) - mT * 0.5 * sqr(x(0)), x(1));
+        return makeVect(x(0) - mT * 0.5 * sqr(x(0)), x(1));
     }
 
     virtual matrix<N, N> hess(vect<N> const& x)

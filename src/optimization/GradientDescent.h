@@ -28,8 +28,6 @@ namespace optimization
                 auto grad = func.grad(p0);
                 auto val = func(p0);
 
-                cerr << "current value " << val << endl;
-
                 auto delta = mDeltaStrategy(iter, p0, val, grad);
                 if (mStopStrategy(iter, p0, grad, delta))
                     break;

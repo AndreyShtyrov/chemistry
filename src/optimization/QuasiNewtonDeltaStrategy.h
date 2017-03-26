@@ -32,22 +32,23 @@ namespace optimization {
     public:
         static constexpr int N = N_DIMS;
 
-        QuasiNewtonDeltaStrategy(double speed=1.) : mSpeed(speed)
+        QuasiNewtonDeltaStrategy()
         {
             mB.setIdentity();
-            out.precision(15);
         }
 
-        void print(Eigen::MatrixXd const &matr) {
-            cout << matr.rows() << ' ' << matr.cols() << endl;
-        };
+        QuasiNewtonDeltaStrategy(matrix<N, N> hess) : mB(move(hess))
+        {
+            out.precision(15);
+        }
 
         matrix<N, N> makeGood(matrix<N, N> const& m)
         {
             matrix<N, N> A = linearization(m);
             matrix<N, N> L = A.transpose() * m * A;
             for (size_t i = 0; i < N; i++)
-                L(i, i) = abs(L(i, i));
+//                L(i, i) = max(abs(L(i, i)), .5);
+                L(i, i) = max(abs(L(i, i)), .1);
             auto Ai = A.inverse();
 
             return Ai.transpose() * L * Ai;
@@ -57,21 +58,17 @@ namespace optimization {
             if (iter)
                 updater.template update<N>(mB, mLastDelta, grad - mLastGrad);
 
-            int const N = -1;
+//            int const N = 3;
 
-            if (iter == N + 1) {
-                cout << "B before hessian gradient descent:" << endl << mB << endl << endl;
-                auto A = linearization(mB);
-                cout << A.transpose() * mB * A << endl << endl << endl;
-            }
-
-            if ((int) iter > N)
-                mLastDelta = -mSpeed * makeGood(mB.inverse()) * grad, cerr << "\t!";
-            else
-                mLastDelta = -0.025  * mSpeed * grad, cerr << "\t";
+//            if ((int) iter > N)
+//            linearization(mB);
+            mLastDelta = -makeGood(mB).inverse() * grad;
+//            mLastDelta = -mSpeed * mB.inverse() * grad;
+//            mLastDelta = -mSpeed * mB * grad;
+//            else
+//                mLastDelta = -mSpeed * grad;
             mLastGrad = grad;
 
-            cerr << mLastDelta.norm() << ' ' << grad.norm() << endl;
             out << p(0) << ' ' << p(1) << endl;
 
             return mLastDelta;
@@ -83,7 +80,6 @@ namespace optimization {
         }
 
     private:
-        double mSpeed;
         matrix<N, N> mB;
 //        matrix<N, N> mH;
         vect<N> mLastDelta;

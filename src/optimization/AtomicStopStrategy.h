@@ -84,9 +84,6 @@ namespace optimization
 
         bool operator()(size_t iter, vect<N> const& p, vect<N> const& grad, vect<N> const& delta)
         {
-            if (iter > 150)
-                return true;
-
             auto x0 = ExtractorType::applyTransformation(p, mFunc);
             auto x1 = ExtractorType::applyTransformation(p + delta, mFunc);
 
@@ -115,6 +112,6 @@ namespace optimization
     template<typename FuncT>
     auto makeStandardAtomicStopStrategy(FuncT const& func)
     {
-        return makeAtomicStopStrategy(0.00045, 0.0003, 0.018, 0.012, func);
+        return makeAtomicStopStrategy(0.000045, 0.00003, 0.0018, 0.0012, func);
     }
 }

@@ -37,7 +37,7 @@ void assign(vect<N>& v, ArgT&& arg, ArgsT&&... args)
 }
 
 template<typename... Args>
-vect<sizeof...(Args)> make_vect(Args&&... args)
+vect<sizeof...(Args)> makeVect(Args&& ... args)
 {
     vect<sizeof...(Args)> v;
     assign<sizeof...(Args), 0>(v, forward<Args>(args)...);
@@ -77,6 +77,12 @@ vect<N> makeRandomVect()
     return v;
 };
 
+template <int N>
+vect<N> makeRandomVect(vect<N> const& lowerBound, vect<N> const& upperBound)
+{
+    return lowerBound + (0.5 * (1 + makeRandomVect<N>().array()) * (upperBound - lowerBound).array()).matrix();
+}
+
 template<int N>
 vect<N> makeConstantVect(double constant)
 {
@@ -111,6 +117,7 @@ matrix<N, N> identity()
     result.setIdentity();
     return result;
 };
+
 
 //template<typename T, typename... Ts>
 //struct first_type

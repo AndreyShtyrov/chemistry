@@ -166,3 +166,25 @@ InPolar<FuncT> makePolar(FuncT const& func, double r)
 {
     return InPolar<FuncT>(func, r);
 }
+
+template<int N>
+vect<N> polarVectLowerBound()
+{
+    return makeConstantVect<N>(0.);
+}
+
+template<int N>
+vect<N> polarVectUpperBound()
+{
+    vect<N> upperBound;
+    upperBound.template block<N - 1, 1>(0, 0).setConstant(2 * M_PI);
+    upperBound.template block<1, 1>(N - 1, 0).setConstant(M_PI);
+
+    return upperBound;
+}
+
+template<>
+vect<1> polarVectUpperBound<1>()
+{
+    return makeConstantVect<1>(2 * M_PI);
+}

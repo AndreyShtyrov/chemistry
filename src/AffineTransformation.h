@@ -58,6 +58,6 @@ auto makeAffineTransfomation(FuncT&& func, vect<decay_t<FuncT>::N> delta,
 template<typename FuncT>
 auto prepareForPolar(FuncT&& func, vect<decay_t<FuncT>::N> const& v)
 {
-    auto A = linearization(func.hess(v));
+    auto A = linearizationNormalization(func.hess(v));
     return makeAffineTransfomation(func, v, A);
 }

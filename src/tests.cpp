@@ -22,7 +22,9 @@ void testGradient(FuncT func, vect<N> const& lowerBound, vect<N> const& upperBou
         for (size_t j = 0; j < N; j++) {
             vect<N> e = delta * eye<N>(j);
             double predicted = 0.5 * (func(p + e) - func(p - e)) / delta;
-            ASSERT_LE(abs(grad(j) - predicted), eps);
+            ASSERT_LE(abs(grad(j) - predicted), eps)
+                              << boost::format("value %1% != %2% (%3% error)") % grad(j) % predicted %
+                                 abs(grad(j) - predicted);
         }
     }
 };
@@ -39,14 +41,16 @@ testHessian(FuncT func, vect<N> lowerBound, vect<N> upperBound, size_t iters, do
                 vect<N> e1 = delta * eye<N>(x1), e2 = delta * eye<N>(x2);
                 double predicted =
                    0.25 * (func(p + e1 + e2) - func(p - e1 + e2) - func(p + e1 - e2) + func(p - e1 - e2)) / sqr(delta);
-                ASSERT_LE(abs(hess(x1, x2) - predicted), eps);
+                ASSERT_LE(abs(hess(x1, x2) - predicted), eps)
+                                  << boost::format("value %1% != %2% (%3% error)") % hess(x1, x2) % predicted %
+                                     abs(hess(x1, x2) - predicted);
             }
     }
 };
 
 template<typename FuncT, int N = FuncT::N>
 void
-testProducer(FuncT func, vect<N> lowerBound, vect<N> upperBound, size_t iters, double delta = 1e-3, double eps = 1e-5)
+testProducer(FuncT func, vect<N> lowerBound, vect<N> upperBound, size_t iters, double delta = 1e-4, double eps = 1e-5)
 {
     testGradient(func, lowerBound, upperBound, iters, delta, eps);
     testHessian(func, lowerBound, upperBound, iters, delta, eps);
@@ -55,8 +59,8 @@ testProducer(FuncT func, vect<N> lowerBound, vect<N> upperBound, size_t iters, d
 
 TEST(FunctionProducer, ModelFunction)
 {
-    auto lowerBound = make_vect(-1., -1.);
-    auto upperBound = make_vect(1., 1.);
+    auto lowerBound = makeVect(-1., -1.);
+    auto upperBound = makeVect(1., 1.);
 
     testProducer(ModelFunction(), lowerBound, upperBound, 1000);
 }
@@ -91,39 +95,37 @@ TEST(FunctionProducer, InPolar)
     auto lowerBound = makeConstantVect<FunctionType::N - 1>(0.);
     auto upperBound = makeConstantVect<FunctionType::N - 1>(2 * M_PI);
 
-    for (double r = 2; r < 10; r += 1)
-        testGradient(makePolar(FunctionType(), r), lowerBound, upperBound, 100);
-//    testHessian(makePolar(FunctionType(), 2), lowerBound, upperBound, 100);
+    testProducer(makePolar(FunctionType(), 1.313), lowerBound, upperBound, 100);
 }
 
 TEST(FunctionProducer, Desturbed)
 {
-    auto lowerBound = make_vect(0., 0.);
-    auto upperBound = make_vect(2 * M_PI, 2 * M_PI);
+    auto lowerBound = makeVect(0., 0.);
+    auto upperBound = makeVect(2 * M_PI, 2 * M_PI);
 
     testProducer(Desturbed<ModelFunction>(ModelFunction()), lowerBound, upperBound, 1000);
 }
 
 TEST(FunctionProducer, ModelFunction3)
 {
-    auto lowerBound = make_vect(-1., -1.);
-    auto upperBound = make_vect(2., 2.);
+    auto lowerBound = makeVect(-1., -1.);
+    auto upperBound = makeVect(2., 2.);
 
     testProducer(ModelFunction3(), lowerBound, upperBound, 1000);
 }
 
 TEST(FunctionProducer, Sum)
 {
-    auto lowerBound = make_vect(-2., -2.);
-    auto upperBound = make_vect(2., 2.);
+    auto lowerBound = makeVect(-2., -2.);
+    auto upperBound = makeVect(2., 2.);
 
     testProducer(ModelFunction() + ModelFunction3(), lowerBound, upperBound, 1000);
 }
 
 TEST(FunctionProducer, LagrangeMultiplier)
 {
-    auto lowerBound = make_vect(-2., -2., -2.);
-    auto upperBound = make_vect(2., 2., 2.);
+    auto lowerBound = makeVect(-2., -2., -2.);
+    auto upperBound = makeVect(2., 2., 2.);
 
     testProducer(make_lagrange(ModelFunction(), SqrNorm<2>() + Constant<2>(-1.)), lowerBound, upperBound, 1000);
 }
@@ -132,8 +134,8 @@ TEST(FunctionProducer, GaussianProducer)
 {
     vect<9> ones;
     ones.setConstant(1);
-    vect<9> lowerBound = -1 * ones;
-    vect<9> upperBound = 1 * ones;
+    auto lowerBound = makeConstantVect<9>(-1.);
+    auto upperBound = makeConstantVect<9>(1.);
 
     testProducer(GaussianProducer<9>({8, 1, 1}), lowerBound, upperBound, 1, 1e-4, 1e-3);
 }
@@ -142,15 +144,15 @@ TEST(FunctionProducer, FixValues)
 {
     vect<3> ones;
     ones.setConstant(1);
-    vect<3> lowerBound = -1 * ones;
-    vect<3> upperBound = 1 * ones;
+    auto lowerBound = makeConstantVect<3>(.9);
+    auto upperBound = makeConstantVect<3>(1);
 
-    testProducer(fixAtomSymmetry(GaussianProducer<9>({8, 1, 1})), lowerBound, upperBound, 1, 1e-4, 1e-3);
+    testProducer(fixAtomSymmetry(GaussianProducer<9>({8, 1, 1})), lowerBound, upperBound, 5, 1e-4, 1e-3);
 }
 
 TEST(FunctionProducer, Stack)
 {
-    auto startPoint = make_vect(1.04218, 0.31040, 1.00456);
+    auto startPoint = makeVect(1.04218, 0.31040, 1.00456);
 
     vector<size_t> weights = {8, 1, 1};
     auto atomicFunc = GaussianProducer<9>(weights);
@@ -161,7 +163,7 @@ TEST(FunctionProducer, Stack)
     auto lowerBound = makeConstantVect<polar.N>(0);
     auto upperBound = makeConstantVect<polar.N>(2 * M_PI);
 
-    testProducer(polar, lowerBound, upperBound, 10, 1e-3, 1e-3);
+    testProducer(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
 }
 
 TEST(FunctionProducer, ModelMultidimensionalFunction)
