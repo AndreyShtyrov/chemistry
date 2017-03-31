@@ -140,6 +140,16 @@ TEST(FunctionProducer, GaussianProducer)
     testProducer(GaussianProducer<9>({8, 1, 1}), lowerBound, upperBound, 1, 1e-4, 1e-3);
 }
 
+TEST(FunctionProducer, GaussianProducer_2)
+{
+    vector<size_t> weights = {6, 6, 1, 1, 1, 1};
+    auto startPoint = makeVect(0.664007917, 1.726194372, -1.239100083, -1.022740312, -0.120487628, -1.239100083,
+                               -1.022740312, 1.726194372, 1.236957917, -1.022740312, -0.120487628, 1.236957917);
+
+    testProducer(fixAtomSymmetry(GaussianProducer<18>(weights)), startPoint, startPoint, 1, 1e-4, 1e-3);
+}
+
+
 TEST(FunctionProducer, FixValues)
 {
     vect<3> ones;
@@ -176,3 +186,5 @@ TEST(FunctionProducer, ModelMultidimensionalFunction)
 
     testProducer(type(), lowerBound, upperBound, 1000);
 }
+
+

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "helper.h"
 
 #include "FunctionProducer.h"
 
@@ -85,7 +86,12 @@ auto fix(FuncT&& func, array<size_t, N_FIXED> const& poss, array<double, N_FIXED
 template<typename FuncT>
 auto fixAtomSymmetry(FuncT&& func)
 {
-//    return fix<7>(forward<FuncT>(func), {0, 1, 2, 3, 4, 5, 8}, {0., 0., 0., 1., 0., 0., 0.});
     return fix<6>(forward<FuncT>(func), {0, 1, 2, 4, 5, 8}, {0., 0., 0., 0., 0., 0.});
+};
+
+template<typename FuncT, int N>
+auto fixAtomSymmetry(FuncT&& func, vect<N> const& pos)
+{
+    return fix<6>(forward<FuncT>(func), {0, 1, 2, 4, 5, 8}, {pos(0), pos(1), pos(2), pos(4), pos(5), pos(8)});
 };
 

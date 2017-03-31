@@ -48,7 +48,7 @@ namespace optimization {
             matrix<N, N> L = A.transpose() * m * A;
             for (size_t i = 0; i < N; i++)
 //                L(i, i) = max(abs(L(i, i)), .5);
-                L(i, i) = max(abs(L(i, i)), .1);
+                L(i, i) = max(abs(L(i, i)), .01);
             auto Ai = A.inverse();
 
             return Ai.transpose() * L * Ai;

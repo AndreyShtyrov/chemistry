@@ -118,6 +118,14 @@ matrix<N, N> identity()
     return result;
 };
 
+template<int N, typename T>
+vect<N> readVect(T&& stream)
+{
+    vect<N> v;
+    for (size_t i = 0; i < N; i++)
+        stream >> v(i);
+    return v;
+}
 
 //template<typename T, typename... Ts>
 //struct first_type

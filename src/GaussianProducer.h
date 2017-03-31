@@ -130,7 +130,7 @@ public:
         return mHess.get();
     }
 
-public:
+private:
     vector<size_t> mCharges;
 
     template<typename T>
