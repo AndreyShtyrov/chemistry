@@ -6,32 +6,30 @@
 #include "linearization.h"
 
 template<typename FuncT>
-class AffineTransformation : public FunctionProducer<FuncT::N>
+class AffineTransformation : public FunctionProducer
 {
 public:
-    using FunctionProducer<FuncT::N>::N;
-
-    AffineTransformation(FuncT func, vect<N> delta, matrix<N, N> const& basis) : mFunc(move(func)), mDelta(move(delta)),
+    AffineTransformation(FuncT func, vect delta, matrix const& basis) : FunctionProducer(func.nDims), mFunc(move(func)), mDelta(move(delta)),
                                                                                  mBasis(basis),
                                                                                  mBasisT(basis.transpose())
     {}
 
-    virtual double operator()(vect<N> const& x) override
+    virtual double operator()(vect const& x) override
     {
         return mFunc(transform(x));
     }
 
-    virtual vect<N> grad(vect<N> const& x) override
+    virtual vect grad(vect const& x) override
     {
         return mBasisT * mFunc.grad(transform(x));
     }
 
-    virtual matrix<N, N> hess(vect<N> const& x) override
+    virtual matrix hess(vect const& x) override
     {
         return mBasisT * mFunc.hess(transform(x)) * mBasis;
     }
 
-    vect<N> transform(vect<N> const& x) const
+    vect transform(vect const& x) const
     {
         return mBasis * x + mDelta;
     }
@@ -43,20 +41,21 @@ public:
 
 private:
     FuncT mFunc;
-    vect<N> mDelta;
-    matrix<N, N> mBasis;
-    matrix<N, N> mBasisT;
+
+    size_t mN;
+    vect mDelta;
+    matrix mBasis;
+    matrix mBasisT;
 };
 
 template<typename FuncT>
-auto makeAffineTransfomation(FuncT&& func, vect<decay_t<FuncT>::N> delta,
-                             matrix<decay_t<FuncT>::N, decay_t<FuncT>::N> const& A)
+auto makeAffineTransfomation(FuncT&& func, vect delta, matrix const& A)
 {
     return AffineTransformation<decay_t<FuncT>>(forward<FuncT>(func), move(delta), A);
 }
 
 template<typename FuncT>
-auto prepareForPolar(FuncT&& func, vect<decay_t<FuncT>::N> const& v)
+auto prepareForPolar(FuncT&& func, vect const& v)
 {
     auto A = linearizationNormalization(func.hess(v));
     return makeAffineTransfomation(func, v, A);

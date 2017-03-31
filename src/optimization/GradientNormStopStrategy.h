@@ -13,7 +13,7 @@ namespace optimization
         GradientLengthStopStrategy(double eps) : mEps(eps)
         {}
 
-        bool operator()(size_t iter, vect<N> const& p, vect<N> const& grad, vect<N> const& delta)
+        bool operator()(size_t iter, vect const& p, vect const& grad, vect const& delta)
         {
             return grad.norm() < mEps;
         }

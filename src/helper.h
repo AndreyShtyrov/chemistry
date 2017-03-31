@@ -13,11 +13,9 @@
 
 using namespace std;
 
-template<int Rows, int Cols>
-using matrix = Eigen::Matrix<double, Rows, Cols>;
+using matrix = Eigen::MatrixXd;
 
-template<size_t Rows>
-using vect = Eigen::Matrix<double, Rows, 1>;
+using vect = Eigen::VectorXd;
 
 template<typename T>
 T sqr(T const& a)
@@ -25,22 +23,22 @@ T sqr(T const& a)
     return a * a;
 }
 
-template<int N, int>
-void assign(vect<N>& v)
+template<int>
+void assign(vect& v)
 { }
 
-template<int N, int P, typename ArgT, typename... ArgsT>
-void assign(vect<N>& v, ArgT&& arg, ArgsT&&... args)
+template<int P, typename ArgT, typename... ArgsT>
+void assign(vect& v, ArgT&& arg, ArgsT&&... args)
 {
     v(P) = forward<ArgT>(arg);
-    assign<N, P + 1>(v, forward<ArgsT>(args)...);
+    assign<P + 1>(v, forward<ArgsT>(args)...);
 }
 
 template<typename... Args>
-vect<sizeof...(Args)> makeVect(Args&& ... args)
+vect makeVect(Args&& ... args)
 {
-    vect<sizeof...(Args)> v;
-    assign<sizeof...(Args), 0>(v, forward<Args>(args)...);
+    vect v(sizeof...(Args));
+    assign<0>(v, forward<Args>(args)...);
     return v;
 }
 
@@ -61,91 +59,60 @@ inline vector<double> linspace(double from, double to, size_t iters) {
     return result;
 }
 
-template<int N, int M>
-matrix<N, M> makeRandomMatrix()
+inline matrix makeRandomMatrix(int rows, int cols)
 {
-    matrix<N, N> matr;
+    matrix matr(rows, cols);
     matr.setRandom();
     return matr;
 };
 
-template<int N>
-vect<N> makeRandomVect()
+inline vect makeRandomVect(int n)
 {
-    vect<N> v;
+    vect v(n);
     v.setRandom();
     return v;
 };
 
-template <int N>
-vect<N> makeRandomVect(vect<N> const& lowerBound, vect<N> const& upperBound)
+inline vect makeRandomVect(vect const& lowerBound, vect const& upperBound)
 {
-    return lowerBound + (0.5 * (1 + makeRandomVect<N>().array()) * (upperBound - lowerBound).array()).matrix();
+    return lowerBound + (0.5 * (1 + makeRandomVect(lowerBound.rows()).array()) * (upperBound - lowerBound).array()).matrix();
 }
 
-template<int N>
-vect<N> makeConstantVect(double constant)
+inline vect makeConstantVect(int n, double constant)
 {
-    vect<N> v;
+    vect v(n);
     v.setConstant(constant);
     return v;
 }
 
-template<int N>
-vect<N> eye(size_t i)
+inline vect eye(int n, size_t i)
 {
-    vect<N> result;
+    vect result(n);
     result.setZero();
     result(i) = 1.;
 
     return result;
 };
 
-
-template<int N, int M>
-matrix<N, M> makeConstantMatrix(double constant)
+inline matrix makeConstantMatrix(int rows, int cols, double constant)
 {
-    matrix<N, M> m;
+    matrix m(rows, cols);
     m.setConstant(constant);
     return m;
 }
 
-template<int N>
-matrix<N, N> identity()
+inline matrix identity(int rows, int cols)
 {
-    matrix<N, N> result;
+    matrix result(rows, cols);
     result.setIdentity();
     return result;
 };
 
-template<int N, typename T>
-vect<N> readVect(T&& stream)
+template<typename T>
+vect readVect(int rows, T&& stream)
 {
-    vect<N> v;
-    for (size_t i = 0; i < N; i++)
+    vect v(rows);
+    for (size_t i = 0; i < rows; i++)
         stream >> v(i);
     return v;
 }
-
-//template<typename T, typename... Ts>
-//struct first_type
-//{
-//    using type = T;
-//};
-//template<typename... Ts> using first_type_t = typename first_type<Ts...>::type;
-//
-//template<typename T, typename... Ts>
-//struct last_type
-//{
-//    using type = typename last_type<Ts...>::type;
-//};
-//
-//template<typename T>
-//struct last_type<T>
-//{
-//    using type = T;
-//};
-//
-//template<typename... Ts>
-//using last_type_t = typename last_type<Ts...>::type;
-

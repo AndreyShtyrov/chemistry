@@ -5,27 +5,25 @@
 #include "FunctionProducer.h"
 
 template<typename FuncT>
-class Desturbed : public FunctionProducer<FuncT::N>
+class Desturbed : public FunctionProducer
 {
 public:
-    using FunctionProducer<FuncT::N>::N;
-
-    Desturbed(FuncT const& func) : mFunc(func)
+    Desturbed(FuncT func) : FunctionProducer(func.nDims), mFunc(move(func))
     { }
 
-    virtual double operator()(vect<N> const& x)
+    virtual double operator()(vect const& x)
     {
         return mFunc(transformCoordinates(x));
     }
 
-    virtual vect<N> grad(vect<N> const& x)
+    virtual vect grad(vect const& x)
     {
         auto grad = mFunc.grad(transformCoordinates(x));
         grad(0) += grad(1) * cos(x(0));
         return grad;
     }
 
-    virtual matrix<N, N> hess(vect<N> const& x)
+    virtual matrix hess(vect const& x)
     {
         auto p = transformCoordinates(x);
         auto grad = mFunc.grad(p);
@@ -33,7 +31,7 @@ public:
         auto c = cos(x(0));
 
         hess(0, 0) = hess(0, 0) + 2 * c * hess(0, 1) + sqr(c) * hess(1, 1) - grad(1) * sin(x(0));
-        for (size_t i = 1; i < (size_t) N; i++)
+        for (size_t i = 1; i < nDims; i++)
             hess(0, i) = hess(i, 0) = hess(0, i) + c * hess(1, i);
 
         return hess;
@@ -42,7 +40,7 @@ public:
 private:
     FuncT mFunc;
 
-    vect<N> transformCoordinates(vect<N> x)
+    vect transformCoordinates(vect x)
     {
         x(1) += sin(x(0));
         return x;

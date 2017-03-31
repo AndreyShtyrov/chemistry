@@ -17,7 +17,7 @@ namespace optimization
             mMeanDelta.setZero();
         }
 
-        vector<vect<N>> operator()(FunctionProducer<N>& func, vect<N> p0)
+        vector<vect<N>> operator()(FunctionProducer<N>& func, vect p0)
         {
             history.clear();
 

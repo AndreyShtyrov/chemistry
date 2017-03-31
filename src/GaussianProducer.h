@@ -73,20 +73,17 @@ private:
     T mValue;
 };
 
-template<int N_DIMS>
-class GaussianProducer : public FunctionProducer<N_DIMS>
+class GaussianProducer : public FunctionProducer
 {
 public:
     static constexpr double MAGIC_CONSTANT = 1.88972585931612435672;
 
-    using FunctionProducer<N_DIMS>::N;
+//    using FunctionProducer<N_DIMS>::N;
 
-    GaussianProducer(vector<size_t> charges) : mCharges(move(charges))
-    {
-        assert(mCharges.size() * 3 == N);
-    }
+    GaussianProducer(vector<size_t> charges) : FunctionProducer(charges.size() * 3), mLastPos(nDims), mCharges(move(charges))
+    { }
 
-    virtual double operator()(vect<N> const& x)
+    virtual double operator()(vect const& x)
     {
         if (testCache(mValue, x))
             return mValue.get();
@@ -94,7 +91,7 @@ public:
         return mValue.get();
     }
 
-    virtual vect<N> grad(vect<N> const& x)
+    virtual vect grad(vect const& x)
     {
         if (testCache(mGrad, x))
             return mGrad.get();
@@ -102,7 +99,7 @@ public:
         return mGrad.get();
     }
 
-    virtual matrix<N, N> hess(vect<N> const& x)
+    virtual matrix hess(vect const& x)
     {
         if (testCache(mHess, x))
             return mHess.get();
@@ -110,7 +107,7 @@ public:
         return mHess.get();
     };
 
-    vect<N> const& getLastPos() const
+    vect const& getLastPos() const
     {
         return mLastPos;
     }
@@ -120,26 +117,31 @@ public:
         return mValue.get();
     }
 
-    vect<N> const& getLastGrad() const
+    vect const& getLastGrad() const
     {
         return mGrad.get();
     }
 
-    matrix<N, N> const& getLastHess() const
+    matrix const& getLastHess() const
     {
         return mHess.get();
     }
 
 private:
+    vect mLastPos;
+    Cache<double> mValue;
+    Cache<vect> mGrad;
+    Cache<matrix> mHess;
     vector<size_t> mCharges;
 
     template<typename T>
-    bool testCache(Cache<T> const& cache, vect<N> const& x)
+    bool testCache(Cache<T> const& cache, vect const& x)
     {
+        cerr << endl << endl << mLastPos.rows() << ' ' << mLastPos.cols() << ' ' << x.rows() << ' ' << x.cols() << endl;
         return mLastPos == x && !cache.empty();
     }
 
-    void createInputFile(vect<N> const& x, bool withGrad, bool withHess)
+    void createInputFile(vect const& x, bool withGrad, bool withHess)
     {
         ofstream f("tmp.inp");
         f.precision(30);
@@ -183,8 +185,9 @@ private:
             while (!boost::starts_with(s, "Cartesian Gradient"))
                 getline(f, s);
 
-            vect<N>& grad = mGrad.get();
-            for (size_t i = 0; i < N; i++) {
+            vect& grad = mGrad.get();
+            grad = vect(nDims);
+            for (size_t i = 0; i < nDims; i++) {
                 f >> grad(i);
                 grad(i) *= MAGIC_CONSTANT;
             }
@@ -195,8 +198,9 @@ private:
             while (!boost::starts_with(s, "Cartesian Force Constants"))
                 getline(f, s);
 
-            matrix<N, N>& hess = mHess.get();
-            for (size_t i = 0; i < N; i++)
+            matrix& hess = mHess.get();
+            hess = matrix(nDims, nDims);
+            for (size_t i = 0; i < nDims; i++)
                 for (size_t j = 0; j <= i; j++) {
                     f >> hess(i, j);
                     hess(i, j) *= MAGIC_CONSTANT * MAGIC_CONSTANT;
@@ -206,7 +210,7 @@ private:
         }
     }
 
-    void processNewPos(vect<N> const& x, bool withGrad, bool withHess)
+    void processNewPos(vect const& x, bool withGrad, bool withHess)
     {
         mValue.clear();
         mGrad.clear();
@@ -217,9 +221,4 @@ private:
         runGaussian();
         parseOutput(withGrad, withHess);
     }
-
-    vect<N> mLastPos;
-    Cache<double> mValue;
-    Cache<vect<N>> mGrad;
-    Cache<matrix<N, N>> mHess;
 };

@@ -11,7 +11,7 @@ namespace optimization
         { }
 
         template<int N>
-        bool operator()(size_t iter, vect<N> const &p, vect<N> const &grad, vect<N> const &delta) {
+        bool operator()(size_t iter, vect const &p, vect const &grad, vect const &delta) {
             return /*iter == 1 || */(grad.norm() < mGradThreshold && delta.norm() < mDeltaThreshold);
         }
 

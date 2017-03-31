@@ -4,24 +4,26 @@
 
 #include "FunctionProducer.h"
 
-template<int N_DIMS>
-class SqrNorm : public FunctionProducer<N_DIMS>
+class SqrNorm : public FunctionProducer
 {
 public:
-    using FunctionProducer<N_DIMS>::N;
+//    using FunctionProducer<N_DIMS>::N;
 
-    virtual double operator()(vect<N> const& x) override
+    SqrNorm(size_t nDims) : FunctionProducer(nDims)
+    { }
+
+    virtual double operator()(vect const& x) override
     {
         return x.transpose() * x;
     }
 
-    virtual vect<N> grad(vect<N> const& x) override
+    virtual vect grad(vect const& x) override
     {
         return 2 * x;
     }
 
-    virtual matrix<N, N> hess(vect<N> const& x) override
+    virtual matrix hess(vect const& x) override
     {
-        return 2. * matrix<N, N>::Identity();
+        return 2. * matrix::Identity(x.rows(), x.rows());
     }
 };

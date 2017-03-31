@@ -11,13 +11,13 @@ namespace optimization
         NesterovGradientDescent(double speed=0.5, double momentum=.9) : mS(speed), mM(momentum)
         { }
 
-        vector<vect<N>> operator()(FunctionProducer<N>& func, vect<N> p0)
+        vector<vect<N>> operator()(FunctionProducer<N>& func, vect p0)
         {
             history.clear();
 
             vector<vect<N>> path;
 
-            vect<N> g;
+            vect g;
             g.setZero();
 
             for (int i = 0; ; i++) {

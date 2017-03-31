@@ -18,7 +18,7 @@ namespace optimization
         {}
 
         template<typename FuncT>
-        vector<vect<N>> operator()(FuncT& func, vect<N> p0)
+        vector<vect<N>> operator()(FuncT& func, vect p0)
         {
             vector<vect<N>> path;
 

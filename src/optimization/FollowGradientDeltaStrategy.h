@@ -13,7 +13,7 @@ namespace optimization
         FollowGradientDeltaStrategy(double speed = 1.) : mSpeed(speed)
         {}
 
-        vect<N> operator()(size_t iter, vect<N> const& p, double value, vect<N> const& grad)
+        vect operator()(size_t iter, vect const& p, double value, vect const& grad)
         {
             return -mSpeed * grad;
         }

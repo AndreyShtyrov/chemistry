@@ -14,14 +14,14 @@ namespace optimization
         vector<vect<N>> grads;
         vector<matrix<N, N>> hess;
 
-        void nextPoint(vect<N> const &pos)
+        void nextPoint(vect const &pos)
         {
             poss.push_back(pos);
 
             cerr << pos.transpose() << ":" << endl;
         }
 
-        void nextPoint(vect<N> const &pos, double val)
+        void nextPoint(vect const &pos, double val)
         {
             nextPoint(pos);
             vals.push_back(val);
@@ -29,7 +29,7 @@ namespace optimization
             cerr << "\t" << val << endl;
         }
 
-        void nextPoint(vect<N> const &pos, double val, vect<N> const &grad)
+        void nextPoint(vect const &pos, double val, vect const &grad)
         {
             nextPoint(pos, val);
             grads.push_back(grad);
@@ -37,7 +37,7 @@ namespace optimization
             cerr << "\t" << grad.norm() << endl;
         }
 
-        void nextPoint(vect<N> const &pos, double val, vect<N> const &grad, matrix<N, N> const &hess)
+        void nextPoint(vect const &pos, double val, vect const &grad, matrix const &hess)
         {
             nextPoint(pos, val, grad);
             hess.push_back(hess);

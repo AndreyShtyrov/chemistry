@@ -4,30 +4,29 @@
 
 #include "FunctionProducer.h"
 
-template<int N_DIMS>
-class Constant : public FunctionProducer<N_DIMS>
+class Constant : public FunctionProducer
 {
 public:
-    using FunctionProducer<N_DIMS>::N;
+//    using FunctionProducer<N_DIMS>::N;
 
-    Constant(double value) : mValue(value)
+    Constant(int nDims, double value) : FunctionProducer(nDims), mValue(value)
     { }
 
-    virtual double operator()(vect<N> const& x)
+    virtual double operator()(vect const& x)
     {
         return mValue;
     }
 
-    virtual vect<N> grad(vect<N> const& x)
+    virtual vect grad(vect const& x)
     {
-        vect<N> grad;
+        vect grad(x.rows());
         grad.setZero();
         return grad;
     }
 
-    virtual matrix<N, N> hess(vect<N> const& x)
+    virtual matrix hess(vect const& x)
     {
-        matrix<N, N> hess;
+        matrix hess(x.rows(), x.rows());
         hess.setZero();
         return hess;
     };

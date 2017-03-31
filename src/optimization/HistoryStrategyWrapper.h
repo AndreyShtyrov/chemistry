@@ -13,14 +13,14 @@ namespace optimization
         HistoryStrategyWrapper(DeltaStrategyT deltaStrategy) : mDeltaStrategy(move(deltaStrategy))
         {}
 
-        vect<N> operator()(size_t iter, vect<N> const& p, double value, vect<N> const& grad)
+        vect operator()(size_t iter, vect const& p, double value, vect const& grad)
         {
             cerr << p.transpose() << endl;
             mValues.push_back(value);
             return mDeltaStrategy(iter, p, value, grad);
         }
 
-        vect<N> operator()(size_t iter, vect<N> const& p, double value, vect<N> const& grad, matrix<N, N> const& hess)
+        vect operator()(size_t iter, vect const& p, double value, vect const& grad, matrix const& hess)
         {
             cerr << value << endl;
             mValues.push_back(value);

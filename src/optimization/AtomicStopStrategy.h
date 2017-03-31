@@ -82,7 +82,7 @@ namespace optimization
             return sqrt(sum / atomCnt) < rmsMax;
         }
 
-        bool operator()(size_t iter, vect<N> const& p, vect<N> const& grad, vect<N> const& delta)
+        bool operator()(size_t iter, vect const& p, vect const& grad, vect const& delta)
         {
             auto x0 = ExtractorType::applyTransformation(p, mFunc);
             auto x1 = ExtractorType::applyTransformation(p + delta, mFunc);

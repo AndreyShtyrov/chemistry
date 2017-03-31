@@ -15,7 +15,7 @@ namespace optimization
         GradientLengthStopCriteria(double threshold) : mThreshold(threshold)
         { }
 
-        bool operator()(vect<N> const& pos, vect<N> const& delta)
+        bool operator()(vect const& pos, vect const& delta)
         {
             mDeltas.push_back(delta);
             return delta.norm() < mThreshold;

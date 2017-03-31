@@ -5,41 +5,39 @@
 #include "FunctionProducer.h"
 
 template<typename FuncT, typename ConstraintT>
-class LagrangeMultiplier : public FunctionProducer<FuncT::N + 1>
+class LagrangeMultiplier : public FunctionProducer
 {
 public:
-    using FunctionProducer<FuncT::N + 1>::N;
-
     template<typename FuncArgT, typename ConstraintArgT>
     LagrangeMultiplier(FuncArgT&& func, ConstraintArgT&& constraint)
-            : mFunc(forward<FuncArgT>(func))
+            : FunctionProducer(func.nDims + 1), mFunc(forward<FuncArgT>(func))
             , mConstraint(forward<ConstraintArgT>(constraint))
     { };
 
-    virtual double operator()(vect<N> const& x)
+    virtual double operator()(vect const& x)
     {
-        vect<N - 1> p = x.head(N - 1);
-        return mFunc(p) + x(N - 1) * mConstraint(p);
+        vect p = x.head(nDims - 1);
+        return mFunc(p) + x(nDims - 1) * mConstraint(p);
     }
 
-    virtual vect<N> grad(vect<N> const& x)
+    virtual vect grad(vect const& x)
     {
-        vect<N - 1> p = x.head(N - 1);
-        vect<N - 1> grad = mFunc.grad(p) + x(N - 1) * mConstraint.grad(p);
+        vect p = x.head(nDims - 1);
+        vect grad = mFunc.grad(p) + x(nDims - 1) * mConstraint.grad(p);
         auto lgrad = mConstraint(p);
 
-        vect<N> result;
+        vect result(nDims);
         result << grad, lgrad;
         return result;
     }
 
-    virtual matrix<N, N> hess(vect<N> const& x)
+    virtual matrix hess(vect const& x)
     {
-        vect<N - 1> p = x.head(N - 1);
+        vect p = x.head(nDims - 1);
 
-        matrix<N, N> result;
-        matrix<N - 1, N - 1> hess = mFunc.hess(p) + x(N - 1) * mConstraint.hess(p);
-        vect<N - 1> grad = mConstraint.grad(p);
+        Eigen::Matrix3d result(nDims, nDims);
+        matrix hess = mFunc.hess(p) + x(nDims - 1) * mConstraint.hess(p);
+        vect grad = mConstraint.grad(p);
 
         result << hess, grad, grad.transpose(), 0;
         return result;

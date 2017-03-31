@@ -10,7 +10,7 @@ namespace optimization
     public:
         static constexpr int N = N_DIMS;
 
-        vect<N> operator()(size_t iter, vect<N> const& p, double value, vect<N> const& grad, matrix<N, N> const& hess)
+        vect operator()(size_t iter, vect const& p, double value, vect const& grad, matrix const& hess)
         {
             return -hess.inverse() * grad;
         }

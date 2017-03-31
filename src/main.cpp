@@ -115,13 +115,13 @@ string draw3dPlot(FuncT &&func, vect<2> from, vect<2> to, size_t iters) {
 }
 
 template<int N>
-vect<N> getRandomPoint(vect<N> const &lowerBound, vect<N> const &upperBound) {
+vect getRandomPoint(vect const &lowerBound, vect const &upperBound) {
     auto p = makeRandomVect<N>();
     return lowerBound.array() + p.array() * (upperBound.array() - lowerBound.array());
 }
 
 template<int N>
-string to_chemcraft_coords(vector<size_t> const &sizes, vect<N> p, double globalDx = 0) {
+string to_chemcraft_coords(vector<size_t> const &sizes, vect p, double globalDx = 0) {
     assert(N == sizes.size() * 3);
 
     stringstream result;
@@ -135,7 +135,7 @@ string to_chemcraft_coords(vector<size_t> const &sizes, vect<N> p, double global
 
 template<template<typename, typename> typename OptimizerT, typename DeltaStrategyT, typename StopStrategyT, typename FuncT, int N>
 tuple<vector<double>, vector<double>>
-testOptimizer(DeltaStrategyT &&deltaStrategy, StopStrategyT &&stopStrategy, FuncT &func, vect<N> const &p) {
+testOptimizer(DeltaStrategyT &&deltaStrategy, StopStrategyT &&stopStrategy, FuncT &func, vect const &p) {
     auto optimizer = OptimizerT<HistoryStrategyWrapper<decay_t<DeltaStrategyT>>, decay_t<StopStrategyT>>(
             make_history_strategy(forward<DeltaStrategyT>(deltaStrategy)), forward<StopStrategyT>(stopStrategy));
     auto path = optimizer(func, p);

@@ -13,7 +13,7 @@ namespace optimization
         HessianGradientDescent(double speed=1.) : mSpeed(speed)
         { }
 
-        vector<vect<N>> operator()(FunctionProducer<N>& func, vect<N> p0)
+        vector<vect<N>> operator()(FunctionProducer<N>& func, vect p0)
         {
             history.clear();
 

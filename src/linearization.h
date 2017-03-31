@@ -2,27 +2,23 @@
 
 #include "helper.h"
 
-template<int N>
-matrix<N, N> isqrt(matrix<N, N> m)
+matrix isqrt(matrix m)
 {
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < m.rows(); i++)
         m(i, i) = 1. / sqrt(abs(m(i, i)));
     return m;
 };
 
-template<int N>
-matrix<N, N> linearization(matrix<N, N> m)
+matrix linearization(matrix m)
 {
-    Eigen::JacobiSVD<matrix<N, N>> d(m, Eigen::ComputeFullU | Eigen::ComputeFullV);
+    Eigen::JacobiSVD<matrix> d(m, Eigen::ComputeFullU | Eigen::ComputeFullV);
     cout << "\t\t\tsingular values: " << d.singularValues().transpose() << endl;
     return d.matrixU();
 }
 
-template<int N>
-matrix<N, N> linearizationNormalization(matrix<N, N> m)
+matrix linearizationNormalization(matrix m)
 {
-    cout << N << endl;
-    Eigen::JacobiSVD<matrix<N, N>> d(m, Eigen::ComputeFullU | Eigen::ComputeFullV);
+    Eigen::JacobiSVD<matrix> d(m, Eigen::ComputeFullU | Eigen::ComputeFullV);
     cout << "\t\t\tsingular values: " << d.singularValues().transpose() << endl;
-    return d.matrixU() * isqrt(matrix<N, N>(d.singularValues().asDiagonal()));
+    return d.matrixU() * isqrt(matrix(d.singularValues().asDiagonal()));
 };

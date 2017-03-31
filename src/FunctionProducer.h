@@ -2,15 +2,17 @@
 
 #include "helper.h"
 
-template<int N_DIMS>
 class FunctionProducer
 {
 public:
-    static constexpr int N = N_DIMS;
+    FunctionProducer(size_t nDims) : nDims(nDims)
+    { }
 
     virtual ~FunctionProducer() = default;
 
-    virtual double       operator()(vect<N> const& x) = 0;
-    virtual vect<N>      grad(vect<N> const& x) = 0;
-    virtual matrix<N, N> hess(vect<N> const& x) = 0;
+    virtual double       operator()(vect const& x) = 0;
+    virtual vect      grad(vect const& x) = 0;
+    virtual matrix hess(vect const& x) = 0;
+
+    const size_t nDims;
 };
