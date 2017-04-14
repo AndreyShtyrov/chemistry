@@ -180,14 +180,14 @@ auto optimize(T &func, vect<T::N> const &x) {
 
 
 void fullShs() {
-//    auto start_point = makeVect(1.04218, 0.31040, 1.00456);
+    auto start_point = makeVect(1.04218, 0.31040, 1.00456);
 
     vector<size_t> weights = {8, 1, 1};
-    auto atomicFunc = GaussianProducer<9>(weights);
+    auto atomicFunc = GaussianProducer(weights);
     auto func = fixAtomSymmetry(atomicFunc);
 
-//    auto localMinima = optimize(func, start_point).back();
-    auto localMinima = makeVect(0.996622544216218, -0.240032763088067, 0.967285186815903);
+    auto localMinima = optimize(func, start_point).back();
+//    auto localMinima = makeVect(0.996622544216218, -0.240032763088067, 0.967285186815903);
 
     cout << boost::format("local minima:\n%1%\ngradient: %2%\nhessian:\n%3%\n\n") %
             to_chemcraft_coords(weights, func.transform(localMinima)) % func.grad(localMinima).transpose() %
@@ -366,131 +366,131 @@ void firstRadiusPolarPicture() {
     }
 }
 
-void c2h4() {
-    vector<size_t> weights = {6, 6, 1, 1, 1, 1};
-//    auto startPoint = makeVect(0.664007917, 1.726194372, -1.239100083, -1.022740312, -0.120487628, -1.239100083,
-//                               -1.022740312, 1.726194372, 1.236957917, -1.022740312, -0.120487628, 1.236957917);
-    auto startPoint = readVect<18>(ifstream("./data/cur.in"));
-    startPoint /= (double) GaussianProducer<18>::MAGIC_CONSTANT;
-
-    auto atomicFunc = GaussianProducer<18>(weights);
-    auto func = fixAtomSymmetry(atomicFunc, startPoint);
-
-//    auto localMinima = optimize(func, startPoint).back();
-//    auto localMinima = makeVect(0.996622544216218, -0.240032763088067, 0.967285186815903);
-    vect<func.N> localMinima;
-//    Eigen::MatrixXf localMinima;
-//    cout << startPoint << endl;
-    localMinima << startPoint(5), startPoint.template block<func.N - 1, 1>(7, 0);
-//    cout << localMinima;
-
-    cout << boost::format("local minima:\n%1%\ngradient: %2%\nhessian:\n%3%\n\n") %
-            to_chemcraft_coords(weights, func.transform(localMinima)) % func.grad(localMinima).transpose() %
-            func.hess(localMinima);
-
-    auto linear_hessian = prepareForPolar(func, localMinima);
-
-    out = ofstream("a.out");
-
-    double firstR = 0.3;
-    double deltaR = 0.1;
-    auto polar = makePolar(linear_hessian, firstR);
-
-    for (size_t iter = 0; iter < 10; iter++) {
-//        auto initialPoint = makeVect(5.4, 1.0);
-        auto initialPoint = makeRandomVect<polar.N>(polarVectLowerBound<polar.N>(), polarVectUpperBound<polar.N>());
-        auto deltaStrategy = QuasiNewtonDeltaStrategy<polar.N, BFGS>(polar.hess(initialPoint));
-        auto stopStrategy = StopStrategy(0.0001, 0.001);
-        auto polarMinima = makeGradientDescent(deltaStrategy, stopStrategy)(polar, initialPoint).back();
-
-        cout << boost::format("First polar minima: %1%\n") % polarMinima.transpose();
-        out << endl;
-
-        vector<vect<linear_hessian.N>> path;
-        path.push_back(polar.transform(polarMinima));
-
-        double lastValue = polar(polarMinima);
-        vect<polar.N> lastPoint = polarMinima;
-
-        vector<double> polarValues;
-        vector<vect<polar.N>> polarPath;
-        polarPath.push_back(lastPoint);
-
-        ofstream(str(boost::format("./data/%1%/%2%.xyz") % iter % 0))
-                << to_chemcraft_coords(weights, func.transform(localMinima)) << endl;
-
-        for (size_t i = 1; i < 20; ++i) {
-            cout << boost::format("iteration %1%:") % i << endl;
-            ofstream(str(boost::format("./data/%1%/%2%.xyz") % iter % i))
-                    << to_chemcraft_coords(weights, func.transform(linear_hessian.transform(path.back()))) << endl;
-
-            auto polar2 = makePolar(linear_hessian, firstR + deltaR * i);
-
-            auto deltaStrategy = QuasiNewtonDeltaStrategy<polar2.N, BFGS>();
-            deltaStrategy.initializeHessian(polar2.hess(lastPoint));
-            auto stopStrategy = StopStrategy(0.0001, 0.001);
-            auto nextPoint = makeGradientDescent(deltaStrategy, stopStrategy)(polar2, lastPoint).back();
-
-            double curValue = polar2(nextPoint);
-
-            path.push_back(polar2.transform(nextPoint));
-            polarPath.push_back(nextPoint);
-            polarValues.push_back(curValue);
-
-            {
-                vector<double> xs, ys;
-                for (auto polarPoint : polarPath)
-                    xs.push_back(polarPoint(0)), ys.push_back(polarPoint(1));
-                framework.scatter(framework.newPlot(), xs, ys);
-            }
-            framework.plot(framework.newPlot(), arange(polarValues.size()), polarValues);
-
-            cout << "\tnew value: " << curValue << endl;
-            auto hess = linear_hessian.hess(path.back());
-            auto A = linearization(hess);
-            cout << A.transpose() * hess * A << endl << endl;
-
-            if (curValue < lastValue) {
-//                break;
-            }
-
-            lastValue = curValue;
-            lastPoint = nextPoint;
-        }
-
-        {
-            vector<double> xs, ys;
-            for (auto polarPoint : polarPath)
-                xs.push_back(polarPoint(0)), ys.push_back(polarPoint(1));
-            framework.scatter(framework.newPlot(), xs, ys);
-        }
-
-        auto pathToMin = optimize(linear_hessian, path.back());
-        path.insert(path.end(), pathToMin.begin(), pathToMin.end());
-
-        vector<double> vals;
-        for (auto point : path) {
-            vals.push_back(linear_hessian(point));
-        }
-        framework.plot(framework.newPlot(), arange(vals.size()), vals);
-
-
-        cerr << endl << endl << endl;
-        for (auto point : path) {
-            static int i = 0;
-            cout << to_chemcraft_coords(weights, func.transform(linear_hessian.transform(point)), 10 * i) << endl;
-            ++i;
-        }
-
-        break;
-    }
-}
+//void c2h4() {
+//    vector<size_t> weights = {6, 6, 1, 1, 1, 1};
+////    auto startPoint = makeVect(0.664007917, 1.726194372, -1.239100083, -1.022740312, -0.120487628, -1.239100083,
+////                               -1.022740312, 1.726194372, 1.236957917, -1.022740312, -0.120487628, 1.236957917);
+//    auto startPoint = readVect<18>(ifstream("./data/cur.in"));
+//    startPoint /= (double) GaussianProducer<18>::MAGIC_CONSTANT;
+//
+//    auto atomicFunc = GaussianProducer<18>(weights);
+//    auto func = fixAtomSymmetry(atomicFunc, startPoint);
+//
+////    auto localMinima = optimize(func, startPoint).back();
+////    auto localMinima = makeVect(0.996622544216218, -0.240032763088067, 0.967285186815903);
+//    vect<func.N> localMinima;
+////    Eigen::MatrixXf localMinima;
+////    cout << startPoint << endl;
+//    localMinima << startPoint(5), startPoint.template block<func.N - 1, 1>(7, 0);
+////    cout << localMinima;
+//
+//    cout << boost::format("local minima:\n%1%\ngradient: %2%\nhessian:\n%3%\n\n") %
+//            to_chemcraft_coords(weights, func.transform(localMinima)) % func.grad(localMinima).transpose() %
+//            func.hess(localMinima);
+//
+//    auto linear_hessian = prepareForPolar(func, localMinima);
+//
+//    out = ofstream("a.out");
+//
+//    double firstR = 0.3;
+//    double deltaR = 0.1;
+//    auto polar = makePolar(linear_hessian, firstR);
+//
+//    for (size_t iter = 0; iter < 10; iter++) {
+////        auto initialPoint = makeVect(5.4, 1.0);
+//        auto initialPoint = makeRandomVect<polar.N>(polarVectLowerBound<polar.N>(), polarVectUpperBound<polar.N>());
+//        auto deltaStrategy = QuasiNewtonDeltaStrategy<polar.N, BFGS>(polar.hess(initialPoint));
+//        auto stopStrategy = StopStrategy(0.0001, 0.001);
+//        auto polarMinima = makeGradientDescent(deltaStrategy, stopStrategy)(polar, initialPoint).back();
+//
+//        cout << boost::format("First polar minima: %1%\n") % polarMinima.transpose();
+//        out << endl;
+//
+//        vector<vect<linear_hessian.N>> path;
+//        path.push_back(polar.transform(polarMinima));
+//
+//        double lastValue = polar(polarMinima);
+//        vect<polar.N> lastPoint = polarMinima;
+//
+//        vector<double> polarValues;
+//        vector<vect<polar.N>> polarPath;
+//        polarPath.push_back(lastPoint);
+//
+//        ofstream(str(boost::format("./data/%1%/%2%.xyz") % iter % 0))
+//                << to_chemcraft_coords(weights, func.transform(localMinima)) << endl;
+//
+//        for (size_t i = 1; i < 20; ++i) {
+//            cout << boost::format("iteration %1%:") % i << endl;
+//            ofstream(str(boost::format("./data/%1%/%2%.xyz") % iter % i))
+//                    << to_chemcraft_coords(weights, func.transform(linear_hessian.transform(path.back()))) << endl;
+//
+//            auto polar2 = makePolar(linear_hessian, firstR + deltaR * i);
+//
+//            auto deltaStrategy = QuasiNewtonDeltaStrategy<polar2.N, BFGS>();
+//            deltaStrategy.initializeHessian(polar2.hess(lastPoint));
+//            auto stopStrategy = StopStrategy(0.0001, 0.001);
+//            auto nextPoint = makeGradientDescent(deltaStrategy, stopStrategy)(polar2, lastPoint).back();
+//
+//            double curValue = polar2(nextPoint);
+//
+//            path.push_back(polar2.transform(nextPoint));
+//            polarPath.push_back(nextPoint);
+//            polarValues.push_back(curValue);
+//
+//            {
+//                vector<double> xs, ys;
+//                for (auto polarPoint : polarPath)
+//                    xs.push_back(polarPoint(0)), ys.push_back(polarPoint(1));
+//                framework.scatter(framework.newPlot(), xs, ys);
+//            }
+//            framework.plot(framework.newPlot(), arange(polarValues.size()), polarValues);
+//
+//            cout << "\tnew value: " << curValue << endl;
+//            auto hess = linear_hessian.hess(path.back());
+//            auto A = linearization(hess);
+//            cout << A.transpose() * hess * A << endl << endl;
+//
+//            if (curValue < lastValue) {
+////                break;
+//            }
+//
+//            lastValue = curValue;
+//            lastPoint = nextPoint;
+//        }
+//
+//        {
+//            vector<double> xs, ys;
+//            for (auto polarPoint : polarPath)
+//                xs.push_back(polarPoint(0)), ys.push_back(polarPoint(1));
+//            framework.scatter(framework.newPlot(), xs, ys);
+//        }
+//
+//        auto pathToMin = optimize(linear_hessian, path.back());
+//        path.insert(path.end(), pathToMin.begin(), pathToMin.end());
+//
+//        vector<double> vals;
+//        for (auto point : path) {
+//            vals.push_back(linear_hessian(point));
+//        }
+//        framework.plot(framework.newPlot(), arange(vals.size()), vals);
+//
+//
+//        cerr << endl << endl << endl;
+//        for (auto point : path) {
+//            static int i = 0;
+//            cout << to_chemcraft_coords(weights, func.transform(linear_hessian.transform(point)), 10 * i) << endl;
+//            ++i;
+//        }
+//
+//        break;
+//    }
+//}
 
 
 int main() {
 //    buildPolarPicture();
 //    firstRadiusPolarPicture();
-//    fullShs();
+    fullShs();
     c2h4();
 
 
