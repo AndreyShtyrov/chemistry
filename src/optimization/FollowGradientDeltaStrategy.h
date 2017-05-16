@@ -4,12 +4,9 @@
 
 namespace optimization
 {
-    template<int N_DIMS>
     class FollowGradientDeltaStrategy
     {
     public:
-        static constexpr int N = N_DIMS;
-
         FollowGradientDeltaStrategy(double speed = 1.) : mSpeed(speed)
         {}
 

@@ -78,8 +78,6 @@ class GaussianProducer : public FunctionProducer
 public:
     static constexpr double MAGIC_CONSTANT = 1.88972585931612435672;
 
-//    using FunctionProducer<N_DIMS>::N;
-
     GaussianProducer(vector<size_t> charges) : FunctionProducer(charges.size() * 3), mLastPos(nDims), mCharges(move(charges))
     { }
 
@@ -127,6 +125,11 @@ public:
         return mHess.get();
     }
 
+    vector<size_t> const& getCharges() const
+    {
+        return mCharges;
+    }
+
 private:
     vect mLastPos;
     Cache<double> mValue;
@@ -137,7 +140,6 @@ private:
     template<typename T>
     bool testCache(Cache<T> const& cache, vect const& x)
     {
-        cerr << endl << endl << mLastPos.rows() << ' ' << mLastPos.cols() << ' ' << x.rows() << ' ' << x.cols() << endl;
         return mLastPos == x && !cache.empty();
     }
 
@@ -222,3 +224,16 @@ private:
         parseOutput(withGrad, withHess);
     }
 };
+
+GaussianProducer readMolecule(istream& input)
+{
+    size_t cnt;
+    input >> cnt;
+
+    vector<size_t> charges(cnt);
+    for (size_t i = 0; i < cnt; i++) {
+        input >> charges[i];
+    }
+
+    return GaussianProducer(charges);
+}

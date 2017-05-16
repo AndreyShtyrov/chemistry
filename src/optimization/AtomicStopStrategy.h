@@ -19,24 +19,24 @@ namespace optimization
             return NextStactExtractor::extractAtomicFunc(t.getInnerFunction());
         }
 
-        static vect<AtomicType::N> applyTransformation(vect<T::N> const& x, T const& t)
+        static vect applyTransformation(vect const& x, T const& t)
         {
             return NextStactExtractor::applyTransformation(t.transform(x), t.getInnerFunction());
         }
     };
 
-    template<int N, typename... StackTs>
-    struct StackExtractor<GaussianProducer<N>, StackTs...>
+    template<typename... StackTs>
+    struct StackExtractor<GaussianProducer, StackTs...>
     {
         using TupleType = tuple<StackTs const& ...>;
-        using AtomicType = GaussianProducer<N>;
+        using AtomicType = GaussianProducer;
 
         static AtomicType const& extractAtomicFunc(AtomicType const& t)
         {
             return t;
         }
 
-        static vect<AtomicType::N> applyTransformation(vect<AtomicType::N> const& x, AtomicType const& t)
+        static vect applyTransformation(vect const& x, AtomicType const& t)
         {
             return x;
         }
@@ -59,7 +59,7 @@ namespace optimization
                                                 mAtomicFunc(ExtractorType::extractAtomicFunc(func))
         {}
 
-        bool check(vect<AtomicType::N> const& v, double singleMax, double rmsMax)
+        bool check(vect const& v, double singleMax, double rmsMax, const char* header)
         {
             double sum = 0;
             size_t atomCnt = (size_t) v.rows() / 3;
@@ -69,7 +69,7 @@ namespace optimization
             for (size_t i = 0; i < atomCnt; i++) {
                 double singleValue = v.template block<3, 1>(i * 3, 0).norm();
                 if (singleValue >= singleMax) {
-                    cerr << boost::format("too large single value: %1% > %2%") % singleValue % singleMax << endl;
+                    LOG_INFO("too large {} single value: {} > {}", header, singleValue, singleMax);
                     return false;
                 }
 
@@ -77,7 +77,7 @@ namespace optimization
             }
 
             if (sqrt(sum / atomCnt) >= rmsMax)
-                cerr << boost::format("too large rms value: %1% > %2%") % sqrt(sum / atomCnt) % rmsMax << endl;
+                LOG_INFO("too large {} rms value: {} > {}", header, sqrt(sum / atomCnt), rmsMax);
 
             return sqrt(sum / atomCnt) < rmsMax;
         }
@@ -89,8 +89,8 @@ namespace optimization
 
             assert((x0 - mAtomicFunc.getLastPos()).norm() < 1e-7);
 
-            return check(x1 - x0, mMaxAtomDelta, mRmsAtomDelta) &&
-                   check(mAtomicFunc.getLastGrad(), mMaxForce, mRmsForce);
+            return check(x1 - x0, mMaxAtomDelta, mRmsAtomDelta, "delta") &&
+                   check(mAtomicFunc.getLastGrad(), mMaxForce, mRmsForce, "grad");
         }
 
     private:

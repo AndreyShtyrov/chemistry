@@ -1,0 +1,14 @@
+[21:22:47] [/home/george/au/chemistry/src/main.cpp:499] nDims = 9
+[21:22:48] [/home/george/au/chemistry/src/main.cpp:500] gradient:   9.4936e-17  1.42665e-14    0.0556968  6.10179e-16    -0.045794   -0.0278484 -7.05115e-16     0.045794   -0.0278484
+[21:22:49] [/home/george/au/chemistry/src/main.cpp:501] gradient: 6.80903e-16 -6.3949e-16    0.045794
+[21:22:50] [/home/george/au/chemistry/src/optimization/AtomicStopStrategy.h:72] too large delta single value: 0.0340609 > 0.0018
+[21:22:51] [/home/george/au/chemistry/src/optimization/AtomicStopStrategy.h:72] too large delta single value: 0.0660131 > 0.0018
+[21:22:52] [/home/george/au/chemistry/src/optimization/AtomicStopStrategy.h:72] too large delta single value: 0.121507 > 0.0018
+[21:22:53] [/home/george/au/chemistry/src/optimization/AtomicStopStrategy.h:72] too large delta single value: 0.215842 > 0.0018
+[21:22:54] [/home/george/au/chemistry/src/optimization/AtomicStopStrategy.h:72] too large delta single value: 0.417135 > 0.0018
+[21:22:54] [/home/george/au/chemistry/src/optimization/AtomicStopStrategy.h:72] too large delta single value: 0.107864 > 0.0018
+[21:22:55] [/home/george/au/chemistry/src/optimization/AtomicStopStrategy.h:72] too large delta single value: 0.169284 > 0.0018
+[21:22:56] [/home/george/au/chemistry/src/optimization/AtomicStopStrategy.h:72] too large delta single value: 0.367026 > 0.0018
+[21:22:57] [/home/george/au/chemistry/src/optimization/AtomicStopStrategy.h:72] too large delta single value: 0.00230082 > 0.0018
+[21:22:57] [/home/george/au/chemistry/src/optimization/AtomicStopStrategy.h:72] too large delta single value: 0.198776 > 0.0018
+[21:22:59] [/home/george/au/chemistry/src/optimization/AtomicStopStrategy.h:72] too large delta single value: 0.131043 > 0.0018

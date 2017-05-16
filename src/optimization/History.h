@@ -1,18 +1,16 @@
 #pragma once
 
 #include "helper.h"
+#include "linearization.h"
 
 namespace optimization
 {
-    template<int N_DIMS>
     struct History
     {
-        static constexpr int N = N_DIMS;
-
         vector<double> vals;
-        vector<vect<N>> poss;
-        vector<vect<N>> grads;
-        vector<matrix<N, N>> hess;
+        vector<vect> poss;
+        vector<vect> grads;
+        vector<matrix> hesss;
 
         void nextPoint(vect const &pos)
         {
@@ -40,7 +38,7 @@ namespace optimization
         void nextPoint(vect const &pos, double val, vect const &grad, matrix const &hess)
         {
             nextPoint(pos, val, grad);
-            hess.push_back(hess);
+            hesss.push_back(hess);
 
             auto A = linearization(hess);
             cerr.precision(5);
@@ -52,7 +50,7 @@ namespace optimization
             poss.clear();
             vals.clear();
             grads.clear();
-            hess.clear();
+            hesss.clear();
         }
 
         size_t size() const

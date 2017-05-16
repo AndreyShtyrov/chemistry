@@ -5,13 +5,26 @@
 #include <cstdio>
 #include <cassert>
 #include <vector>
+#include <memory>
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
-#include <boost/format.hpp>
 #include <boost/type_index.hpp>
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
+
+#define SPDLOG_STR_H(x) #x
+#define SPDLOG_STR_HELPER(x) SPDLOG_STR_H(x)
+
+#define LOG_INFO(...) logger->info("[" __FILE__ ":" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
+#define LOG_WARN(...) logger->warn("[" __FILE__ ":" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
+#define LOG_ERROR(...) logger->error("[" __FILE__ ":" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
+#define LOG_CRITICAL(...) logger->critical("[" __FILE__ ":" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
 
 using namespace std;
+
+extern shared_ptr<spdlog::logger> logger;
+void initializeLogger();
 
 using matrix = Eigen::MatrixXd;
 
@@ -109,7 +122,7 @@ inline matrix identity(int rows, int cols)
 };
 
 template<typename T>
-vect readVect(int rows, T&& stream)
+vect readVect(size_t rows, T&& stream)
 {
     vect v(rows);
     for (size_t i = 0; i < rows; i++)

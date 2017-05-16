@@ -1,11 +1,5 @@
 #pragma once
 
-#include "MomentumGradientDescent.h"
-#include "NesterovGradientDescent.h"
-#include "Adagrad.h"
-#include "Adadelta.h"
-#include "Adam.h"
-
 #include "History.h"
 #include "GradientLengthStopCriteria.h"
 

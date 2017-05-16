@@ -11,16 +11,14 @@ namespace optimization
     class GradientDescent
     {
     public:
-        static constexpr int N = DeltaStrategyT::N;
-
         GradientDescent(DeltaStrategyT deltaStrategy, StopStrategyT stopStrategy) : mDeltaStrategy(move(deltaStrategy)),
                                                                                     mStopStrategy(move(stopStrategy))
         {}
 
         template<typename FuncT>
-        vector<vect<N>> operator()(FuncT& func, vect p0)
+        vector<vect> operator()(FuncT& func, vect p0)
         {
-            vector<vect<N>> path;
+            vector<vect> path;
 
             for (size_t iter = 0;; iter++) {
                 path.push_back(p0);

@@ -12,7 +12,8 @@ matrix isqrt(matrix m)
 matrix linearization(matrix m)
 {
     Eigen::JacobiSVD<matrix> d(m, Eigen::ComputeFullU | Eigen::ComputeFullV);
-    cout << "\t\t\tsingular values: " << d.singularValues().transpose() << endl;
+    LOG_INFO("singular values: {}", d.singularValues().transpose());
+
     return d.matrixU();
 }
 

@@ -2,12 +2,14 @@ cmake_minimum_required(VERSION 3.5)
 
 project(chemistry)
 
-set(CMAKE_CXX_FLAGS "-Wall -Werror -std=c++14")
-
+set(CMAKE_CXX_FLAGS "-Wall -Werror -std=c++14 -DSPDLOG_DEBUG_ON")
+set(CMAKE_EXE_LINKER_FLAGS "-pthread")
 SET(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 
 find_package(Eigen3 REQUIRED)
 
+
+#gtest
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
         RESULT_VARIABLE result
@@ -24,11 +26,19 @@ endif()
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src ${CMAKE_BINARY_DIR}/googletest-build)
 
+
+#spdlog
+if (NOT EXISTS "${CMAKE_SOURCE_DIR}/thirdparty/spdlog")
+    message(SEND_ERROR "CImg library submodule was not downloaded! Please, execute: git submodule update --init")
+endif()
+include_directories(${CMAKE_SOURCE_DIR}/thirdparty/spdlog/include)
+
+
 include_directories(${SOURCE_DIR})
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 #include_directories(${SRC)
-SET(SOURCE_FILES src/PythongraphicsFramework.cpp)
+SET(SOURCE_FILES src/helper.cpp)
 
 add_executable(chemistry ${SOURCE_DIR}/main.cpp ${SOURCE_FILES})
 add_executable(run_tests ${SOURCE_DIR}/tests.cpp ${SOURCE_FILES})

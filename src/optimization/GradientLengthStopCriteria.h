@@ -6,12 +6,9 @@
 
 namespace optimization
 {
-    template<int N_DIMS>
-    class GradientLengthStopCriteria : public History<N_DIMS>
+    class GradientLengthStopCriteria
     {
     public:
-        using History<N_DIMS>::N;
-
         GradientLengthStopCriteria(double threshold) : mThreshold(threshold)
         { }
 
@@ -23,6 +20,6 @@ namespace optimization
 
     private:
         double mThreshold;
-        vector<vect<N>> mDeltas;
+        vector<vect> mDeltas;
     };
 }

@@ -1,0 +1,1 @@
+[2017-05-12 16:06:13.828] [logger] [info] Program started

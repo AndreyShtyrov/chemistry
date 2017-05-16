@@ -1,0 +1,6 @@
+[2017-05-12 20:20:06.164] [daily_logger] [info] 123.44
+*** [20:20:06 +03:00] [thread 832] End of example. ***
+[2017-05-12 20:20:15.069] [daily_logger] [info] 123.44
+*** [20:20:15 +03:00] [thread 896] End of example. ***
+[2017-05-12 20:20:47.120] [daily_logger] [info] 123.44
+*** [20:20:47 +03:00] [thread 1021] End of example. ***
