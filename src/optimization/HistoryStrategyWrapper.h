@@ -36,7 +36,7 @@ namespace optimization
     };
 
     template<typename DeltaStrategyT>
-    auto make_history_strategy(DeltaStrategyT&& deltaStrategy)
+    auto makeHistoryDeltaStrategy(DeltaStrategyT&& deltaStrategy)
     {
         return HistoryStrategyWrapper<decay_t<DeltaStrategyT>>(forward<DeltaStrategyT>(deltaStrategy));
     }

@@ -6,7 +6,6 @@ ofstream out;
 #include <boost/lexical_cast.hpp>
 #include <Eigen/LU>
 #include <optimization/GradientLengthStopCriteria.h>
-#include <optimization/GradientOptimization.h>
 
 #include "linearization.h"
 #include "FunctionProducers.h"
@@ -122,20 +121,12 @@ vect getRandomPoint(vect const& lowerBound, vect const& upperBound)
     return lowerBound.array() + p.array() * (upperBound.array() - lowerBound.array());
 }
 
-string to_chemcraft_coords(vector<size_t> const& sizes, vect p)
-{
-    stringstream result;
-    for (size_t i = 0; i < sizes.size(); i++)
-        result << boost::format("%1%\t%2%\t%3%\t%4%") % sizes[i] % p(i * 3 + 0) % p(i * 3 + 1) % p(i * 3 + 2) << endl;
-    return result.str();
-}
-
 template<template<typename, typename> typename OptimizerT, typename DeltaStrategyT, typename StopStrategyT, typename FuncT>
 tuple<vector<double>, vector<double>>
 testOptimizer(DeltaStrategyT&& deltaStrategy, StopStrategyT&& stopStrategy, FuncT& func, vect const& p)
 {
     auto optimizer = OptimizerT<HistoryStrategyWrapper<decay_t<DeltaStrategyT>>, decay_t<StopStrategyT>>(
-       make_history_strategy(forward<DeltaStrategyT>(deltaStrategy)), forward<StopStrategyT>(stopStrategy));
+       makeHistoryDeltaStrategy(forward<DeltaStrategyT>(deltaStrategy)), forward<StopStrategyT>(stopStrategy));
     auto path = optimizer(func, p);
     auto vals = optimizer.getDeltaStrategy().getValues();
 

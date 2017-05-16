@@ -16,21 +16,21 @@ namespace optimization
         {}
 
         template<typename FuncT>
-        vector<vect> operator()(FuncT& func, vect p0)
+        vector<vect> operator()(FuncT& func, vect p)
         {
             vector<vect> path;
 
             for (size_t iter = 0;; iter++) {
-                path.push_back(p0);
+                path.push_back(p);
 
-                auto grad = func.grad(p0);
-                auto val = func(p0);
+                auto grad = func.grad(p);
+                auto val = func(p);
 
-                auto delta = mDeltaStrategy(iter, p0, val, grad);
-                if (mStopStrategy(iter, p0, grad, delta))
+                auto delta = mDeltaStrategy(iter, p, val, grad);
+                if (mStopStrategy(iter, p, grad, delta))
                     break;
 
-                p0 += delta;
+                p += delta;
             }
 
             return path;

@@ -5,7 +5,7 @@
 #include "FunctionProducer.h"
 
 string const GAUSSIAN_SCF_HEADER = "%nproc=3\n"
-   "%chk=chk\n"
+   "%chk=./tmp/chk\n"
    "%mem=1000mb\n"
    "# B3lyp/3-21g nosym scf\n"
    "\n"
@@ -14,7 +14,7 @@ string const GAUSSIAN_SCF_HEADER = "%nproc=3\n"
 
 
 string const GAUSSIAN_FORCE_HEADER = "%nproc=3\n"
-   "%chk=chk\n"
+   "%chk=./tmp/chk\n"
    "%mem=1000mb\n"
    "# B3lyp/3-21g nosym force\n"
    "\n"
@@ -22,7 +22,7 @@ string const GAUSSIAN_FORCE_HEADER = "%nproc=3\n"
    "0 1";
 
 string const GAUSSIAN_HESS_HEADER = "%nproc=3\n"
-   "%chk=chk\n"
+   "%chk=./tmp/chk\n"
    "%mem=1000mb\n"
    "# B3lyp/3-21g nosym freq\n"
    "\n"
@@ -145,7 +145,11 @@ private:
 
     void createInputFile(vect const& x, bool withGrad, bool withHess)
     {
-        ofstream f("tmp.inp");
+        static int counter = 0;
+        ofstream output("./tmp/res" + to_string(counter++) + ".xyz");
+        output << to_chemcraft_coords(mCharges, x);
+
+        ofstream f("./tmp/a.inp");
         f.precision(30);
         if (withHess)
             f << GAUSSIAN_HESS_HEADER << endl;
@@ -165,14 +169,14 @@ private:
 
     void runGaussian()
     {
-        if (system("mg09D tmp.inp tmp.out > /dev/null") || system("formchk chk.chk > /dev/null")) {
+        if (system("mg09D ./tmp/a.inp ./tmp/a.out > /dev/null") || system("formchk ./tmp/chk.chk > /dev/null")) {
             throw GaussianException();
         }
     }
 
     void parseOutput(bool withGrad, bool withHess)
     {
-        ifstream f("chk.fchk");
+        ifstream f("./tmp/chk.fchk");
 
         string s;
         while (!boost::starts_with(s, "Total Energy"))

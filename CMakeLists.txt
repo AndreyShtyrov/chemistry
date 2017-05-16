@@ -28,7 +28,7 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src ${CMAKE_BINARY_DIR}/googlete
 
 
 #spdlog
-if (NOT EXISTS "${CMAKE_SOURCE_DIR}/thirdparty/spdlog")
+if (NOT EXISTS "${CMAKE_SOURCE_DIR}/thirdparty/spdlog/include")
     message(SEND_ERROR "CImg library submodule was not downloaded! Please, execute: git submodule update --init")
 endif()
 include_directories(${CMAKE_SOURCE_DIR}/thirdparty/spdlog/include)

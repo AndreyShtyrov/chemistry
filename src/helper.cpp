@@ -5,7 +5,6 @@
 PythongraphicsFramework framework("func.out");
 shared_ptr<spdlog::logger> logger;
 
-
 void initializeLogger()
 {
     vector<spdlog::sink_ptr> sinks;

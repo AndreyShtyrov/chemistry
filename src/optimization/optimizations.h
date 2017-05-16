@@ -1,6 +1,5 @@
 #pragma once
 
-#include "History.h"
 #include "GradientLengthStopCriteria.h"
 
 #include "GradientDescent.h"
