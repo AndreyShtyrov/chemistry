@@ -6,6 +6,7 @@
 #include <cassert>
 #include <vector>
 #include <memory>
+#include <cmath>
 
 #include <Eigen/Core>
 #include <Eigen/Dense>

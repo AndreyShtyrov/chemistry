@@ -96,3 +96,40 @@ auto fixAtomSymmetry(FuncT&& func, vect const& pos)
     return fix(forward<FuncT>(func), {0, 1, 2, 4, 5, 8}, {pos(0), pos(1), pos(2), pos(4), pos(5), pos(8)});
 };
 
+vect rotateToFix(vect p)
+{
+    vector<Eigen::Vector3d> ps;
+    for (size_t i = 0; i < (size_t) p.rows(); i += 3) {
+        ps.push_back(p.block(i, 0, 3, 1));
+    }
+
+    auto delta = ps[0];
+    for (auto& p : ps)
+        p -= delta;
+
+    Eigen::Vector3d ox = {1, 0, 0};
+    Eigen::Vector3d axis = ps[1].cross(ox);
+    double angle = atan2(ps[1].cross(ox).norm(), ps[1].dot(ox));
+    Eigen::Matrix3d m = Eigen::AngleAxisd(angle, axis).matrix();
+
+    for (auto& p : ps)
+        p = m * p;
+
+    axis = {1, 0, 0};
+    angle = atan2(ps[2](2), ps[2](1));
+    m = Eigen::AngleAxisd(-angle, axis).matrix();
+
+    for (auto& p : ps)
+        p = m * p;
+
+    for (size_t i = 0; i < ps.size(); i++) {
+        p.block(i * 3, 0, 3, 1) = ps[i];
+    }
+
+    for (size_t i = 0; i < 9; i++)
+        if (i != 3 && i != 6 && i != 7)
+            assert(abs(p(0)) < 1e-7);
+
+    return p;
+}
+

@@ -229,15 +229,24 @@ private:
     }
 };
 
-GaussianProducer readMolecule(istream& input)
+tuple<vector<size_t>, vect> readMolecule(istream& input)
 {
-    size_t cnt;
-    input >> cnt;
+    vector<size_t> charges;
+    vector<Eigen::Vector3d> poss;
 
-    vector<size_t> charges(cnt);
-    for (size_t i = 0; i < cnt; i++) {
-        input >> charges[i];
+    size_t charge = 0;
+    while (input >> charge) {
+        Eigen::Vector3d pos;
+        for (size_t i = 0; i < 3; i++)
+            input >> pos(i);
+
+        charges.push_back(charge);
+        poss.push_back(pos);
     }
 
-    return GaussianProducer(charges);
+    vect pos(charges.size() * 3, 1);
+    for (size_t i = 0; i < charges.size(); i++) {
+        pos.block(i * 3, 0, 3, 1) = poss[i];
+    }
+    return make_tuple(charges, pos);
 }

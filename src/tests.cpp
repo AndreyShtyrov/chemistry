@@ -186,4 +186,17 @@ TEST(FunctionProducer, ModelMultidimensionalFunction)
     testProducer(type(), lowerBound, upperBound, 1000);
 }
 
+TEST(FixValues, rotateToFix)
+{
+    for (size_t i = 0; i < 100; i++) {
+        vect v(9);
+        for (size_t i = 0; i < (size_t) v.rows(); i++)
+            v(i) = (double) rand() / RAND_MAX;
+        v = rotateToFix(v);
+
+        for (size_t i = 0; i < 9; i++)
+            if (i != 3 && i != 6 && i != 7)
+                ASSERT_LE(abs(v(0)), 1e-7) << "vector components error";
+    }
+}
 

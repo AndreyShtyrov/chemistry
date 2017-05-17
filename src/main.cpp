@@ -5,7 +5,6 @@ ofstream out;
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <Eigen/LU>
-#include <optimization/GradientLengthStopCriteria.h>
 
 #include "linearization.h"
 #include "FunctionProducers.h"
@@ -126,7 +125,7 @@ tuple<vector<double>, vector<double>>
 testOptimizer(DeltaStrategyT&& deltaStrategy, StopStrategyT&& stopStrategy, FuncT& func, vect const& p)
 {
     auto optimizer = OptimizerT<HistoryStrategyWrapper<decay_t<DeltaStrategyT>>, decay_t<StopStrategyT>>(
-       makeHistoryDeltaStrategy(forward<DeltaStrategyT>(deltaStrategy)), forward<StopStrategyT>(stopStrategy));
+       makeHistoryStrategy(forward<DeltaStrategyT>(deltaStrategy)), forward<StopStrategyT>(stopStrategy));
     auto path = optimizer(func, p);
     auto vals = optimizer.getDeltaStrategy().getValues();
 
@@ -162,9 +161,15 @@ void standardOptimizationTest()
 };
 
 template<typename T>
-auto optimize(T& func, vect const& x)
+auto optimize(T& func, vect const& x, bool deltaHistory=false)
 {
-    return makeGradientDescent(QuasiNewtonDeltaStrategy<BFGS>(func.hess(x)), makeStandardAtomicStopStrategy(func))(func, x);
+    if (deltaHistory) {
+//        return makeSecondGradientDescent(makeHistoryStrategy(HessianDeltaStrategy()), makeStandardAtomicStopStrategy(func))(func, x);
+        return makeGradientDescent(makeHistoryStrategy(FollowGradientDeltaStrategy()), makeStandardAtomicStopStrategy(func))(func, x);
+    }
+    else {
+        return makeSecondGradientDescent(HessianDeltaStrategy(), makeStandardAtomicStopStrategy(func))(func, x);
+    }
 };
 
 
@@ -481,17 +486,20 @@ void firstRadiusPolarPicture()
 
 void optimizeStructure()
 {
-    ifstream input("H2O");
+//    ifstream input("H2O");
+    ifstream input("C2H4");
 
-    auto molecule = readMolecule(input);
-    auto initState = readVect(molecule.nDims, input);
+    vector<size_t> charges;
+    vect initState;
+    tie(charges, initState) = readMolecule(input);
+
+    initState = rotateToFix(initState);
+    auto molecule = GaussianProducer(charges);
     auto prepared = fixAtomSymmetry(makeAffineTransfomation(molecule, initState));
 
     LOG_INFO("nDims = {}", molecule.nDims);
-    LOG_INFO("gradient: {}", molecule.grad(initState).transpose());
-    LOG_INFO("gradient: {}", prepared.grad(makeConstantVect(prepared.nDims, 0)).transpose());
 
-    auto optimized = optimize(prepared, makeConstantVect(prepared.nDims, 0)).back();
+    auto optimized = optimize(prepared, makeConstantVect(prepared.nDims, 0), true).back();
 
     cout << to_chemcraft_coords(molecule.getCharges(), prepared.transform(optimized)) << endl;
 }
@@ -499,7 +507,6 @@ void optimizeStructure()
 int main()
 {
     initializeLogger();
-
 //    buildPolarPicture();
 //    firstRadiusPolarPicture();
 //    fullShs();

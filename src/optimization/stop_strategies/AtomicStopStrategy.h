@@ -69,7 +69,8 @@ namespace optimization
             for (size_t i = 0; i < atomCnt; i++) {
                 double singleValue = v.template block<3, 1>(i * 3, 0).norm();
                 if (singleValue >= singleMax) {
-                    LOG_INFO("too large {} single value: {} > {}", header, singleValue, singleMax);
+                    LOG_INFO("too large {} single value: {} > {} [{}]", header, singleValue, singleMax, v.transpose());
+
                     return false;
                 }
 
@@ -77,7 +78,7 @@ namespace optimization
             }
 
             if (sqrt(sum / atomCnt) >= rmsMax)
-                LOG_INFO("too large {} rms value: {} > {}", header, sqrt(sum / atomCnt), rmsMax);
+                LOG_INFO("too large {} rms value: {} > {} [{}]", header, sqrt(sum / atomCnt), rmsMax, v.transpose());
 
             return sqrt(sum / atomCnt) < rmsMax;
         }

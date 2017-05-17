@@ -1,19 +1,17 @@
 #pragma once
 
-#include "GradientLengthStopCriteria.h"
-
 #include "GradientDescent.h"
 #include "SecondOrderGradientDescent.h"
 
-#include "FollowGradientDeltaStrategy.h"
-#include "HessianDeltaStrategy.h"
-#include "QuasiNewtonDeltaStrategy.h"
+#include "delta_strategies/FollowGradientDeltaStrategy.h"
+#include "delta_strategies/HessianDeltaStrategy.h"
+#include "delta_strategies/QuasiNewtonDeltaStrategy.h"
 
-#include "AtomicStopStrategy.h"
-#include "DeltaNormStopStrategy.h"
-#include "GradientNormStopStrategy.h"
-#include "HistoryStrategyWrapper.h"
-#include "StopStrategy.h"
+#include "stop_strategies/AtomicStopStrategy.h"
+#include "stop_strategies/DeltaNormStopStrategy.h"
+#include "stop_strategies/GradientNormStopStrategy.h"
+#include "stop_strategies/StopStrategy.h"
+#include "stop_strategies/HistoryStrategyWrapper.h"
 
 namespace optimization
 {
