@@ -23,11 +23,21 @@ namespace optimization
             for (size_t iter = 0;; iter++) {
                 path.push_back(p);
 
-                auto grad = func.grad(p);
-                auto val = func(p);
+                vect grad;
+                double val = 0;
+
+                try {
+                    grad = func.grad(p);
+                    val = func(p);
+                }
+                catch (GaussianException const& exc) {
+                    LOG_ERROR("Gaussian Exception: {}", exc.what());
+                    grad.setZero();
+                    val = 0;
+                }
 
                 auto delta = mDeltaStrategy(iter, p, val, grad);
-                if (mStopStrategy(iter, p, grad, delta))
+                if (mStopStrategy(iter, p, val, grad, delta))
                     break;
 
                 p += delta;

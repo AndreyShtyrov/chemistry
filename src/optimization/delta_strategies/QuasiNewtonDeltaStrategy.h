@@ -51,13 +51,17 @@ namespace optimization {
 
         vect operator()(size_t iter, vect const &p, double value, vect const &grad) {
             if (iter)
-                updater.update(mB, mLastDelta, grad - mLastGrad);
+                updater.update(mB, p - mLastP, grad - mLastGrad);
 
-//            mLastDelta = -makeGood(mB).inverse() * grad;
-            mLastDelta = mB.inverse() * grad;
+            LOG_INFO("B matrix values: {}", Eigen::JacobiSVD<matrix>(mB).singularValues().transpose());
+
+            mLastP = p;
             mLastGrad = grad;
 
-            return mLastDelta;
+            if (iter < 4)
+                return -grad;
+            else
+                return -mB.inverse() * grad;
         }
 
         void initializeHessian(matrix hess)
@@ -70,6 +74,7 @@ namespace optimization {
 //        matrix mH;
         vect mLastDelta;
         vect mLastGrad;
+        vect mLastP;
         UpdaterT updater;
     };
 }

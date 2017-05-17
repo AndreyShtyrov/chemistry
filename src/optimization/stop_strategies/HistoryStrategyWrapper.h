@@ -4,43 +4,77 @@
 
 namespace optimization
 {
-    template<typename DeltaStrategyT>
+    template<typename StopStrategyT>
     class HistoryStrategyWrapper
     {
     public:
-        static constexpr int N = DeltaStrategyT::N;
+        static constexpr int N = StopStrategyT::N;
 
-        HistoryStrategyWrapper(DeltaStrategyT deltaStrategy) : mDeltaStrategy(move(deltaStrategy))
+        HistoryStrategyWrapper(StopStrategyT stopStrategy) : mStopStrategy(move(stopStrategy))
         {}
 
-        vect operator()(size_t iter, vect const& p, double value, vect const& grad)
+        bool operator()(size_t iter, vect const& p, double value, vect const& grad, vect const& delta)
         {
-            LOG_INFO("Delta strategy iteration:\n\tpoint: {}\n\tgrad: {}\n", p.transpose(), grad.transpose());
-            mValues.push_back(value);
-            return mDeltaStrategy(iter, p, value, grad);
+            LOG_INFO("Delta strategy iteration:\n\titeration: {}\n\tvalue: {}\n\tpoint: {}\n\tgrad: {}\n\tdelta: {}\n",
+                     iter, value, p.transpose(), grad.transpose(), delta.transpose());
+            mGrads.push_back(grad);
+
+            return mStopStrategy(iter, p, value, grad, delta);
         }
 
-        vect operator()(size_t iter, vect const& p, double value, vect const& grad, matrix const& hess)
+        bool
+        operator()(size_t iter, vect const& p, double value, vect const& grad, matrix const& hess, vect const& delta)
         {
-            LOG_INFO("Delta strategy iteration:\n\tpoint: {}\n\tgrad: {}\n\thess values: {}", p.transpose(),
-                     grad.transpose(), Eigen::JacobiSVD<matrix>(hess).singularValues().transpose());
+            LOG_INFO(
+               "Delta strategy iteration:\n\titeration: {}\n\tvalue: {}\n\tpoint: {}\n\tgrad: {}\n\tdelta: {}\n\thess values: {}\n",
+               iter, value, p.transpose(), grad.transpose(), delta.transpose(),
+               Eigen::JacobiSVD<matrix>(hess).singularValues().transpose());
+
             mValues.push_back(value);
-            return mDeltaStrategy(iter, p, value, grad, hess);
+            mGrads.push_back(grad);
+
+            return mStopStrategy(iter, p, value, grad, hess, delta);
         }
+
+//        vect operator()(size_t iter, vect const& p, double value, vect const& grad, matrix const& hess)
+//        {
+//            LOG_INFO("Delta strategy iteration:\n\titeration: {}\n\tpoint: {}\n\tgrad: {}\n\thess values: {}", iter,
+//                     p.transpose(), grad.transpose(), Eigen::JacobiSVD<matrix>(hess).singularValues().transpose());
+//            mValues.push_back(value);
+//            mGrads.push_back(grad);
+//
+//            return mStopStrategy(iter, p, value, grad, hess);
+//        }
+//
+//        vect operator()(size_t iter, vect const& p, double value, vect const& grad)
+//        {
+//            LOG_INFO("Delta strategy iteration:\n\titeration: {}\n\tpoint: {}\n\tgrad: {}\n", iter, p.transpose(),
+//                     grad.transpose());
+//            mValues.push_back(value);
+//            mGrads.push_back(grad);
+//
+//            return mStopStrategy(iter, p, value, grad);
+//        }
 
         vector<double> const& getValues() const
         {
             return mValues;
         }
 
+        vector<vect> const& getGrads() const
+        {
+            return mGrads;
+        }
+
     private:
-        DeltaStrategyT mDeltaStrategy;
+        StopStrategyT mStopStrategy;
         vector<double> mValues;
+        vector<vect> mGrads;
     };
 
-    template<typename DeltaStrategyT>
-    auto makeHistoryStrategy(DeltaStrategyT&& deltaStrategy)
+    template<typename StopStrategyT>
+    auto makeHistoryStrategy(StopStrategyT&& deltaStrategy)
     {
-        return HistoryStrategyWrapper<decay_t<DeltaStrategyT>>(forward<DeltaStrategyT>(deltaStrategy));
+        return HistoryStrategyWrapper<decay_t<StopStrategyT>>(forward<StopStrategyT>(deltaStrategy));
     }
 }

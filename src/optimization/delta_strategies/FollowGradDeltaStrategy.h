@@ -4,10 +4,10 @@
 
 namespace optimization
 {
-    class FollowGradientDeltaStrategy
+    class FollowGradDeltaStrategy
     {
     public:
-        FollowGradientDeltaStrategy(double speed = 1.) : mSpeed(speed)
+        FollowGradDeltaStrategy(double speed = 1.) : mSpeed(speed)
         {}
 
         vect operator()(size_t iter, vect const& p, double value, vect const& grad)

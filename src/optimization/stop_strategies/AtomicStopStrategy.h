@@ -83,8 +83,11 @@ namespace optimization
             return sqrt(sum / atomCnt) < rmsMax;
         }
 
-        bool operator()(size_t iter, vect const& p, vect const& grad, vect const& delta)
+        bool operator()(size_t iter, vect const& p, double value, vect const& grad, vect const& delta)
         {
+            if (iter > 100)
+                return true;
+
             auto x0 = ExtractorType::applyTransformation(p, mFunc);
             auto x1 = ExtractorType::applyTransformation(p + delta, mFunc);
 
@@ -92,6 +95,11 @@ namespace optimization
 
             return check(x1 - x0, mMaxAtomDelta, mRmsAtomDelta, "delta") &&
                    check(mAtomicFunc.getLastGrad(), mMaxForce, mRmsForce, "grad");
+        }
+
+        bool operator()(size_t iter, vect const& p, double value, vect const& grad, matrix const& hess, vect const& delta)
+        {
+            return operator()(iter, p, value, grad, delta);
         }
 
     private:

@@ -3,9 +3,10 @@
 #include "GradientDescent.h"
 #include "SecondOrderGradientDescent.h"
 
-#include "delta_strategies/FollowGradientDeltaStrategy.h"
+#include "delta_strategies/FollowGradDeltaStrategy.h"
 #include "delta_strategies/HessianDeltaStrategy.h"
 #include "delta_strategies/QuasiNewtonDeltaStrategy.h"
+#include "delta_strategies/RepeatingDeltaStrategy.h"
 
 #include "stop_strategies/AtomicStopStrategy.h"
 #include "stop_strategies/DeltaNormStopStrategy.h"

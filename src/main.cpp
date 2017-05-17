@@ -120,54 +120,27 @@ vect getRandomPoint(vect const& lowerBound, vect const& upperBound)
     return lowerBound.array() + p.array() * (upperBound.array() - lowerBound.array());
 }
 
-template<template<typename, typename> typename OptimizerT, typename DeltaStrategyT, typename StopStrategyT, typename FuncT>
-tuple<vector<double>, vector<double>>
-testOptimizer(DeltaStrategyT&& deltaStrategy, StopStrategyT&& stopStrategy, FuncT& func, vect const& p)
-{
-    auto optimizer = OptimizerT<HistoryStrategyWrapper<decay_t<DeltaStrategyT>>, decay_t<StopStrategyT>>(
-       makeHistoryStrategy(forward<DeltaStrategyT>(deltaStrategy)), forward<StopStrategyT>(stopStrategy));
-    auto path = optimizer(func, p);
-    auto vals = optimizer.getDeltaStrategy().getValues();
-
-    return make_tuple(arange(vals.size()), vals);
-};
-
-void standardOptimizationTest()
-{
-    auto v = makeVect(1.04218, 0.31040, 1.00456);
-//    auto v = make_vect(1.00335, -0.140611, 0.993603);
-
-    vector<size_t> weights = {8, 1, 1};
-    auto atomicFunc = GaussianProducer(weights);
-    auto func = fixAtomSymmetry(atomicFunc);
-
-    auto axis = framework.newPlot();
-    vector<double> path, vals;
-
-    tie(path, vals) = testOptimizer<GradientDescent>(QuasiNewtonDeltaStrategy<DFP>(),
-                                                     makeAtomicStopStrategy(0.00045, 0.0003, 0.018, 0.012, func), func,
-                                                     v);
-    framework.plot(axis, arange(vals.size()), vals);
-
-    tie(path, vals) = testOptimizer<SecondOrderGradientDescent>(HessianDeltaStrategy(),
-                                                                makeAtomicStopStrategy(0.00045, 0.0003, 0.018, 0.012,
-                                                                                       func), func, v);
-    framework.plot(axis, arange(vals.size()), vals);
-
-    tie(path, vals) = testOptimizer<GradientDescent>(FollowGradientDeltaStrategy(),
-                                                     makeAtomicStopStrategy(0.00045, 0.0003, 0.018, 0.012, func), func,
-                                                     v);
-    framework.plot(axis, arange(vals.size()), vals);
-};
-
 template<typename T>
-auto optimize(T& func, vect const& x, bool deltaHistory=false)
+auto optimize(T& func, vect const& x, bool deltaHistory = false)
 {
     if (deltaHistory) {
-//        return makeSecondGradientDescent(makeHistoryStrategy(HessianDeltaStrategy()), makeStandardAtomicStopStrategy(func))(func, x);
-        return makeGradientDescent(makeHistoryStrategy(FollowGradientDeltaStrategy()), makeStandardAtomicStopStrategy(func))(func, x);
-    }
-    else {
+//        auto optimizer = makeGradientDescent(makeHistoryStrategy(makeRepeatDeltaStrategy(FollowGradDeltaStrategy())),
+//                                             makeStandardAtomicStopStrategy(func));
+        auto optimizer = makeGradientDescent(makeRepeatDeltaStrategy(FollowGradDeltaStrategy()),
+                                             makeHistoryStrategy(makeStandardAtomicStopStrategy(func)));
+//        auto optimizer = makeGradientDescent(makeRepeatDeltaStrategy(QuasiNewtonDeltaStrategy<Broyden>(func.hess(x))),
+//                                             makeHistoryStrategy(makeStandardAtomicStopStrategy(func)));
+//        auto optimizer = makeSecondGradientDescent(makeRepeatDeltaStrategy(HessianDeltaStrategy()), makeHistoryStrategy(makeStandardAtomicStopStrategy(func)));
+        auto path = optimizer(func, x);
+
+//        framework.plot(framework.newPlot("'values'"), optimizer.getDeltaStrategy().getValues());
+//        vector<double> gradNorms;
+//        for (auto& grad : optimizer.getDeltaStrategy().getGrads())
+//            gradNorms.push_back(grad.norm());
+//        framework.plot(framework.newPlot("'grad norms'"), gradNorms);
+
+        return path;
+    } else {
         return makeSecondGradientDescent(HessianDeltaStrategy(), makeStandardAtomicStopStrategy(func))(func, x);
     }
 };

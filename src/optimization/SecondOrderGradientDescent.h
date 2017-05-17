@@ -30,7 +30,7 @@ namespace optimization
                 auto val = func(p0);
 
                 auto delta = mDeltaStrategy(iter, p0, val, grad, hess);
-                if (mStopStrategy(iter, p0, grad, delta))
+                if (mStopStrategy(iter, p0, val, grad, hess, delta))
                     break;
 
                 p0 += delta;
