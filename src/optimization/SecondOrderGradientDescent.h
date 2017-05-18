@@ -25,9 +25,9 @@ namespace optimization
             for (size_t iter = 0;; iter++) {
                 path.push_back(p);
 
-                matrix hess;
-                vect grad;
-                double val;
+                matrix hess(func.nDims, func.nDims);
+                vect grad(func.nDims);
+                double val = 0;
 
                 try {
                     hess = func.hess(p);

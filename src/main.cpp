@@ -338,8 +338,8 @@ void fullShs()
 
 //    auto polarDirection = makeRandomVect(polar.nDims);
 //    auto polarDirection = makeConstantVect(linearHessian.nDims - 1, M_PI / 2);
-    auto polarDirection = makeVect(1.25211, 2.10604, 1.30287, 2.18491, 0.827295, 1.74907, 1.37185, 1.53325, 1.49286,
-                                   1.64736, 1.59163);
+//    auto polarDirection = makeVect(1.25211,2.10604,1.30287,2.18491,0.827295,1.74907,1.37185,1.53325,1.49286,1.64736,1.59163);
+    auto polarDirection = makeVect(1.15933,2.13214,1.28005,2.09002,0.472694,2.14605,1.18723,1.6452,1.61283,1.75991,1.37056);
 //    {
 //        auto polar = makePolar(linearHessian, firstR);
 ////        auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
@@ -350,7 +350,7 @@ void fullShs()
 //    }
 
 
-    for (size_t iter = 0; ; iter++) {
+    for (size_t iter = 9; ; iter++) {
         auto polar = makePolar(linearHessian, firstR + iter * deltaR);
         auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
         auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-3, 1e-3));
