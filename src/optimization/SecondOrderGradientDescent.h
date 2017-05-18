@@ -18,22 +18,34 @@ namespace optimization
         {}
 
         template<typename FuncT>
-        vector<vect> operator()(FuncT& func, vect p0)
+        vector<vect> operator()(FuncT& func, vect p)
         {
             vector<vect> path;
 
             for (size_t iter = 0;; iter++) {
-                path.push_back(p0);
+                path.push_back(p);
 
-                auto hess = func.hess(p0);
-                auto grad = func.grad(p0);
-                auto val = func(p0);
+                matrix hess;
+                vect grad;
+                double val;
 
-                auto delta = mDeltaStrategy(iter, p0, val, grad, hess);
-                if (mStopStrategy(iter, p0, val, grad, hess, delta))
+                try {
+                    hess = func.hess(p);
+                    grad = func.grad(p);
+                    val = func(p);
+                }
+                catch (GaussianException const& exc) {
+                    LOG_ERROR("Gaussian Exception: {}", exc.what());
+                    val = 0;
+                    grad.setZero();
+                    hess.setZero();
+                }
+
+                auto delta = mDeltaStrategy(iter, p, val, grad, hess);
+                if (mStopStrategy(iter, p, val, grad, hess, delta))
                     break;
 
-                p0 += delta;
+                p += delta;
             }
 
             return path;

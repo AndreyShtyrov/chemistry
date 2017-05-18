@@ -67,6 +67,11 @@ public:
         return to;
     }
 
+    vect fullTransform(vect const& from) const
+    {
+        return mFunc.transform(transform(from));
+    }
+
     FuncT const& getInnerFunction() const
     {
         return mFunc;

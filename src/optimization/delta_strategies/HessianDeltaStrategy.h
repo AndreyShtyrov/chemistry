@@ -9,7 +9,7 @@ namespace optimization
     public:
         vect operator()(size_t iter, vect const& p, double value, vect const& grad, matrix const& hess)
         {
-            if (iter < 4)
+            if (iter < 20)
                 return -grad;
             else
                 return -hess.inverse() * grad;

@@ -34,46 +34,6 @@ constexpr double DY = calculate_delta(MIN_Y, MAX_Y, N);
 
 constexpr size_t PHI = 1000;
 
-template<typename FuncT, typename Optimizer1T, typename Optimizer2T>
-vector<vect> shs(FuncT& func, Optimizer1T optimizer1, Optimizer2T optimizer2, double deltaR, vect pos)
-{
-    vector<vect> path;
-    path.push_back(pos);
-
-    double lastValue = func(pos);
-
-    vect lastPolar;
-    lastPolar.setRandom();
-    cout << lastPolar << endl << endl;
-
-    for (int i = 0; i < 20; ++i) {
-        auto polars = makePolar(func, deltaR * (i + 1));
-        lastPolar = optimizer1(polars, lastPolar).back();
-
-        pos = polars.transform(lastPolar);
-
-        double curValue = func(pos);
-        if (curValue < lastValue) {
-            break;
-        }
-        lastValue = curValue;
-        path.push_back(pos);
-    }
-
-
-    auto saddle = pos;
-    for (int i = 0; i < 3; i++) {
-        path.push_back(saddle);
-        saddle = optimize(pos, func.grad(saddle), func.hess(saddle));
-    }
-    path.push_back(saddle);
-
-//    auto pathToMinimum = optimizer2(func, pos);
-//    path.insert(path.end(), pathToMinimum.begin(), pathToMinimum.end());
-
-    return path;
-}
-
 double get_linear_comb(double from, double to, double t)
 {
     return from + (to - from) * t;
@@ -124,141 +84,15 @@ template<typename T>
 auto optimize(T& func, vect const& x, bool deltaHistory = false)
 {
     if (deltaHistory) {
-//        auto optimizer = makeGradientDescent(makeHistoryStrategy(makeRepeatDeltaStrategy(FollowGradDeltaStrategy())),
-//                                             makeStandardAtomicStopStrategy(func));
-        auto optimizer = makeGradientDescent(makeRepeatDeltaStrategy(FollowGradDeltaStrategy()),
-                                             makeHistoryStrategy(makeStandardAtomicStopStrategy(func)));
-//        auto optimizer = makeGradientDescent(makeRepeatDeltaStrategy(QuasiNewtonDeltaStrategy<Broyden>(func.hess(x))),
-//                                             makeHistoryStrategy(makeStandardAtomicStopStrategy(func)));
-//        auto optimizer = makeSecondGradientDescent(makeRepeatDeltaStrategy(HessianDeltaStrategy()), makeHistoryStrategy(makeStandardAtomicStopStrategy(func)));
+        auto optimizer = makeSecondGradientDescent(makeRepeatDeltaStrategy(HessianDeltaStrategy()),
+                                                   makeHistoryStrategy(makeStandardAtomicStopStrategy(func)));
         auto path = optimizer(func, x);
-
-//        framework.plot(framework.newPlot("'values'"), optimizer.getDeltaStrategy().getValues());
-//        vector<double> gradNorms;
-//        for (auto& grad : optimizer.getDeltaStrategy().getGrads())
-//            gradNorms.push_back(grad.norm());
-//        framework.plot(framework.newPlot("'grad norms'"), gradNorms);
-
         return path;
     } else {
-        return makeSecondGradientDescent(HessianDeltaStrategy(), makeStandardAtomicStopStrategy(func))(func, x);
+        return makeSecondGradientDescent(makeRepeatDeltaStrategy(HessianDeltaStrategy()),
+                                         makeStandardAtomicStopStrategy(func))(func, x);
     }
 };
-
-
-void fullShs()
-{
-    auto start_point = makeVect(1.04218, 0.31040, 1.00456);
-
-    vector<size_t> weights = {8, 1, 1};
-    auto atomicFunc = GaussianProducer(weights);
-    auto func = fixAtomSymmetry(atomicFunc);
-
-    auto localMinima = optimize(func, start_point).back();
-//    auto localMinima = makeVect(0.996622544216218, -0.240032763088067, 0.967285186815903);
-
-    cout << boost::format("local minima:\n%1%\ngradient: %2%\nhessian:\n%3%\n\n") %
-            to_chemcraft_coords(weights, func.transform(localMinima)) % func.grad(localMinima).transpose() %
-            func.hess(localMinima);
-
-    auto linear_hessian = prepareForPolar(func, localMinima);
-
-    out = ofstream("a.out");
-
-    double firstR = 0.3;
-    double deltaR = 0.1;
-    auto polar = makePolar(linear_hessian, firstR);
-
-    for (size_t iter = 0; iter < 10; iter++) {
-//        auto initialPoint = makeRandomVect<polar.N>(polarVectLowerBound<polar.N>(), polarVectUpperBound<polar.N>());
-        auto initialPoint = makeVect(5.4,
-                                     1.0);//makeRandomVect<polar.N>(polarVectLowerBound<polar.N>(), polarVectUpperBound<polar.N>());
-        auto deltaStrategy = QuasiNewtonDeltaStrategy<BFGS>(polar.hess(initialPoint));
-        auto stopStrategy = StopStrategy(0.0001, 0.001);
-        auto polarMinima = makeGradientDescent(deltaStrategy, stopStrategy)(polar, initialPoint).back();
-
-        cout << boost::format("First polar minima: %1%\n") % polarMinima.transpose();
-        out << endl;
-
-        vector<vect> path;
-        path.push_back(polar.transform(polarMinima));
-
-        double lastValue = polar(polarMinima);
-        vect lastPoint = polarMinima;
-
-        vector<double> polarValues;
-        vector<vect> polarPath;
-        polarPath.push_back(lastPoint);
-
-        ofstream(str(boost::format("./data/%1%/%2%.xyz") % iter % 0))
-           << to_chemcraft_coords(weights, func.transform(localMinima)) << endl;
-
-        for (size_t i = 1; i < 20; ++i) {
-            cout << boost::format("iteration %1%:") % i << endl;
-            ofstream(str(boost::format("./data/%1%/%2%.xyz") % iter % i))
-               << to_chemcraft_coords(weights, func.transform(linear_hessian.transform(path.back()))) << endl;
-
-            auto polar2 = makePolar(linear_hessian, firstR + deltaR * i);
-
-            auto deltaStrategy = QuasiNewtonDeltaStrategy<BFGS>();
-            deltaStrategy.initializeHessian(polar2.hess(lastPoint));
-            auto stopStrategy = StopStrategy(0.0001, 0.001);
-            auto nextPoint = makeGradientDescent(deltaStrategy, stopStrategy)(polar2, lastPoint).back();
-
-            double curValue = polar2(nextPoint);
-
-            path.push_back(polar2.transform(nextPoint));
-            polarPath.push_back(nextPoint);
-            polarValues.push_back(curValue);
-
-            {
-                vector<double> xs, ys;
-                for (auto polarPoint : polarPath)
-                    xs.push_back(polarPoint(0)), ys.push_back(polarPoint(1));
-                framework.scatter(framework.newPlot(), xs, ys);
-            }
-            framework.plot(framework.newPlot(), arange(polarValues.size()), polarValues);
-
-            cout << "\tnew value: " << curValue << endl;
-            auto hess = linear_hessian.hess(path.back());
-            auto A = linearization(hess);
-            cout << A.transpose() * hess * A << endl << endl;
-
-            if (curValue < lastValue) {
-//                break;
-            }
-
-            lastValue = curValue;
-            lastPoint = nextPoint;
-        }
-
-        {
-            vector<double> xs, ys;
-            for (auto polarPoint : polarPath)
-                xs.push_back(polarPoint(0)), ys.push_back(polarPoint(1));
-            framework.scatter(framework.newPlot(), xs, ys);
-        }
-
-        auto pathToMin = optimize(linear_hessian, path.back());
-        path.insert(path.end(), pathToMin.begin(), pathToMin.end());
-
-        vector<double> vals;
-        for (auto point : path) {
-            vals.push_back(linear_hessian(point));
-        }
-        framework.plot(framework.newPlot(), arange(vals.size()), vals);
-
-
-        cerr << endl << endl << endl;
-        for (auto point : path) {
-            static int i = 0;
-            cout << to_chemcraft_coords(weights, func.transform(linear_hessian.transform(point))) << endl;
-            ++i;
-        }
-
-        break;
-    }
-}
 
 void buildPolarPicture()
 {
@@ -477,14 +311,152 @@ void optimizeStructure()
     cout << to_chemcraft_coords(molecule.getCharges(), prepared.transform(optimized)) << endl;
 }
 
+void fullShs()
+{
+    ifstream input("C2H4");
+    vector<size_t> charges;
+    vect initState;
+    tie(charges, initState) = readMolecule(input);
+
+    initState = rotateToFix(initState);
+    auto molecule = GaussianProducer(charges);
+    auto prepared = fixAtomSymmetry(makeAffineTransfomation(molecule, initState));
+
+//    auto localMinima = optimize(prepared, makeConstantVect(prepared.nDims, 0)).back();
+    auto localMinima = makeVect(-0.495722, 0.120477, -0.874622, 0.283053, 0.784344, -0.00621205, -0.787401, -0.193879,
+                                -0.301919, -0.553383, 0.552153, 0.529974);
+
+//    LOG_INFO("local minima: {}", localMinima.transpose());
+//    LOG_INFO("chemcraft coords:\n{}", to_chemcraft_coords(charges, prepared.fullTransform(localMinima)));
+//    LOG_INFO("gradient: {}", prepared.grad(localMinima).transpose());
+//    LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(prepared.hess(localMinima)).singularValues().transpose());
+
+    auto linearHessian = prepareForPolar(prepared, localMinima);
+
+    double firstR = 0.3;
+    double deltaR = 0.1;
+
+//    auto polarDirection = makeRandomVect(polar.nDims);
+//    auto polarDirection = makeConstantVect(linearHessian.nDims - 1, M_PI / 2);
+    auto polarDirection = makeVect(1.25211, 2.10604, 1.30287, 2.18491, 0.827295, 1.74907, 1.37185, 1.53325, 1.49286,
+                                   1.64736, 1.59163);
+//    {
+//        auto polar = makePolar(linearHessian, firstR);
+////        auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
+////        auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-3, 1e-3));
+////        polarDirection = makeSecondGradientDescent(deltaStrategy, stopStrategy)(polar, polarDirection).back();
+//        LOG_INFO("initial polar Direction:{}\nchemcraft coords: {}\n", polarDirection.transpose(),
+//                 to_chemcraft_coords(charges, polar.fullTransform(polarDirection)));
+//    }
+
+
+    for (size_t iter = 0; ; iter++) {
+        auto polar = makePolar(linearHessian, firstR + iter * deltaR);
+        auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
+        auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-3, 1e-3));
+//        auto stopStrategy = StopStrategy(1e-3, 1e-3);
+        polarDirection = makeSecondGradientDescent(deltaStrategy, stopStrategy)(polar, polarDirection).back();
+
+        LOG_INFO("initial polar Direction:{}\nchemcraft coords: {}\n", polarDirection.transpose(),
+                 to_chemcraft_coords(charges, polar.fullTransform(polarDirection)));
+        ofstream output("./first/" + to_string(iter) + ".xyz");
+        output << to_chemcraft_coords(charges, polar.fullTransform(polarDirection)) << endl;
+    }
+
+//
+////        auto initialPoint = makeRandomVect<polar.N>(polarVectLowerBound<polar.N>(), polarVectUpperBound<polar.N>());
+//    auto initialPoint = makeVect(5.4,
+//                                 1.0);//makeRandomVect<polar.N>(polarVectLowerBound<polar.N>(), polarVectUpperBound<polar.N>());
+//    auto deltaStrategy = QuasiNewtonDeltaStrategy<BFGS>(polar.hess(initialPoint));
+//    auto stopStrategy = StopStrategy(0.0001, 0.001);
+//    auto polarMinima = makeGradientDescent(deltaStrategy, stopStrategy)(polar, initialPoint).back();
+//
+//
+//    cout << boost::format("First polar minima: %1%\n") % polarMinima.transpose();
+//    out << endl;
+//
+//    vector<vect> path;
+//    path.push_back(polar.transform(polarMinima));
+//
+//    double lastValue = polar(polarMinima);
+//    vect lastPoint = polarMinima;
+//
+//    vector<double> polarValues;
+//    vector<vect> polarPath;
+//    polarPath.push_back(lastPoint);
+
+//    for (size_t i = 1; i < 20; ++i) {
+//        cout << boost::format("iteration %1%:") % i << endl;
+//        ofstream(str(boost::format("./data/%1%/%2%.xyz") % iter % i))
+//           << to_chemcraft_coords(weights, func.transform(linear_hessian.transform(path.back()))) << endl;
+//
+//        auto polar2 = makePolar(linear_hessian, firstR + deltaR * i);
+//
+//        auto deltaStrategy = QuasiNewtonDeltaStrategy<BFGS>();
+//        deltaStrategy.initializeHessian(polar2.hess(lastPoint));
+//        auto stopStrategy = StopStrategy(0.0001, 0.001);
+//        auto nextPoint = makeGradientDescent(deltaStrategy, stopStrategy)(polar2, lastPoint).back();
+//
+//        double curValue = polar2(nextPoint);
+//
+//        path.push_back(polar2.transform(nextPoint));
+//        polarPath.push_back(nextPoint);
+//        polarValues.push_back(curValue);
+//
+//        {
+//            vector<double> xs, ys;
+//            for (auto polarPoint : polarPath)
+//                xs.push_back(polarPoint(0)), ys.push_back(polarPoint(1));
+//            framework.scatter(framework.newPlot(), xs, ys);
+//        }
+//        framework.plot(framework.newPlot(), arange(polarValues.size()), polarValues);
+//
+//        cout << "\tnew value: " << curValue << endl;
+//        auto hess = linear_hessian.hess(path.back());
+//        auto A = linearization(hess);
+//        cout << A.transpose() * hess * A << endl << endl;
+//
+//        if (curValue < lastValue) {
+////                break;
+//        }
+//
+//        lastValue = curValue;
+//        lastPoint = nextPoint;
+//    }
+//
+//    {
+//        vector<double> xs, ys;
+//        for (auto polarPoint : polarPath)
+//            xs.push_back(polarPoint(0)), ys.push_back(polarPoint(1));
+//        framework.scatter(framework.newPlot(), xs, ys);
+//    }
+//
+//    auto pathToMin = optimize(linear_hessian, path.back());
+//    path.insert(path.end(), pathToMin.begin(), pathToMin.end());
+//
+//    vector<double> vals;
+//    for (auto point : path) {
+//        vals.push_back(linear_hessian(point));
+//    }
+//    framework.plot(framework.newPlot(), arange(vals.size()), vals);
+//
+//
+//    cerr << endl << endl << endl;
+//    for (auto point : path) {
+//        static int i = 0;
+//        cout << to_chemcraft_coords(weights, func.transform(linear_hessian.transform(point))) << endl;
+//        ++i;
+//    }
+}
+
 int main()
 {
     initializeLogger();
 //    buildPolarPicture();
 //    firstRadiusPolarPicture();
-//    fullShs();
 
-    optimizeStructure();
+//    optimizeStructure();
+    fullShs();
 
     return 0;
 }

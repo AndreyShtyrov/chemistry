@@ -14,7 +14,7 @@ template<typename FuncT>
 void testGradient(FuncT& func, vect const& lowerBound, vect const& upperBound, size_t iters, double delta = 1e-4,
                   double eps = 1e-5)
 {
-    size_t N = lowerBound.rows();
+    size_t N = (size_t) lowerBound.rows();
 
     for (size_t i = 0; i < iters; i++) {
         auto p = getRandomPoint(lowerBound, upperBound);
@@ -23,6 +23,8 @@ void testGradient(FuncT& func, vect const& lowerBound, vect const& upperBound, s
         for (size_t j = 0; j < N; j++) {
             vect e = delta * eye(N, j);
             double predicted = 0.5 * (func(p + e) - func(p - e)) / delta;
+
+            cout << boost::format("gradient: grad(%1%) = %2% == %3%") % j % grad(j) % predicted << endl;
             ASSERT_LE(abs(grad(j) - predicted), eps)
                               << boost::format("value %1% != %2% (%3% error)") % grad(j) % predicted %
                                  abs(grad(j) - predicted);
@@ -31,8 +33,7 @@ void testGradient(FuncT& func, vect const& lowerBound, vect const& upperBound, s
 };
 
 template<typename FuncT>
-void
-testHessian(FuncT& func, vect lowerBound, vect upperBound, size_t iters, double delta = 1e-4, double eps = 1e-5)
+void testHessian(FuncT& func, vect lowerBound, vect upperBound, size_t iters, double delta = 1e-4, double eps = 1e-5)
 {
     size_t N = lowerBound.rows();
 
@@ -44,6 +45,7 @@ testHessian(FuncT& func, vect lowerBound, vect upperBound, size_t iters, double 
                 vect e1 = delta * eye(N, x1), e2 = delta * eye(N, x2);
                 double predicted =
                    0.25 * (func(p + e1 + e2) - func(p - e1 + e2) - func(p + e1 - e2) + func(p - e1 - e2)) / sqr(delta);
+                cout << boost::format("gradient: hess(%1%, %2%) = %3% == %4%") % x1 % x2 % hess(x1, x2) % predicted << endl;
                 ASSERT_LE(abs(hess(x1, x2) - predicted), eps)
                                   << boost::format("value %1% != %2% (%3% error)") % hess(x1, x2) % predicted %
                                      abs(hess(x1, x2) - predicted);
@@ -52,8 +54,7 @@ testHessian(FuncT& func, vect lowerBound, vect upperBound, size_t iters, double 
 };
 
 template<typename FuncT>
-void
-testProducer(FuncT func, vect lowerBound, vect upperBound, size_t iters, double delta = 1e-4, double eps = 1e-5)
+void testProducer(FuncT func, vect lowerBound, vect upperBound, size_t iters, double delta = 1e-4, double eps = 1e-5)
 {
     testGradient(func, lowerBound, upperBound, iters, delta, eps);
     testHessian(func, lowerBound, upperBound, iters, delta, eps);
@@ -136,7 +137,7 @@ TEST(FunctionProducer, LagrangeMultiplier)
 TEST(FunctionProducer, GaussianProducer)
 {
     auto lowerBound = makeConstantVect(9, -1);
-    auto upperBound = makeConstantVect(9,  1);
+    auto upperBound = makeConstantVect(9, 1);
 
     testProducer(GaussianProducer({8, 1, 1}), lowerBound, upperBound, 1, 1e-4, 1e-3);
 }
@@ -174,6 +175,31 @@ TEST(FunctionProducer, Stack)
 
     testProducer(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
 }
+
+TEST(FunctionProducer, Stack2)
+{
+    vector<size_t> charges = {6, 6, 1, 1, 1, 1};
+    vect initState = makeVect(0.000000000, 0.000000000, -0.665079000, 0.035065274, 0.058977884, 0.684472749,
+                              0.150810779, 0.964915143, -1.225651234, -0.177203028, -0.964988711, -1.253913402,
+                              -0.066854801, 0.720391837, 1.298331278, 0.301663799, -0.766483770, 1.184359568);
+
+    initState = rotateToFix(initState);
+    auto molecule = GaussianProducer(charges);
+    auto prepared = fixAtomSymmetry(makeAffineTransfomation(molecule, initState));
+
+    auto localMinima = makeVect(-0.495722, 0.120477, -0.874622, 0.283053, 0.784344, -0.00621205, -0.787401, -0.193879,
+                                -0.301919, -0.553383, 0.552153, 0.529974);
+    auto linearHessian = prepareForPolar(prepared, localMinima);
+    auto polar = makePolar(linearHessian, .3);
+
+
+    auto lowerBound = makeConstantVect(polar.nDims, 0);
+    auto upperBound = makeConstantVect(polar.nDims, 1);
+
+    testHessian(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
+    testProducer(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
+}
+
 
 TEST(FunctionProducer, ModelMultidimensionalFunction)
 {

@@ -32,8 +32,8 @@ namespace optimization
                 }
                 catch (GaussianException const& exc) {
                     LOG_ERROR("Gaussian Exception: {}", exc.what());
-                    grad.setZero();
                     val = 0;
+                    grad.setZero();
                 }
 
                 auto delta = mDeltaStrategy(iter, p, val, grad);

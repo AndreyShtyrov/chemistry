@@ -20,6 +20,5 @@ matrix linearization(matrix m)
 matrix linearizationNormalization(matrix m)
 {
     Eigen::JacobiSVD<matrix> d(m, Eigen::ComputeFullU | Eigen::ComputeFullV);
-    cout << "\t\t\tsingular values: " << d.singularValues().transpose() << endl;
     return d.matrixU() * isqrt(matrix(d.singularValues().asDiagonal()));
 };

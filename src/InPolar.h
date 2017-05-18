@@ -58,9 +58,14 @@ public:
         return x;
     }
 
+    vect fullTransform(vect const& phi) const
+    {
+        return mFunc.fullTransform(transform(phi));
+    }
+
     FuncT const& getInnerFunction() const
     {
-
+        return mFunc;
     }
 
 public:

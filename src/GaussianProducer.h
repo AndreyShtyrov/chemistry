@@ -140,7 +140,7 @@ private:
     template<typename T>
     bool testCache(Cache<T> const& cache, vect const& x)
     {
-        return mLastPos == x && !cache.empty();
+        return !cache.empty() && mLastPos == x;
     }
 
     void createInputFile(vect const& x, bool withGrad, bool withHess)

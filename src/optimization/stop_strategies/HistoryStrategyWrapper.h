@@ -26,8 +26,8 @@ namespace optimization
         operator()(size_t iter, vect const& p, double value, vect const& grad, matrix const& hess, vect const& delta)
         {
             LOG_INFO(
-               "Delta strategy iteration:\n\titeration: {}\n\tvalue: {}\n\tpoint: {}\n\tgrad: {}\n\tdelta: {}\n\thess values: {}\n",
-               iter, value, p.transpose(), grad.transpose(), delta.transpose(),
+               "Delta strategy iteration:\n\titeration: {}\n\tvalue: {}\n\tpoint: {}\n\tgrad: {} [{}]\n\tdelta: {} [{}]\n\thess values: {}\n",
+               iter, value, p.transpose(), grad.norm(), grad.transpose(), delta.norm(), delta.transpose(),
                Eigen::JacobiSVD<matrix>(hess).singularValues().transpose());
 
             mValues.push_back(value);

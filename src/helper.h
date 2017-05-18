@@ -93,14 +93,14 @@ inline vect makeRandomVect(vect const& lowerBound, vect const& upperBound)
     return lowerBound + (0.5 * (1 + makeRandomVect(lowerBound.rows()).array()) * (upperBound - lowerBound).array()).matrix();
 }
 
-inline vect makeConstantVect(int n, double constant)
+inline vect makeConstantVect(size_t n, double constant)
 {
     vect v(n);
     v.setConstant(constant);
     return v;
 }
 
-inline vect eye(int n, size_t i)
+inline vect eye(size_t n, size_t i)
 {
     vect result(n);
     result.setZero();
