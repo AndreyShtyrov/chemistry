@@ -76,7 +76,7 @@ inline vector<double> linspace(double from, double to, size_t iters) {
     return result;
 }
 
-inline matrix makeRandomMatrix(int rows, int cols)
+inline matrix makeRandomMatrix(size_t rows, size_t cols)
 {
     matrix matr(rows, cols);
     matr.setRandom();

@@ -15,7 +15,7 @@ namespace optimization
         }
 
         bool operator()(size_t iter, vect const &p, double value, vect const &grad, matrix const& hess, vect const &delta) {
-            return /*iter == 1 || */(grad.norm() < mGradThreshold && delta.norm() < mDeltaThreshold);
+            return iter == 20 || (grad.norm() < mGradThreshold && delta.norm() < mDeltaThreshold);
         }
 
     private:

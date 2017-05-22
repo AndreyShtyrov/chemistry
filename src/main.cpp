@@ -334,12 +334,24 @@ void fullShs()
     auto linearHessian = prepareForPolar(prepared, localMinima);
     auto polar = makePolar(prepared, .3);
 
+    auto axis = framework.newPlot();
+    auto projMatrix = makeRandomMatrix(2, polar.nDims);
     for (size_t i = 0; i < 10; i++) {
         auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
         auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-3, 1e-3));
-        auto polarDirection = makeSecondGradientDescent(deltaStrategy, stopStrategy)(polar, randomPolarPoint(polar.nDims + 1)).back();
-        LOG_INFO("initial polar Direction:{}\nchemcraft coords:\n {}\n", polarDirection.transpose(),
-                 toChemcraftCoords(charges, polar.fullTransform(polarDirection)));
+        auto path = makeSecondGradientDescent(deltaStrategy, stopStrategy)(polar, randomPolarPoint(polar.nDims + 1));
+
+        {
+            vector<double> xs, ys;
+            for (auto p : path) {
+                auto proj = projMatrix * p;
+                xs.push_back(proj(0));
+                ys.push_back(proj(1));
+            }
+            framework.plot(axis, xs, ys);
+        }
+//        LOG_INFO("initial polar Direction:{}\nchemcraft coords:\n {}\n", polarDirection.transpose(),
+//                 toChemcraftCoords(charges, polar.fullTransform(polarDirection)));
     }
     return;
 
