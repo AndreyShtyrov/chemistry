@@ -3,6 +3,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 
 #include "FunctionProducer.h"
+#include "InputOutputUtils.h"
 
 string const GAUSSIAN_SCF_HEADER = "%nproc=3\n"
    "%chk=./tmp/chk\n"
@@ -229,24 +230,3 @@ private:
     }
 };
 
-tuple<vector<size_t>, vect> readMolecule(istream& input)
-{
-    vector<size_t> charges;
-    vector<Eigen::Vector3d> poss;
-
-    size_t charge = 0;
-    while (input >> charge) {
-        Eigen::Vector3d pos;
-        for (size_t i = 0; i < 3; i++)
-            input >> pos(i);
-
-        charges.push_back(charge);
-        poss.push_back(pos);
-    }
-
-    vect pos(charges.size() * 3, 1);
-    for (size_t i = 0; i < charges.size(); i++) {
-        pos.block(i * 3, 0, 3, 1) = poss[i];
-    }
-    return make_tuple(charges, pos);
-}

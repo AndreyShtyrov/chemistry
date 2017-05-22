@@ -11,6 +11,7 @@ ofstream out;
 #include "PythongraphicsFramework.h"
 
 #include "optimization/optimizations.h"
+#include "InputOutputUtils.h"
 
 using namespace std;
 using namespace optimization;
@@ -313,78 +314,43 @@ void optimizeStructure()
 
 void fullShs()
 {
-    ifstream input("C2H4");
     vector<size_t> charges;
     vect initState;
-    tie(charges, initState) = readMolecule(input);
+    tie(charges, initState) = readMolecule(ifstream("C2H4"));
 
     initState = rotateToFix(initState);
     auto molecule = GaussianProducer(charges);
-    auto prepared = fixAtomSymmetry(makeAffineTransfomation(molecule, initState));
+    auto fixed = fixAtomSymmetry(makeAffineTransfomation(molecule, initState));
 
-//    auto localMinima = optimize(prepared, makeConstantVect(prepared.nDims, 0)).back();
-    auto localMinima = makeVect(-0.495722, 0.120477, -0.874622, 0.283053, 0.784344, -0.00621205, -0.787401, -0.193879,
+//    auto equilStruct = optimize(fixed, makeConstantVect(fixed.nDims, 0)).back();
+    auto equilStruct = makeVect(-0.495722, 0.120477, -0.874622, 0.283053, 0.784344, -0.00621205, -0.787401, -0.193879,
                                 -0.301919, -0.553383, 0.552153, 0.529974);
 
-//    LOG_INFO("local minima: {}", localMinima.transpose());
-//    LOG_INFO("chemcraft coords:\n{}", to_chemcraft_coords(charges, prepared.fullTransform(localMinima)));
-//    LOG_INFO("gradient: {}", prepared.grad(localMinima).transpose());
-//    LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(prepared.hess(localMinima)).singularValues().transpose());
+    LOG_INFO("local minima: {}", equilStruct.transpose());
+    LOG_INFO("chemcraft coords:\n{}", toChemcraftCoords(charges, fixed.fullTransform(equilStruct)));
+    LOG_INFO("gradient: {}", fixed.grad(equilStruct).transpose());
+    LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(fixed.hess(equilStruct)).singularValues().transpose());
 
-    auto linearHessian = prepareForPolar(prepared, localMinima);
-    auto polar = makePolar(prepared, .3);
+    auto linearHessian = prepareForPolar(fixed, equilStruct);
 
-    auto axis = framework.newPlot();
-    auto projMatrix = makeRandomMatrix(2, polar.nDims);
-    for (size_t i = 0; i < 10; i++) {
-        auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
-        auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-3, 1e-3));
-        auto path = makeSecondGradientDescent(deltaStrategy, stopStrategy)(polar, randomPolarPoint(polar.nDims + 1));
-
-        {
-            vector<double> xs, ys;
-            for (auto p : path) {
-                auto proj = projMatrix * p;
-                xs.push_back(proj(0));
-                ys.push_back(proj(1));
-            }
-            framework.plot(axis, xs, ys);
-        }
-//        LOG_INFO("initial polar Direction:{}\nchemcraft coords:\n {}\n", polarDirection.transpose(),
-//                 toChemcraftCoords(charges, polar.fullTransform(polarDirection)));
-    }
-    return;
-
-
-    double firstR = 0.3;
-    double deltaR = 0.1;
+    double firstR = 0.2;
+    double deltaR = 0.05;
 
 //    auto polarDirection = makeRandomVect(polar.nDims);
 //    auto polarDirection = makeConstantVect(linearHessian.nDims - 1, M_PI / 2);
 //    auto polarDirection = makeVect(1.25211,2.10604,1.30287,2.18491,0.827295,1.74907,1.37185,1.53325,1.49286,1.64736,1.59163);
-    auto polarDirection = makeVect(1.15933, 2.13214, 1.28005, 2.09002, 0.472694, 2.14605, 1.18723, 1.6452, 1.61283,
-                                   1.75991, 1.37056);
-//    {
-//        auto polar = makePolar(linearHessian, firstR);
-////        auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
-////        auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-3, 1e-3));
-////        polarDirection = makeSecondGradientDescent(deltaStrategy, stopStrategy)(polar, polarDirection).back();
-//        LOG_INFO("initial polar Direction:{}\nchemcraft coords: {}\n", polarDirection.transpose(),
-//                 to_chemcraft_coords(charges, polar.fullTransform(polarDirection)));
-//    }
+    auto polarDirection = readVect(ifstream("C2H4_polarDiractions"));
 
-
-    for (size_t iter = 9;; iter++) {
+    for (size_t iter = 0;; iter++) {
         auto polar = makePolar(linearHessian, firstR + iter * deltaR);
         auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
         auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-3, 1e-3));
-//        auto stopStrategy = StopStrategy(1e-3, 1e-3);
         polarDirection = makeSecondGradientDescent(deltaStrategy, stopStrategy)(polar, polarDirection).back();
 
-        LOG_INFO("initial polar Direction:{}\nchemcraft coords: {}\n", polarDirection.transpose(),
+        LOG_INFO("Path chemcraft coords: {}\n", polarDirection.transpose(),
                  toChemcraftCoords(charges, polar.fullTransform(polarDirection)));
-        ofstream output("./first/" + to_string(iter) + ".xyz");
-        output << toChemcraftCoords(charges, polar.fullTransform(polarDirection)) << endl;
+        ofstream output("./second/" + to_string(iter) + ".xyz");
+        output << toChemcraftCoords(charges, polar.fullTransform(polarDirection));
     }
 
 //
