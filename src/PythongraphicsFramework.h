@@ -10,10 +10,10 @@ public:
         mOutput.precision(10);
     }
 
-    string newPlot(string title="''")
+    string newPlot(string title="")
     {
         auto fig = next_var_name();
-        mOutput << fig << " = plt.figure()" << endl << fig << ".suptitle(" << title << ")" << endl;
+        mOutput << fig << " = plt.figure()" << endl << fig << ".suptitle('" << title << "')" << endl;
 
         auto axis = next_var_name();
         mOutput << axis << " = " << fig << ".gca()" << endl;
@@ -24,10 +24,10 @@ public:
 //        return axis;
     }
 
-    string new3dPlot(string title="''")
+    string new3dPlot(string title="")
     {
         auto fig = next_var_name();
-        mOutput << fig << " = plt.figure()" << endl << fig << ".suptitle(" << title << ")" << endl;
+        mOutput << fig << " = plt.figure()" << endl << fig << ".suptitle('" << title << "')" << endl;
 
         auto axis = next_var_name();
         mOutput << axis << " = " << fig << ".gca(projection='3d')" << endl;

@@ -156,3 +156,22 @@ vect polarVectUpperBound(int rows)
 
     return upperBound;
 }
+
+vect randomPolarPoint(size_t nDims)
+{
+    vect v(nDims);
+    normal_distribution<double> distribution(.0, 1.);
+    for (size_t i = 0; i < nDims; i++)
+        v(i) = distribution(randomGen);
+    v /= v.norm();
+
+    vect phi(nDims - 1);
+    double sinProduct = 1;
+    for (size_t i = 0; i < nDims - 1; i++) {
+        double cur = acos(v(i) / sinProduct);
+        sinProduct *= sin(cur);
+        phi(i) = cur;
+    }
+
+    return phi;
+}

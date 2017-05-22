@@ -107,7 +107,7 @@ void buildPolarPicture()
     cout.precision(15);
     cout << fixed << localMinima.transpose() << endl;
     cout << boost::format("local minima:\n%1%\ngradient: %2%\nhessian:\n%3%\n\n") %
-            to_chemcraft_coords(weights, func.transform(localMinima)) % func.grad(localMinima).transpose() %
+            toChemcraftCoords(weights, func.transform(localMinima)) % func.grad(localMinima).transpose() %
             func.hess(localMinima);
     return;
 //    auto linearHess = prepareForPolar(func, localMinima);
@@ -145,7 +145,7 @@ void firstRadiusPolarPicture()
     auto localMinima = makeVect(0.996622544216218, -0.240032763088067, 0.967285186815903);
 
     cout << boost::format("local minima:\n%1%\ngradient: %2%\nhessian:\n%3%\n\n") %
-            to_chemcraft_coords(weights, func.transform(localMinima)) % func.grad(localMinima).transpose() %
+            toChemcraftCoords(weights, func.transform(localMinima)) % func.grad(localMinima).transpose() %
             func.hess(localMinima);
 
     auto linearHess = prepareForPolar(func, localMinima);
@@ -308,7 +308,7 @@ void optimizeStructure()
 
     auto optimized = optimize(prepared, makeConstantVect(prepared.nDims, 0), true).back();
 
-    cout << to_chemcraft_coords(molecule.getCharges(), prepared.transform(optimized)) << endl;
+    cout << toChemcraftCoords(molecule.getCharges(), prepared.transform(optimized)) << endl;
 }
 
 void fullShs()
@@ -332,6 +332,17 @@ void fullShs()
 //    LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(prepared.hess(localMinima)).singularValues().transpose());
 
     auto linearHessian = prepareForPolar(prepared, localMinima);
+    auto polar = makePolar(prepared, .3);
+
+    for (size_t i = 0; i < 10; i++) {
+        auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
+        auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-3, 1e-3));
+        auto polarDirection = makeSecondGradientDescent(deltaStrategy, stopStrategy)(polar, randomPolarPoint(polar.nDims + 1)).back();
+        LOG_INFO("initial polar Direction:{}\nchemcraft coords:\n {}\n", polarDirection.transpose(),
+                 toChemcraftCoords(charges, polar.fullTransform(polarDirection)));
+    }
+    return;
+
 
     double firstR = 0.3;
     double deltaR = 0.1;
@@ -339,7 +350,8 @@ void fullShs()
 //    auto polarDirection = makeRandomVect(polar.nDims);
 //    auto polarDirection = makeConstantVect(linearHessian.nDims - 1, M_PI / 2);
 //    auto polarDirection = makeVect(1.25211,2.10604,1.30287,2.18491,0.827295,1.74907,1.37185,1.53325,1.49286,1.64736,1.59163);
-    auto polarDirection = makeVect(1.15933,2.13214,1.28005,2.09002,0.472694,2.14605,1.18723,1.6452,1.61283,1.75991,1.37056);
+    auto polarDirection = makeVect(1.15933, 2.13214, 1.28005, 2.09002, 0.472694, 2.14605, 1.18723, 1.6452, 1.61283,
+                                   1.75991, 1.37056);
 //    {
 //        auto polar = makePolar(linearHessian, firstR);
 ////        auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
@@ -350,7 +362,7 @@ void fullShs()
 //    }
 
 
-    for (size_t iter = 9; ; iter++) {
+    for (size_t iter = 9;; iter++) {
         auto polar = makePolar(linearHessian, firstR + iter * deltaR);
         auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
         auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-3, 1e-3));
@@ -358,9 +370,9 @@ void fullShs()
         polarDirection = makeSecondGradientDescent(deltaStrategy, stopStrategy)(polar, polarDirection).back();
 
         LOG_INFO("initial polar Direction:{}\nchemcraft coords: {}\n", polarDirection.transpose(),
-                 to_chemcraft_coords(charges, polar.fullTransform(polarDirection)));
+                 toChemcraftCoords(charges, polar.fullTransform(polarDirection)));
         ofstream output("./first/" + to_string(iter) + ".xyz");
-        output << to_chemcraft_coords(charges, polar.fullTransform(polarDirection)) << endl;
+        output << toChemcraftCoords(charges, polar.fullTransform(polarDirection)) << endl;
     }
 
 //

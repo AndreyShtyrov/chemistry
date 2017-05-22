@@ -2,6 +2,8 @@
 
 #include "PythongraphicsFramework.h"
 
+mt19937 randomGen;
+
 PythongraphicsFramework framework("func.out");
 shared_ptr<spdlog::logger> logger;
 

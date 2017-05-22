@@ -28,6 +28,8 @@ using namespace std;
 extern shared_ptr<spdlog::logger> logger;
 void initializeLogger();
 
+extern mt19937 randomGen;
+
 using matrix = Eigen::MatrixXd;
 
 using vect = Eigen::VectorXd;
@@ -81,7 +83,7 @@ inline matrix makeRandomMatrix(int rows, int cols)
     return matr;
 };
 
-inline vect makeRandomVect(int n)
+inline vect makeRandomVect(size_t n)
 {
     vect v(n);
     v.setRandom();
@@ -132,7 +134,7 @@ vect readVect(size_t rows, T&& stream)
     return v;
 }
 
-inline string to_chemcraft_coords(vector<size_t> const& charges, vect p)
+inline string toChemcraftCoords(vector<size_t> const& charges, vect p)
 {
     stringstream result;
     for (size_t i = 0; i < charges.size(); i++)

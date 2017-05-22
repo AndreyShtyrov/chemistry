@@ -147,7 +147,7 @@ private:
     {
         static int counter = 0;
         ofstream output("./tmp/res" + to_string(counter++) + ".xyz");
-        output << to_chemcraft_coords(mCharges, x);
+        output << toChemcraftCoords(mCharges, x);
 
         ofstream f("./tmp/a.inp");
         f.precision(30);
