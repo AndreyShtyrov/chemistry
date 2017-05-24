@@ -179,15 +179,18 @@ void fullShs()
 //    auto polarDirection = makeVect(1.25211,2.10604,1.30287,2.18491,0.827295,1.74907,1.37185,1.53325,1.49286,1.64736,1.59163);
 //    auto polarDirection = readVect(ifstream("C2H4_polarDiractions"));
 
-    auto initDirections = parseLogForStartingPoints();
-    for (auto polarDirection : initDirections) {
-        static int counter = 0;
-        counter++;
-        system(str(boost::format("mkdir %1%") % counter).c_str());
+    ifstream input("C2H4_polarDirections");
+    size_t cnt;
+    input >> cnt;
 
-        LOG_INFO("Starting new {} direction [{}]", counter, polarDirection.transpose());
+    for (size_t i = 0; i < cnt; i++) {
+        auto polarDirection = readVect(input);
 
-        for (size_t iter = 0; iter < 100; iter++) {
+        system(str(boost::format("mkdir %1%") % i).c_str());
+
+        LOG_INFO("Starting new {} direction [{}]", i, polarDirection.transpose());
+
+        for (size_t iter = 0; iter < 20; iter++) {
             auto polar = makePolar(linearHessian, firstR + iter * deltaR);
             auto deltaStrategy = makeRepeatDeltaStrategy(HessianDeltaStrategy());
             auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-3, 1e-3));
@@ -195,7 +198,7 @@ void fullShs()
 
             LOG_INFO("Path chemcraft coords {}:\n {}\n", iter, polarDirection.transpose(),
                      toChemcraftCoords(charges, polar.fullTransform(polarDirection)));
-            ofstream output(str(boost::format("./%1%/%2%.xyz") % counter % iter));
+            ofstream output(str(boost::format("./%1%/%2%.xyz") % i % iter));
             output << toChemcraftCoords(charges, polar.fullTransform(polarDirection));
         }
     }
@@ -207,134 +210,7 @@ int main()
     initializeLogger();
 
 //    optimizeStructure();
-//    fullShs();
-
-
-    vector<vect> coords;
-    vector<vect> polarCoords;
-
-    ifstream log("loggg");
-    string s;
-    while (getline(log, s))
-        if (s.find("initial polar Direction") != string::npos) {
-            {
-                stringstream ss(s);
-                for (int i = 0; i < 5; i++)
-                    ss >> s;
-
-                vect v(11);
-                for (int i = 0; i < v.rows(); i++)
-                    ss >> v(i);
-                polarCoords.push_back(v);
-            }
-
-            stringstream ss;
-
-            getline(log, s);
-            for (int i = 0; i < 6; i++) {
-                getline(log, s);
-                ss << s << endl;
-            }
-
-            vector<size_t> charges;
-            vect initState;
-            tie(charges, initState) = readMolecule(ss);
-
-            coords.push_back(initState);
-        }
-
-    vector<size_t> charges;
-    vect initState;
-    tie(charges, initState) = readMolecule(ifstream("C2H4"));
-
-    GaussianProducer producer(charges);
-    auto prepared = fixAtomSymmetry(makeAffineTransfomation(producer, rotateToFix(initState)));
-
-    auto localMinima = makeVect(-0.495722, 0.120477, -0.874622, 0.283053, 0.784344, -0.00621205, -0.787401, -0.193879,
-                                -0.301919, -0.553383, 0.552153, 0.529974);
-    auto linearHessian = prepareForPolar(prepared, localMinima);
-    auto polar = makePolar(linearHessian, .3);
-//
-//    cout.precision(10);
-//    for (auto v : polarCoords) {
-//        auto polarGrad = polar.grad(v);
-//        auto dir = polar.transform(v);
-//        auto prevGrad = linearHessian.grad(dir);
-//
-//        vect dirOne = dir / dir.norm();
-//        vect firstProj = dirOne * (dirOne.transpose() * prevGrad);
-//        vect secondProj = prevGrad - firstProj;
-//
-//        LOG_INFO("\n\tdirection: {}\n\tpolar grad norm: {}\n\tgrad norm: {}\n\tcomponents: ({}, {})", dir.transpose(),
-//                 polarGrad.norm(), prevGrad.norm(), firstProj.norm(), secondProj.norm());
-//    }
-
-    for (size_t i = 0; i < coords.size(); i++)
-        cout << (polar.fullTransform(polarCoords[i]) - coords[i]).norm() << ' ';
-    cout << endl;
-
-    for (size_t i = coords.size(); i; i--)
-        if (polar.grad(polarCoords[i - 1]).norm() > 1e-4) {
-            LOG_ERROR("bad grad norm ({}) in index {}", polar.grad(polarCoords[i - 1]).norm(), i);
-            polarCoords.erase(polarCoords.begin() + i - 1);
-            coords.erase(coords.begin() + i - 1);
-        }
-
-    for (size_t i = 0; i < coords.size(); i++)
-        cout << (polar.fullTransform(polarCoords[i]) - coords[i]).norm() << ' ';
-    cout << endl;
-
-    vector<vect> goodCoords;
-    while (coords.size()) {
-        vect current = coords.front();
-        goodCoords.push_back(polarCoords.front());
-
-        for (size_t i = coords.size(); i; i--)
-            if ((current - coords[i - 1]).norm() < 0.2) {
-                coords.erase(coords.begin() + i - 1);
-                polarCoords.erase(polarCoords.begin() + i - 1);
-            }
-    }
-
-    cout.precision(10);
-    for (auto const& v : goodCoords) {
-        cout << v.rows() << endl;
-        for (size_t i = 0; i < (size_t) v.rows(); i++)
-            cout << fixed << v(i) << ' ';
-        cout << endl;
-    }
-
-    cout << endl << endl;
-
-    for (auto const& v : goodCoords) {
-        cout << polar.fullTransform(v).transpose() << endl;
-    }
-
-//
-//    vect first = coords.front();
-//
-//    first = coords.front();
-//    coords.resize(remove_if(coords.begin(), coords.end(), [&](vect const& v){return (first - v).norm() < 0.2;}) - coords.begin());
-//
-//    first = coords.front();
-//    coords.resize(remove_if(coords.begin(), coords.end(), [&](vect const& v){return (first - v).norm() < 0.2;}) - coords.begin());
-//
-//    first = coords.front();
-//    coords.resize(remove_if(coords.begin(), coords.end(), [&](vect const& v){return (first - v).norm() < 0.2;}) - coords.begin());
-//
-//
-//    vector<double> xs;
-//    for (auto& v : coords)
-//        xs.push_back((coords.front() - v).norm());
-//    sort(xs.begin(), xs.end());
-//    framework.plot(framework.newPlot(), xs);
-//
-//    cout.precision(2);
-//    for (auto& v1 : coords) {
-//        for (auto& v2 : coords)
-//            cout << fixed << (v1 - v2).norm() << ' ';
-//        cout << endl;
-//    }
+    fullShs();
 
     return 0;
 }
