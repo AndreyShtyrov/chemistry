@@ -2,6 +2,8 @@
 
 #include "helper.h"
 
+#include "linearAlgebraUtils.h"
+
 namespace optimization {
     struct DFP {
         void update(matrix &B, vect const& dx, vect const& dy) {

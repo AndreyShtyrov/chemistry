@@ -15,8 +15,8 @@ namespace optimization
 
         bool operator()(size_t iter, vect const& p, double value, vect const& grad, vect const& delta)
         {
-            LOG_INFO("Delta strategy iteration:\n\titeration: {}\n\tvalue: {}\n\tpoint: {}\n\tgrad: {}\n\tdelta: {}\n",
-                     iter, value, p.transpose(), grad.transpose(), delta.transpose());
+            LOG_INFO("Delta strategy iteration:\n\titeration: {}\n\tvalue: {}\n\tpoint: {}\n\tgrad: {} [{}]\n\tdelta: {} [{}]\n",
+                     iter, value, p.transpose(), grad.norm(), grad.transpose(), delta.norm(), delta.transpose());
             mGrads.push_back(grad);
 
             return mStopStrategy(iter, p, value, grad, delta);

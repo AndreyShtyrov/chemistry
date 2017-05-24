@@ -76,54 +76,6 @@ inline vector<double> linspace(double from, double to, size_t iters) {
     return result;
 }
 
-inline matrix makeRandomMatrix(size_t rows, size_t cols)
-{
-    matrix matr(rows, cols);
-    matr.setRandom();
-    return matr;
-};
-
-inline vect makeRandomVect(size_t n)
-{
-    vect v(n);
-    v.setRandom();
-    return v;
-};
-
-inline vect makeRandomVect(vect const& lowerBound, vect const& upperBound)
-{
-    return lowerBound + (0.5 * (1 + makeRandomVect(lowerBound.rows()).array()) * (upperBound - lowerBound).array()).matrix();
-}
-
-inline vect makeConstantVect(size_t n, double constant)
-{
-    vect v(n);
-    v.setConstant(constant);
-    return v;
-}
-
-inline vect eye(size_t n, size_t i)
-{
-    vect result(n);
-    result.setZero();
-    result(i) = 1.;
-
-    return result;
-};
-
-inline matrix makeConstantMatrix(int rows, int cols, double constant)
-{
-    matrix m(rows, cols);
-    m.setConstant(constant);
-    return m;
-}
-
-inline matrix identity(int rows, int cols)
-{
-    matrix result(rows, cols);
-    result.setIdentity();
-    return result;
-};
 
 template<typename T>
 vect readVect(size_t rows, T&& stream)

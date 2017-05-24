@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "FunctionProducers.h"
+#include "producers/producers.h"
 
 vect getRandomPoint(vect const& lowerBound, vect const& upperBound)
 {

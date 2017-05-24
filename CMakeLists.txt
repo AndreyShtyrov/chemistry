@@ -38,7 +38,7 @@ include_directories(${SOURCE_DIR})
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 #include_directories(${SRC)
-SET(SOURCE_FILES src/helper.cpp src/InputOutputUtils.cpp)
+SET(SOURCE_FILES src/helper.cpp src/InputOutputUtils.cpp src/linearAlgebraUtils.cpp)
 
 add_executable(chemistry ${SOURCE_DIR}/main.cpp ${SOURCE_FILES})
 add_executable(run_tests ${SOURCE_DIR}/tests.cpp ${SOURCE_FILES})

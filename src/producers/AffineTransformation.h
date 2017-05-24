@@ -3,7 +3,7 @@
 #include "helper.h"
 
 #include "FunctionProducer.h"
-#include "linearization.h"
+#include "linearAlgebraUtils.h"
 
 template<typename FuncT>
 class AffineTransformation : public FunctionProducer
@@ -63,6 +63,12 @@ template<typename FuncT>
 auto makeAffineTransfomation(FuncT&& func, vect delta, matrix const& A)
 {
     return AffineTransformation<decay_t<FuncT>>(forward<FuncT>(func), move(delta), A);
+}
+
+template<typename FuncT>
+auto makeAffineTransfomation(FuncT&& func, matrix const& A)
+{
+    return AffineTransformation<decay_t<FuncT>>(forward<FuncT>(func), makeConstantVect(func.nDims, 0), A);
 }
 
 template<typename FuncT>
