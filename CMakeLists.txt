@@ -7,7 +7,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-pthread")
 SET(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 
 find_package(Eigen3 REQUIRED)
-
+find_package(Boost REQUIRED COMPONENTS system filesystem)
 
 #gtest
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
@@ -33,7 +33,6 @@ if (NOT EXISTS "${CMAKE_SOURCE_DIR}/thirdparty/spdlog/include")
 endif()
 include_directories(${CMAKE_SOURCE_DIR}/thirdparty/spdlog/include)
 
-
 include_directories(${SOURCE_DIR})
 include_directories(${EIGEN3_INCLUDE_DIR})
 
@@ -41,6 +40,7 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 SET(SOURCE_FILES src/helper.cpp src/InputOutputUtils.cpp src/linearAlgebraUtils.cpp)
 
 add_executable(chemistry ${SOURCE_DIR}/main.cpp ${SOURCE_FILES})
-add_executable(run_tests ${SOURCE_DIR}/tests.cpp ${SOURCE_FILES})
+target_link_libraries(chemistry ${Boost_LIBRARIES})
 
-target_link_libraries(run_tests gtest_main)
+add_executable(run_tests ${SOURCE_DIR}/tests.cpp ${SOURCE_FILES})
+target_link_libraries(run_tests gtest_main )

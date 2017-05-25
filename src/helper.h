@@ -75,14 +75,3 @@ inline vector<double> linspace(double from, double to, size_t iters) {
         result.push_back(from + (to - from) / (iters - 1) * i);
     return result;
 }
-
-
-template<typename T>
-vect readVect(size_t rows, T&& stream)
-{
-    vect v(rows);
-    for (size_t i = 0; i < rows; i++)
-        stream >> v(i);
-    return v;
-}
-

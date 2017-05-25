@@ -114,6 +114,7 @@ vect rotateToFix(vect p)
 
     Eigen::Vector3d ox = {1, 0, 0};
     Eigen::Vector3d axis = ps[1].cross(ox);
+//    axis /= axis.norm();
     double angle = atan2(ps[1].cross(ox).norm(), ps[1].dot(ox));
     Eigen::Matrix3d m = Eigen::AngleAxisd(angle, axis).matrix();
 

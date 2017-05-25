@@ -160,25 +160,23 @@ vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, do
 
     vector<vect> path;
 
-    for (size_t iter = 0; ; iter++) {
+    for (size_t iter = 0;; iter++) {
         auto rotation = rotationMatrix(e, p);
         auto rotated = makeAffineTransfomation(func, rotation);
         auto polar = makePolar(rotated, r);
 
         double value;
         vect grad;
-        matrix hess;
-
+        matrix hess(func.nDims, func.nDims);
 
         vect lastP = p;
-        if (iter < 20) {
+        if (iter < 0) {
             hess.setZero();
             grad = polar.grad(theta);
             value = polar(theta);
 
             p = rotated.transform(polar.transform(theta - grad));
-        }
-        else {
+        } else {
             hess = polar.hess(theta);
             grad = polar.grad(theta);
             value = polar(theta);
@@ -195,39 +193,21 @@ vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, do
     return path;
 }
 
-void fullShs()
+template<typename FuncT>
+void findInitialPolarDirections(FuncT& func)
 {
-    vector<size_t> charges;
-    vect initState;
-    tie(charges, initState) = readMolecule(ifstream("C2H4"));
-
-    initState = rotateToFix(initState);
-    auto molecule = GaussianProducer(charges);
-    auto fixed = fixAtomSymmetry(makeAffineTransfomation(molecule, initState));
-
-//    auto equilStruct = optimize(fixed, makeConstantVect(fixed.nDims, 0)).back();
-    auto equilStruct = makeVect(-0.495722, 0.120477, -0.874622, 0.283053, 0.784344, -0.00621205, -0.787401, -0.193879,
-                                -0.301919, -0.553383, 0.552153, 0.529974);
-
-    LOG_INFO("local minima: {}", equilStruct.transpose());
-    LOG_INFO("chemcraft coords:\n{}", toChemcraftCoords(charges, fixed.fullTransform(equilStruct)));
-    LOG_INFO("gradient: {}", fixed.grad(equilStruct).transpose());
-    LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(fixed.hess(equilStruct)).singularValues().transpose());
-
-    auto linearHessian = prepareForPolar(fixed, equilStruct);
-
     auto axis = framework.newPlot();
-    auto projMatrix = makeRandomMatrix(2, molecule.nDims);
+    auto projMatrix = makeRandomMatrix(2, func.nDims);
 
     while (true) {
         vector<double> xs, ys;
 
-        vect pos = randomVectOnSphere(linearHessian.nDims, 0.3);
+        vect pos = randomVectOnSphere(func.nDims, 0.3);
 
-        auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), linearHessian, pos, .3);
+        auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, .3);
 
         for (auto const& p : path) {
-            vect proj = projMatrix * linearHessian.fullTransform(p);
+            vect proj = projMatrix * func.fullTransform(p);
             xs.push_back(proj(0));
             ys.push_back(proj(1));
         }
@@ -238,102 +218,224 @@ void fullShs()
         LOG_INFO("initial polar Direction: {}", path.back().transpose());
 
         vect p = path.back();
-        vect grad = linearHessian.grad(p);
+        vect grad = func.grad(p);
         vect dir = p / p.norm();
         vect first = dir * grad.dot(dir);
         vect second = grad - first;
         LOG_INFO("read grad norm is {}\nfirst norm = {}\nsecond norm = {}", grad.norm(), first.norm(), second.norm());
     }
-
-//    double firstR = 0.3;
-//    double deltaR = 0.05;
-
-//    auto polarDirection = makeRandomVect(polar.nDims);
-//    auto polarDirection = makeConstantVect(linearHessian.nDims - 1, M_PI / 2);
-//    auto polarDirection = makeVect(1.25211,2.10604,1.30287,2.18491,0.827295,1.74907,1.37185,1.53325,1.49286,1.64736,1.59163);
-//    auto polarDirection = readVect(ifstream("C2H4_polarDiractions"));
-
-//
-//    while (true) {
-//        vect p = makeRandomVect(N) * 1000;
-//        vect e = makeRandomVect(N);
-//        e = e / e.norm() * p.norm();
-////
-////        vect u = (p - e * p.dot(e));
-////        u /= u.norm();
-////        double alpha = acos(p.dot(e) / p.norm());
-////
-////        auto rotation = rotationMatrix(e, u, alpha);
-////        cout << (rotation * p).transpose() << endl;
-////        cout << (rotationMatrix(p, e) * p).transpose() << endl;
-//        cout << (e - rotationMatrix(p, e) * p).norm() << endl;
-////        cout << endl;
-//    }
-
-//    ifstream input("C2H4_polarDirections");
-//    size_t cnt;
-//    input >> cnt;
-//    for (size_t i = 0; i < cnt; i++) {
-//        auto polarDirection = readVect(input);
-//
-//        auto p = polar.transform(polarDirection);
-//        auto e = eye((size_t) p.rows(), (size_t) p.rows() - 1);
-//        auto rotation = rotationMatrix(e, p);
-//
-//        auto rotated = makeAffineTransfomation(linearHessian, rotation);
-//        auto polar2 = makePolar(rotated, .3);
-//
-//        cout << polar2.transform(makeConstantVect(polar2.nDims, M_PI / 2)).transpose() << endl;
-//        cout << rotated.transform(polar2.transform(makeConstantVect(polar2.nDims, M_PI / 2))).transpose() << endl;
-//        cout << polar.transform(polarDirection).transpose() << endl;
-//        cout << endl;
-//        cout << polar(polarDirection) << ' ' << polar2(makeConstantVect(polar2.nDims, M_PI / 2)) << endl;
-//
-//        LOG_INFO("{}", polar.grad(polarDirection).norm());
-//        LOG_INFO("{}", polar2.grad(makeConstantVect(polar2.nDims, M_PI / 2)).norm());
-//        LOG_INFO("{}", Eigen::JacobiSVD<matrix>(polar.hess(polarDirection)).singularValues().transpose());
-//        LOG_INFO("{}", Eigen::JacobiSVD<matrix>(polar2.hess(makeConstantVect(polar2.nDims, M_PI / 2))).singularValues().transpose());
-//        cout << endl << endl << endl;
-//    }
 }
 
+template<typename FuncT>
+void buildAllPaths(vector<size_t> const& charges, FuncT& linearHessian)
+{
+    ifstream input("C2H4_polarDirections");
+    size_t cnt;
+    input >> cnt;
+
+    double const firstR = 0.3;
+    double const deltaR = 0.01;
+
+    for (size_t i = 0; i < cnt; i++) {
+        auto direction = readVect(input);
+        LOG_INFO("Path #{}. Initial direction: {}", i, direction.transpose());
+
+        system(str(boost::format("mkdir %1%") % i).c_str());
+        double value = linearHessian(direction);
+
+        for (size_t j = 0; j < 100; j++) {
+            double r = firstR + deltaR * j;
+
+            direction = direction / direction.norm() * r;
+            direction = optimizeOnSphere(makeHistoryStrategy(StopStrategy(5e-4, 5e-4)), linearHessian, direction,
+                                         r).back();
+
+            double newValue = linearHessian(direction);
+            LOG_INFO("New {} point in path: value = {}, chemcraft coords:\n{}", j, newValue,
+                     toChemcraftCoords(charges, linearHessian.fullTransform(direction)));
+
+            ofstream output(str(boost::format("./%1%/%2%.xyz") % i % j));
+            output << toChemcraftCoords(charges, linearHessian.fullTransform(direction)) << endl;
+
+            if (newValue < value)
+                break;
+            value = newValue;
+        }
+    }
+}
+
+void fullShs()
+{
+    vector<size_t> charges;
+    vect initState;
+    tie(charges, initState) = readMolecule(ifstream("C2H4"));
+
+    initState = rotateToFix(initState);
+    auto molecule = GaussianProducer(charges);
+    auto prepared = fixAtomSymmetry(makeAffineTransfomation(molecule, initState));
+
+//    auto equilStruct = optimize(fixed, makeConstantVect(fixed.nDims, 0)).back();
+    auto equilStruct = makeVect(-0.495722, 0.120477, -0.874622, 0.283053, 0.784344, -0.00621205, -0.787401, -0.193879,
+                                -0.301919, -0.553383, 0.552153, 0.529974);
+
+    LOG_INFO("local minima: {}", equilStruct.transpose());
+    LOG_INFO("chemcraft coords:\n{}", toChemcraftCoords(charges, prepared.fullTransform(equilStruct)));
+    LOG_INFO("gradient: {}", prepared.grad(equilStruct).transpose());
+    LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(prepared.hess(equilStruct)).singularValues().transpose());
+
+    auto linearHessian = prepareForPolar(prepared, equilStruct);
+
+    ifstream input("C2H4_polarDirections");
+    size_t cnt;
+    input >> cnt;
+
+    double const firstR = 0.3;
+    double const deltaR = 0.01;
+
+    auto direction = readVect(input);
+    LOG_INFO("Initial direction: {}", direction.transpose());
+
+//    double value = linearHessian(direction);
+    for (size_t j = 0; ; j++) {
+        double r = firstR + deltaR * j;
+
+        direction = direction / direction.norm() * r;
+        direction = optimizeOnSphere(makeHistoryStrategy(StopStrategy(5e-4, 5e-4)), linearHessian, direction,
+                                     r).back();
+
+        double newValue = linearHessian(direction);
+        LOG_INFO("New {} point in path: value = {}, chemcraft coords:\n{}", j, newValue,
+                 toChemcraftCoords(charges, linearHessian.fullTransform(direction)));
+
+        ofstream output(str(boost::format("./c2h4/%1%.xyz") % j));
+        output << toChemcraftCoords(charges, linearHessian.fullTransform(direction)) << endl;
+
+//        if (newValue < value)
+//            break;
+//        value = newValue;
+    }
+}
+
+void sortByEnergy()
+{
+    vector<size_t> charges;
+    vect initState;
+    tie(charges, initState) = readMolecule(ifstream("C2H4"));
+
+    initState = rotateToFix(initState);
+    auto molecule = GaussianProducer(charges);
+    auto prepared = fixAtomSymmetry(makeAffineTransfomation(molecule, initState));
+
+//    auto equilStruct = optimize(fixed, makeConstantVect(fixed.nDims, 0)).back();
+    auto equilStruct = makeVect(-0.495722, 0.120477, -0.874622, 0.283053, 0.784344, -0.00621205, -0.787401, -0.193879,
+                                -0.301919, -0.553383, 0.552153, 0.529974);
+
+    LOG_INFO("local minima: {}", equilStruct.transpose());
+    LOG_INFO("chemcraft coords:\n{}", toChemcraftCoords(charges, prepared.fullTransform(equilStruct)));
+    LOG_INFO("gradient: {}", prepared.grad(equilStruct).transpose());
+    LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(prepared.hess(equilStruct)).singularValues().transpose());
+
+    auto linearHessian = prepareForPolar(prepared, equilStruct);
+
+    ifstream input("C2H4_polarDirections");
+    size_t cnt;
+    input >> cnt;
+
+    vector<vect> dirs;
+    vector<double> vals;
+
+    for (size_t i = 0; i < cnt; i++) {
+        auto direction = readVect(input);
+        dirs.push_back(direction);
+        vals.push_back(linearHessian(direction));
+    }
+
+    vector<size_t> inds;
+    for (size_t i = 0; i < dirs.size(); i++)
+        inds.push_back(i);
+
+    sort(inds.begin(), inds.end(), [&](size_t a, size_t b){ return vals[a] < vals[b]; });
+
+    for (size_t i : inds)
+        cout << vals[i] << endl;
+    cout << endl;
+
+    cout.precision(10);
+    for (size_t i : inds) {
+        cout << dirs[i].rows() << endl;
+        for (int j = 0; j < dirs[i].rows(); j++)
+            cout << fixed << dirs[i](j) << ' ';
+        cout << endl;
+    }
+}
+
+void filterPolarDirectionsLogFile()
+{
+    auto ps = parseLogForStartingPoints(12);
+    cout << ps.size() << endl;
+
+    vector<bool> used(ps.size());
+    for (size_t i = 0; i < ps.size(); i++)
+        for (size_t j = i + 1; j < ps.size(); j++)
+            if ((ps[i] - ps[j]).norm() < 1e-3)
+                used[j] = true;
+
+    size_t cnt = 0;
+    for (size_t i = 0; i < ps.size(); i++)
+        if (!used[i])
+            cnt++;
+    cout << cnt << endl;
+
+    for (auto val : used)
+        cout << val;
+    cout << endl << endl;
+
+    cout.precision(10);
+    for (size_t i = 0; i < ps.size(); i++)
+        if (!used[i]) {
+            cout << ps[i].rows() << endl;
+            for (int j = 0; j < ps[i].rows(); j++)
+                cout << fixed << ps[i](j) << ' ';
+            cout << endl;
+        }
+    cout << endl << endl << endl;
+
+    cout << ps.size() << endl;
+    for (auto const& p : ps)
+        cout << p.transpose() << endl;
+    cout << endl << endl;
+
+    cout.precision(2);
+    for (auto const& p : ps) {
+        for (auto const& p2 : ps)
+            cout << fixed << (p - p2).norm() << ' ';
+        cout << endl;
+    }
+}
+
+#include <boost/filesystem.hpp>
+
+using namespace boost::filesystem;
 
 int main()
 {
     initializeLogger();
-
-//    optimizeStructure();
 //    fullShs();
 
-    auto ps = parseLogForStartingPoints(12);
+    int const N = 373;
 
-    for (auto const& p : ps)
-        cout << p.transpose() << endl;
-    cout << endl << endl;
-    for (auto const& p : ps) {
-        for (auto const& p2 : ps)
-            cout << (p - p2).norm() << ' ';
-        cout << endl;
+    vector<double> vs;
+
+    for (size_t j = 0; j < N; j++) {
+        vector<size_t> charges;
+        vect initState;
+        tie(charges, initState) = readMolecule(ifstream(str(boost::format("./c2h4/%1%.xyz") % j)));
+        GaussianProducer producer(charges);
+
+        vs.push_back(producer(initState));
     }
-//   vector<size_t> charges;
-//    vect initState;
-//    tie(charges, initState) = readMolecule(ifstream("C2H4"));
-//
-//    initState = rotateToFix(initState);
-//    auto molecule = GaussianProducer(charges);
-//    auto fixed = fixAtomSymmetry(makeAffineTransfomation(molecule, initState));
-//
-////    auto equilStruct = optimize(fixed, makeConstantVect(fixed.nDims, 0)).back();
-//    auto equilStruct = makeVect(-0.495722, 0.120477, -0.874622, 0.283053, 0.784344, -0.00621205, -0.787401, -0.193879,
-//                                -0.301919, -0.553383, 0.552153, 0.529974);
-//
-//    LOG_INFO("local minima: {}", equilStruct.transpose());
-//    LOG_INFO("chemcraft coords:\n{}", toChemcraftCoords(charges, fixed.fullTransform(equilStruct)));
-//    LOG_INFO("gradient: {}", fixed.grad(equilStruct).transpose());
-//    LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(fixed.hess(equilStruct)).singularValues().transpose());
-//
-//    auto linearHessian = prepareForPolar(fixed, equilStruct);
 
+    framework.plot(framework.newPlot(), vs);
 
     return 0;
 }

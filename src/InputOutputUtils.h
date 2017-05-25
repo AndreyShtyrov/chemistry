@@ -15,6 +15,16 @@ vect readVect(StreamT&& stream)
     return v;
 }
 
+template<typename T>
+vect readVect(size_t rows, T&& stream)
+{
+    vect v(rows);
+    for (size_t i = 0; i < rows; i++)
+        stream >> v(i);
+    return v;
+}
+
+
 template<typename StreamT>
 tuple<vector<size_t>, vect> readMolecule(StreamT&& stream)
 {

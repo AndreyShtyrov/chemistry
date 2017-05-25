@@ -56,7 +56,7 @@ private:
 template<typename FuncT>
 auto makeAffineTransfomation(FuncT&& func, vect delta)
 {
-    return AffineTransformation<decay_t<FuncT>>(forward<FuncT>(func), move(delta), identity(func.nDims, func.nDims));
+    return AffineTransformation<decay_t<FuncT>>(forward<FuncT>(func), move(delta), identity(func.nDims));
 }
 
 template<typename FuncT>
