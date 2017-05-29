@@ -131,6 +131,16 @@ public:
         return mCharges;
     }
 
+    vect transform(vect from) const
+    {
+        return from;
+    }
+
+    vect fullTransform(vect from) const
+    {
+        return from;
+    }
+
 private:
     vect mLastPos;
     Cache<double> mValue;

@@ -6,7 +6,7 @@ vect makeRandomVect(size_t n);
 
 vect makeRandomVect(vect const& lowerBound, vect const& upperBound);
 
-vect makeConstantVect(size_t n, double constant);
+vect makeConstantVect(size_t n, double constant=0.);
 
 vect eye(size_t n, size_t i);
 

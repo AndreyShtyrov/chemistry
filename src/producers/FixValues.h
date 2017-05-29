@@ -67,9 +67,23 @@ public:
         return to;
     }
 
+    vect backTransform(vect const& from) const
+    {
+        vect result(nDims);
+        for (size_t i = 0, j = 0, k = 0; (int) i < from.rows(); i++)
+            if (i == mPoss[k]) {
+                assert(abs(from(i) - mVals[k]) < 1e-7);
+                k++;
+            }
+            else {
+                result(j++) = from(i);
+            }
+        return result;
+    }
+
     vect fullTransform(vect const& from) const
     {
-        return mFunc.transform(transform(from));
+        return mFunc.fullTransform(transform(from));
     }
 
     FuncT const& getInnerFunction() const
@@ -114,7 +128,7 @@ vect rotateToFix(vect p)
 
     Eigen::Vector3d ox = {1, 0, 0};
     Eigen::Vector3d axis = ps[1].cross(ox);
-//    axis /= axis.norm();
+    axis /= axis.norm();
     double angle = atan2(ps[1].cross(ox).norm(), ps[1].dot(ox));
     Eigen::Matrix3d m = Eigen::AngleAxisd(angle, axis).matrix();
 
