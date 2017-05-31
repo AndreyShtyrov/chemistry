@@ -15,8 +15,8 @@ vect readVect(StreamT&& stream)
     return v;
 }
 
-template<typename T>
-vect readVect(size_t rows, T&& stream)
+template<typename StreamT>
+vect readVect(size_t rows, StreamT&& stream)
 {
     vect v(rows);
     for (size_t i = 0; i < rows; i++)
@@ -24,6 +24,17 @@ vect readVect(size_t rows, T&& stream)
     return v;
 }
 
+template<typename StreamT>
+vector<size_t> readCharges(StreamT&& stream)
+{
+    size_t n;
+    stream >> n;
+
+    vector<size_t> charges(n);
+    for (size_t i = 0; i < n; i++)
+        stream >> charges[i];
+    return charges;
+}
 
 template<typename StreamT>
 tuple<vector<size_t>, vect> readMolecule(StreamT&& stream)
