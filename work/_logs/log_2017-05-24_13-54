@@ -1,0 +1,5 @@
+[13:54:45] [/home/george/au/chemistry/src/main.cpp:278] bad grad norm (0.0288283) in index 57
+[13:54:46] [/home/george/au/chemistry/src/main.cpp:278] bad grad norm (0.028759) in index 56
+[13:54:56] [/home/george/au/chemistry/src/main.cpp:278] bad grad norm (0.0266923) in index 47
+[13:55:13] [/home/george/au/chemistry/src/main.cpp:278] bad grad norm (0.103236) in index 32
+[13:56:17] [/home/george/au/chemistry/src/main.cpp:278] bad grad norm (0.0288126) in index 1

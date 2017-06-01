@@ -151,46 +151,50 @@ vector<vect> parseLogForStartingPoints(string const& file, size_t nDims)
 }
 
 template<typename FuncT, typename StopStrategy>
-vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, double r)
+vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, double r, size_t preHessIters)
 {
-    assert(abs(r - p.norm()) < 1e-7);
+    try {
+        assert(abs(r - p.norm()) < 1e-7);
 
-    auto e = eye(func.nDims, func.nDims - 1);
-    auto theta = makeConstantVect(func.nDims - 1, M_PI / 2);
+        auto e = eye(func.nDims, func.nDims - 1);
+        auto theta = makeConstantVect(func.nDims - 1, M_PI / 2);
 
-    vector<vect> path;
+        vector<vect> path;
 
-    for (size_t iter = 0;; iter++) {
-        auto rotation = rotationMatrix(e, p);
-        auto rotated = makeAffineTransfomation(func, rotation);
-        auto polar = makePolar(rotated, r);
+        for (size_t iter = 0;; iter++) {
+            auto rotation = rotationMatrix(e, p);
+            auto rotated = makeAffineTransfomation(func, rotation);
+            auto polar = makePolar(rotated, r);
 
-        double value;
-        vect grad;
-        matrix hess(func.nDims, func.nDims);
+            double value;
+            vect grad;
+            matrix hess(func.nDims, func.nDims);
 
-        vect lastP = p;
-        if (iter < 100) {
-            hess.setZero();
-            grad = polar.grad(theta);
-            value = polar(theta);
+            vect lastP = p;
+            if (iter < preHessIters) {
+                hess.setZero();
+                grad = polar.grad(theta);
+                value = polar(theta);
 
-            p = rotated.transform(polar.transform(theta - 2 * grad));
-        } else {
-            hess = polar.hess(theta);
-            grad = polar.grad(theta);
-            value = polar(theta);
+                p = rotated.transform(polar.transform(theta - 2 * grad));
+            } else {
+                hess = polar.hess(theta);
+                grad = polar.grad(theta);
+                value = polar(theta);
 
-            p = rotated.transform(polar.transform(theta - hess.inverse() * grad));
+                p = rotated.transform(polar.transform(theta - hess.inverse() * grad));
+            }
+
+            path.push_back(p);
+
+            if (stopStrategy(iter, p, value, grad, hess, p - lastP))
+                break;
         }
 
-        path.push_back(p);
-
-        if (stopStrategy(iter, p, value, grad, hess, p - lastP))
-            break;
+        return path;
+    } catch (GaussianException const& exc) {
+        return {};
     }
-
-    return path;
 }
 
 template<typename FuncT>
@@ -205,7 +209,7 @@ void findInitialPolarDirections(FuncT& func, double r)
 
             vect pos = randomVectOnSphere(func.nDims, r);
 
-            auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r);
+            auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 100);
             if (path.empty())
                 continue;
 
@@ -215,6 +219,7 @@ void findInitialPolarDirections(FuncT& func, double r)
                 xs.push_back(proj(0));
                 ys.push_back(proj(1));
             }
+
 
             framework.plot(axis, xs, ys);
             framework.scatter(axis, xs, ys);
@@ -343,11 +348,8 @@ void filterPolarDirectionsLogFile()
 
 using namespace boost::filesystem;
 
-int main()
+void shs()
 {
-    initializeLogger();
-//    filterPolarDirectionsLogFile();
-
     ifstream input("./C2H4");
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
@@ -358,7 +360,7 @@ int main()
 
     LOG_INFO("local minima: {}", equilStruct.transpose());
     LOG_INFO("chemcraft coords:\n{}", toChemcraftCoords(charges, fixedSym.fullTransform(equilStruct)));
-    LOG_INFO("energy: {}", fixedSym(equilStruct));
+    LOG_INFO("energy: {:.13f}", fixedSym(equilStruct));
     LOG_INFO("gradient: {}", fixedSym.grad(equilStruct).transpose());
     LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(fixedSym.hess(equilStruct)).singularValues().transpose());
 
@@ -370,6 +372,8 @@ int main()
     double const firstR = 0.3;
     double const deltaR = 0.01;
 
+    auto projMatrix = makeRandomMatrix(2, linearHessian.nDims);
+
     for (size_t i = 0; i < cnt; i++) {
         auto direction = readVect(input);
         LOG_INFO("Path #{}. Initial direction: {}", i, direction.transpose());
@@ -377,27 +381,49 @@ int main()
         system(str(boost::format("mkdir %1%") % i).c_str());
         double value = linearHessian(direction);
 
-        for (size_t j = 0; j < 100; j++) {
+        vector<double> xs, ys;
+
+        for (size_t j = 0; j < 200; j++) {
+            vect proj = projMatrix * direction / direction.norm();
+            xs.push_back(proj(0)), ys.push_back(proj(1));
+
             double r = firstR + deltaR * j;
 
+            vect prev = direction;
             direction = direction / direction.norm() * r;
-            direction = optimizeOnSphere(makeHistoryStrategy(StopStrategy(5e-4, 5e-4)), linearHessian, direction,
-                                         r).back();
+            auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(5e-4, 5e-4)), linearHessian, direction, r, 0);
+            if (path.empty()) {
+                LOG_ERROR("empty path");
+                break;
+            }
+            direction = path.back();
 
             double newValue = linearHessian(direction);
-            LOG_INFO("New {} point in path: value = {}, chemcraft coords:\n{}", j, newValue,
+            LOG_INFO("New {} point in path:\n\tvalue = {:.13f}\n\tdelta norm = {:.13f}\n\t{}\nchemcraft coords:\n{}", j,
+                     newValue, (direction / direction.norm() - prev / prev.norm()).norm(), direction.transpose(),
                      toChemcraftCoords(charges, linearHessian.fullTransform(direction)));
 
             ofstream output(str(boost::format("./%1%/%2%.xyz") % i % j));
             output << toChemcraftCoords(charges, linearHessian.fullTransform(direction)) << endl;
 
-            if (newValue < value)
-                break;
+            if (newValue < value) {
+                LOG_ERROR("newValue < value [{:.13f} < {:.13f}]. Stopping", newValue, value);
+//                break;
+            }
+
             value = newValue;
         }
-    }
 
+        framework.plot(framework.newPlot(), xs, ys);
+        return;
+    }
+}
+
+int main()
+{
+    initializeLogger();
+//    filterPolarDirectionsLogFile();
+    shs();
 
 //    findInitialPolarDirections(linearHessian, .3);
-
 }

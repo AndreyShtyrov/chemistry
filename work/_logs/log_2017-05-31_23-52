@@ -1,0 +1,25 @@
+[23:52:28] [/home/george/au/chemistry/src/main.cpp:451] local minima:      1.32941    -0.573933     0.921778    -0.573934    -0.921779 -4.70707e-06      1.90334     0.921779  4.36793e-06      1.90334    -0.921778 -3.29194e-06
+[23:52:28] [/home/george/au/chemistry/src/main.cpp:452] chemcraft coords:
+6	0.00000000000	0.00000000000	0.00000000000
+6	1.32940757491	0.00000000000	0.00000000000
+1	-0.57393334128	0.92177801256	0.00000000000
+1	-0.57393377545	-0.92177856722	-0.00000470707
+1	1.90334101590	0.92177865815	0.00000436793
+1	1.90334102142	-0.92177829468	-0.00000329194
+
+[23:52:30] [/home/george/au/chemistry/src/main.cpp:453] energy: -78.161
+[23:52:32] [/home/george/au/chemistry/src/main.cpp:454] gradient: -5.30473e-07  3.97286e-08  2.05549e-08 -4.62237e-07 -7.59209e-07 -1.11395e-07  3.30764e-07  6.97642e-07  1.38383e-07   1.3176e-07 -3.74372e-07 -9.75557e-08
+[23:52:37] [/home/george/au/chemistry/src/main.cpp:455] hessian values:   3.50096   1.29456   1.28174   1.27253  0.956244  0.304392  0.252729  0.142622  0.130684  0.100072 0.0996413 0.0277335
+[23:52:39] [/home/george/au/chemistry/src/main.cpp:463] energy #0 = -78.1499310923278
+[23:52:40] [/home/george/au/chemistry/src/main.cpp:463] energy #1 = -78.1335253995707
+[23:52:42] [/home/george/au/chemistry/src/main.cpp:463] energy #2 = -78.1359098867462
+[23:52:43] [/home/george/au/chemistry/src/main.cpp:463] energy #3 = -78.0935629115072
+[23:52:45] [/home/george/au/chemistry/src/main.cpp:463] energy #4 = -78.1032317308703
+[23:52:46] [/home/george/au/chemistry/src/main.cpp:463] energy #5 = -78.1053351961015
+[23:52:47] [/home/george/au/chemistry/src/main.cpp:463] energy #6 = -78.0946395421716
+[23:52:49] [/home/george/au/chemistry/src/main.cpp:463] energy #7 = -78.1279234766183
+[23:52:50] [/home/george/au/chemistry/src/main.cpp:463] energy #8 = -78.0992942536361
+[23:52:52] [/home/george/au/chemistry/src/main.cpp:463] energy #9 = -78.1033117752609
+[23:52:56] [/home/george/au/chemistry/src/main.cpp:463] energy #10 = -78.1259385988911
+[23:52:59] [/home/george/au/chemistry/src/main.cpp:463] energy #11 = -78.1250983284483
+[23:53:01] [/home/george/au/chemistry/src/main.cpp:463] energy #12 = -78.1273961616739

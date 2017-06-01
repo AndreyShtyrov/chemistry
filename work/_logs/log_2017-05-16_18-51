@@ -1,0 +1,27 @@
+[18:51:22] [/home/george/au/chemistry/src/FixValues.h:121] dot product = 0, cross product = 1
+[18:51:22] [/home/george/au/chemistry/src/FixValues.h:123] angle = 1.5708
+[18:51:22] [/home/george/au/chemistry/src/FixValues.h:140] angle 2 = 3.14159, axis:
+1
+0
+0
+[18:51:22] [/home/george/au/chemistry/src/FixValues.h:147] 
+first p = 0 0 0
+'real' p = 0 0 0
+[18:51:22] [/home/george/au/chemistry/src/FixValues.h:149] 
+final p = 0
+0
+0
+[18:51:22] [/home/george/au/chemistry/src/FixValues.h:147] 
+first p =           1 6.12323e-17           0
+'real' p =            1 -6.12323e-17   7.4988e-33
+[18:51:22] [/home/george/au/chemistry/src/FixValues.h:149] 
+final p =            1
+-6.12323e-17
+  7.4988e-33
+[18:51:22] [/home/george/au/chemistry/src/FixValues.h:147] 
+first p =  1 -1  0
+'real' p =            1            1 -1.22465e-16
+[18:51:22] [/home/george/au/chemistry/src/FixValues.h:149] 
+final p =            1
+           1
+-1.22465e-16

@@ -1,0 +1,31 @@
+[21:06:43] [/home/george/au/chemistry/src/main.cpp:167] local minima:   -0.495722    0.120477   -0.874622    0.283053    0.784344 -0.00621205   -0.787401   -0.193879   -0.301919   -0.553383    0.552153    0.529974
+[21:06:43] [/home/george/au/chemistry/src/main.cpp:168] chemcraft coords:
+6	0	0	0
+6	1.32934	0.00148676	-0.012208
+1	-0.574987	0.921121	0
+1	-0.572834	-0.922402	0.0105114
+1	1.90217	0.923871	-0.0227472
+1	1.90433	-0.919644	-0.0122165
+
+[21:06:44] [/home/george/au/chemistry/src/main.cpp:169] gradient: -1.28851e-05   4.6311e-07 -2.94394e-07 -5.06238e-07 -4.87571e-07 -5.81185e-07 -1.21292e-05 -1.98896e-05 -2.82696e-06  4.07758e-06 -7.38302e-06 -6.16816e-08
+[21:06:47] [/home/george/au/chemistry/src/main.cpp:170] hessian values:   3.50088   1.29456   1.28176   1.27256   0.95627  0.304382  0.252728  0.142608  0.130677  0.100098 0.0996093 0.0277168
+[21:06:49] [/home/george/au/chemistry/src/main.cpp:192] 0.0610869
+[21:06:50] [/home/george/au/chemistry/src/main.cpp:192] 0.0825804
+[21:06:51] [/home/george/au/chemistry/src/main.cpp:192] 0.109952
+[21:06:53] [/home/george/au/chemistry/src/main.cpp:192] 0.142045
+[21:06:54] [/home/george/au/chemistry/src/main.cpp:192] 0.173371
+[21:06:55] [/home/george/au/chemistry/src/main.cpp:192] 0.191198
+[21:06:57] [/home/george/au/chemistry/src/main.cpp:192] 0.178846
+[21:06:58] [/home/george/au/chemistry/src/main.cpp:192] 0.134973
+[21:07:00] [/home/george/au/chemistry/src/main.cpp:192] 0.0859966
+[21:07:01] [/home/george/au/chemistry/src/main.cpp:192] 0.0535747
+[21:07:03] [/home/george/au/chemistry/src/main.cpp:220] 0.0610869
+[21:07:04] [/home/george/au/chemistry/src/main.cpp:220] 0.0826406
+[21:07:06] [/home/george/au/chemistry/src/main.cpp:220] 0.0901945
+[21:07:07] [/home/george/au/chemistry/src/main.cpp:220] 0.0928667
+[21:07:09] [/home/george/au/chemistry/src/main.cpp:220] 0.0938233
+[21:07:10] [/home/george/au/chemistry/src/main.cpp:220] 0.0941693
+[21:07:12] [/home/george/au/chemistry/src/main.cpp:220] 0.0942956
+[21:07:13] [/home/george/au/chemistry/src/main.cpp:220] 0.0943421
+[21:07:14] [/home/george/au/chemistry/src/main.cpp:220] 0.0943592
+[21:07:16] [/home/george/au/chemistry/src/main.cpp:220] 0.0943656

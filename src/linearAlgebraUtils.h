@@ -27,3 +27,5 @@ matrix rotationMatrix(vect u, vect v, double alpha);
 matrix rotationMatrix(vect from, vect to);
 
 vect randomVectOnSphere(size_t nDims, double r=1.);
+
+vect projection(vect wich, vect to);

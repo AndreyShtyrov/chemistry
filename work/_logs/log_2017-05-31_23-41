@@ -1,0 +1,6 @@
+[23:41:58] [/home/george/au/chemistry/src/main.cpp:445] first  vector:   0.0938921   -0.145394   0.0654526   -0.136113    0.130519  -0.0249336    0.027647 -0.00543225   0.0104982 -0.00948906   0.0056136    0.136204
+[23:41:58] [/home/george/au/chemistry/src/main.cpp:446] second vector:   0.0938923   -0.145394   0.0654524   -0.136113     0.13052  -0.0249335   0.0276469  0.00543199   0.0104981 -0.00948866  -0.0056143   -0.136204
+[23:41:58] [/home/george/au/chemistry/src/main.cpp:451] first  transformed vector:         0         0         0   1.33645         0         0 -0.587513  0.915954         0 -0.486586 -0.768029 -0.564273   1.91195   0.76528  0.478726   1.89943 -0.849273 -0.349101
+[23:41:58] [/home/george/au/chemistry/src/main.cpp:452] second transformed vector:         0         0         0   1.33645         0         0 -0.587512  0.915954         0 -0.486588 -0.768033  0.564264   1.91195  0.765283 -0.478719   1.89943 -0.849275  0.349095
+[23:41:58] [/home/george/au/chemistry/src/main.cpp:453] vector dist = 1.6363908104854
+[23:41:58] [/home/george/au/chemistry/src/main.cpp:454] molecul dist = 0.0000000000341

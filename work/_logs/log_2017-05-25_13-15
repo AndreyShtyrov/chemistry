@@ -1,0 +1,40 @@
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:140] p =           0           0           0     1.35129 8.37446e-18 1.59543e-17   -0.513821     1.00201           0   -0.634791   -0.952023  0.00484293     1.99058    0.605985    0.220837     1.82143   -0.793355    -0.38976
+[13:15:29] [/home/george/au/chemistry/src/main.cpp:237] transformed init state:           0
+          0
+          0
+    1.35129
+8.37446e-18
+1.59543e-17
+  -0.513821
+    1.00201
+          0
+  -0.634791
+  -0.952023
+ 0.00484293
+    1.99058
+   0.605985
+   0.220837
+    1.82143
+  -0.793355
+   -0.38976
+[13:15:29] [/home/george/au/chemistry/src/main.cpp:244] local minima:   -0.495722    0.120477   -0.874622    0.283053    0.784344 -0.00621205   -0.787401   -0.193879   -0.301919   -0.553383    0.552153    0.529974
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0
+[13:15:29] [/home/george/au/chemistry/src/main.cpp:245] chemcraft coords:
+6	0	0	0
+6	0.855573	8.37446e-18	1.59543e-17
+1	-0.393344	0.127393	0
+1	-0.351738	-0.167679	-0.00136912
+1	1.20318	0.412106	-0.0810822
+1	1.26804	-0.241202	0.140214
+
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0
+[13:15:29] [/home/george/au/chemistry/src/producers/FixValues.h:64] fixed val 0

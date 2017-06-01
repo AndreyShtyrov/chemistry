@@ -1,0 +1,212 @@
+[22:54:38] [/home/george/au/chemistry/src/main.cpp:361] initial polar Direction: 1.25211  2.10604  1.30287  2.18491 0.827295  1.74907  1.37185  1.53325  1.49286  1.64736  1.59163
+chemcraft coords: 6	0	0	0
+6	1.33621	0.00148676	-0.012208
+1	-0.591349	0.91341	0
+1	-0.479566	-0.766279	0.572796
+1	1.90682	0.76431	-0.500644
+1	1.90302	-0.844982	0.337375
+
+
+[22:56:07] [/home/george/au/chemistry/src/main.cpp:361] initial polar Direction: 1.24036  2.13191  1.28744  2.22599 0.762451  1.76522  1.35547   1.5332  1.48803  1.65108  1.58617
+chemcraft coords: 6	0	0	0
+6	1.33953	0.00148676	-0.012208
+1	-0.596123	0.910416	0
+1	-0.444668	-0.70752	0.671595
+1	1.9031	0.710995	-0.583542
+1	1.90146	-0.819228	0.400844
+
+
+[22:58:02] [/home/george/au/chemistry/src/main.cpp:361] initial polar Direction: 1.21879  2.12079  1.29607  2.20479 0.679773   1.8255  1.30989  1.58021  1.48511  1.66822  1.54655
+chemcraft coords: 6	0	0	0
+6	1.34108	0.00148676	-0.012208
+1	-0.611799	0.901482	0
+1	-0.418177	-0.662025	0.738062
+1	1.91158	0.638488	-0.657516
+1	1.90012	-0.776805	0.477387
+
+
+[22:58:10] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1314 to -78.1187). Trying next delta (0.154808 delta norm)
+[22:58:18] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1346 to -78.1312). Trying next delta (0.0785977 delta norm)
+[22:58:26] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1352 to -78.1341). Trying next delta (0.0445264 delta norm)
+[22:58:34] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1354 to -78.1351). Trying next delta (0.0244167 delta norm)
+[22:58:42] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1355 to -78.1354). Trying next delta (0.0138528 delta norm)
+[22:58:50] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1355 to -78.1355). Trying next delta (0.0079198 delta norm)
+[22:58:58] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1355 to -78.1355). Trying next delta (0.00475785 delta norm)
+[22:59:11] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1355 to -78.1355). Trying next delta (0.00525992 delta norm)
+[22:59:19] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1356 to -78.1355). Trying next delta (0.00319869 delta norm)
+[22:59:35] [/home/george/au/chemistry/src/main.cpp:361] initial polar Direction: 1.20558   2.1215  1.29611      2.2 0.627375  1.86506  1.28334      1.6   1.4875  1.67851  1.52294
+chemcraft coords: 6	0	0	0
+6	1.3434	0.00148676	-0.012208
+1	-0.625859	0.8924	0
+1	-0.389274	-0.613183	0.79873
+1	1.91372	0.573846	-0.717009
+1	1.89865	-0.737588	0.538117
+
+
+[22:59:43] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1264 to -78.0807). Trying next delta (0.18527 delta norm)
+[22:59:47] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1264 to -78.1249). Trying next delta (0.0926352 delta norm)
+[22:59:51] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1264 to -78.1139). Trying next delta (0.138953 delta norm)
+[22:59:55] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1264 to -78.105). Trying next delta (0.0231588 delta norm)
+[22:59:59] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1264 to -78.124). Trying next delta (0.057897 delta norm)
+[23:00:08] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.13 to -78.1243). Trying next delta (0.06636 delta norm)
+[23:00:12] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.13 to -78.1298). Trying next delta (0.03318 delta norm)
+[23:00:16] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.13 to -78.1283). Trying next delta (0.04977 delta norm)
+[23:00:20] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.13 to -78.1271). Trying next delta (0.008295 delta norm)
+[23:00:24] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.13 to -78.1297). Trying next delta (0.0207375 delta norm)
+[23:00:32] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1305 to -78.13). Trying next delta (0.0210987 delta norm)
+[23:00:36] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1305 to -78.1305). Trying next delta (0.0105494 delta norm)
+[23:00:40] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1305 to -78.1303). Trying next delta (0.015824 delta norm)
+[23:00:44] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1305 to -78.1302). Trying next delta (0.00263734 delta norm)
+[23:00:49] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1305 to -78.1305). Trying next delta (0.00659335 delta norm)
+[23:00:57] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1305 to -78.1305). Trying next delta (0.0073471 delta norm)
+[23:01:12] [/home/george/au/chemistry/src/main.cpp:361] initial polar Direction: 1.19403  2.12083  1.29584  2.18955 0.584885  1.90603  1.25919  1.61652  1.49433  1.68907  1.49813
+chemcraft coords: 6	0	0	0
+6	1.34559	0.00148676	-0.012208
+1	-0.642984	0.880576	0
+1	-0.36129	-0.566406	0.849834
+1	1.91586	0.509145	-0.766578
+1	1.89718	-0.694648	0.594553
+
+
+[23:01:20] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1213 to -78.0074). Trying next delta (0.215206 delta norm)
+[23:01:24] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1213 to -78.1087). Trying next delta (0.107603 delta norm)
+[23:01:28] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1213 to -78.1029). Trying next delta (0.161405 delta norm)
+[23:01:32] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1213 to -78.0893). Trying next delta (0.0269008 delta norm)
+[23:01:36] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1213 to -78.118). Trying next delta (0.0672519 delta norm)
+[23:01:44] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1254 to -78.1242). Trying next delta (0.0246696 delta norm)
+[23:01:48] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1254 to -78.1253). Trying next delta (0.0123348 delta norm)
+[23:01:52] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1254 to -78.1252). Trying next delta (0.0185022 delta norm)
+[23:01:56] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1254 to -78.125). Trying next delta (0.0030837 delta norm)
+[23:02:00] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1254 to -78.1254). Trying next delta (0.00770924 delta norm)
+[23:02:12] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1255 to -78.1255). Trying next delta (0.00511602 delta norm)
+[23:02:16] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1255 to -78.1255). Trying next delta (0.00255801 delta norm)
+[23:02:20] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1255 to -78.1255). Trying next delta (0.00383702 delta norm)
+[23:02:24] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1255 to -78.1255). Trying next delta (0.000639503 delta norm)
+[23:02:28] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1255 to -78.1255). Trying next delta (0.00159876 delta norm)
+[23:02:47] [/home/george/au/chemistry/src/main.cpp:361] initial polar Direction: 1.18374   2.1197  1.29457  2.17412 0.550206  1.94927  1.23753  1.62999  1.50621   1.7003  1.47178
+chemcraft coords: 6	0	0	0
+6	1.34756	0.00148676	-0.012208
+1	-0.663851	0.865146	0
+1	-0.334208	-0.52173	0.893481
+1	1.91817	0.44505	-0.807492
+1	1.8956	-0.647411	0.647667
+
+
+[23:02:55] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1163 to -77.8747). Trying next delta (0.24445 delta norm)
+[23:03:00] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1163 to -78.0823). Trying next delta (0.122225 delta norm)
+[23:03:04] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1163 to -78.0904). Trying next delta (0.183338 delta norm)
+[23:03:08] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1163 to -78.0709). Trying next delta (0.0305563 delta norm)
+[23:03:12] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1163 to -78.1118). Trying next delta (0.0763908 delta norm)
+[23:03:20] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1203 to -78.1144). Trying next delta (0.0454868 delta norm)
+[23:03:24] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1203 to -78.1193). Trying next delta (0.0227434 delta norm)
+[23:03:28] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1203 to -78.1192). Trying next delta (0.0341151 delta norm)
+[23:03:32] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1203 to -78.1183). Trying next delta (0.00568585 delta norm)
+[23:03:36] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1203 to -78.1201). Trying next delta (0.0142146 delta norm)
+[23:03:44] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1204 to -78.1199). Trying next delta (0.01429 delta norm)
+[23:03:48] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1204 to -78.1203). Trying next delta (0.00714498 delta norm)
+[23:03:52] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1204 to -78.1203). Trying next delta (0.0107175 delta norm)
+[23:03:56] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1204 to -78.1202). Trying next delta (0.00178624 delta norm)
+[23:04:00] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1204 to -78.1204). Trying next delta (0.00446561 delta norm)
+[23:04:08] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1204 to -78.1204). Trying next delta (0.00602597 delta norm)
+[23:04:40] [/home/george/au/chemistry/src/main.cpp:361] initial polar Direction: 1.17505  2.11935  1.29257  2.15648 0.522334  1.99419  1.21879  1.63959  1.52278  1.71244  1.44581
+chemcraft coords: 6	0	0	0
+6	1.3493	0.00148676	-0.012208
+1	-0.688392	0.845689	0
+1	-0.307788	-0.478397	0.931523
+1	1.92036	0.382286	-0.840953
+1	1.89413	-0.596782	0.696467
+
+
+[23:04:55] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1113 to -77.6478). Trying next delta (0.272294 delta norm)
+[23:05:01] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1113 to -78.0413). Trying next delta (0.136147 delta norm)
+[23:05:07] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1113 to -78.0765). Trying next delta (0.204221 delta norm)
+[23:05:13] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1113 to -78.0501). Trying next delta (0.0340368 delta norm)
+[23:05:20] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1113 to -78.1055). Trying next delta (0.0850919 delta norm)
+[23:05:33] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1144 to -78.0497). Trying next delta (0.14546 delta norm)
+[23:05:41] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1144 to -78.0996). Trying next delta (0.0727301 delta norm)
+[23:05:50] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1144 to -78.1011). Trying next delta (0.109095 delta norm)
+[23:05:56] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1144 to -78.0877). Trying next delta (0.0181825 delta norm)
+[23:06:02] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1144 to -78.1126). Trying next delta (0.0454563 delta norm)
+[23:06:15] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1149 to -78.0717). Trying next delta (0.0933743 delta norm)
+[23:06:21] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1149 to -78.1076). Trying next delta (0.0466872 delta norm)
+[23:06:28] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1149 to -78.1103). Trying next delta (0.0700308 delta norm)
+[23:06:34] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1149 to -78.1062). Trying next delta (0.0116718 delta norm)
+[23:06:39] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1149 to -78.1142). Trying next delta (0.0291795 delta norm)
+[23:06:47] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1152 to -78.1037). Trying next delta (0.0558066 delta norm)
+[23:06:51] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1152 to -78.1129). Trying next delta (0.0279033 delta norm)
+[23:06:55] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1152 to -78.1134). Trying next delta (0.041855 delta norm)
+[23:06:59] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1152 to -78.1116). Trying next delta (0.00697583 delta norm)
+[23:07:03] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1152 to -78.115). Trying next delta (0.0174396 delta norm)
+[23:07:11] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1153 to -78.115). Trying next delta (0.179919 delta norm)
+[23:07:23] [/home/george/au/chemistry/src/main.cpp:361] initial polar Direction: 1.16794  2.12059  1.28934  2.13642 0.500331   2.0417  1.20348  1.64541  1.54554  1.72591  1.41999
+chemcraft coords: 6	0	0	0
+6	1.35068	0.00148676	-0.012208
+1	-0.717546	0.820711	0
+1	-0.281766	-0.436162	0.965145
+1	1.92239	0.32188	-0.867659
+1	1.89291	-0.542293	0.741252
+
+
+[23:07:31] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1063 to -77.281). Trying next delta (0.29825 delta norm)
+[23:07:37] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1063 to -77.9812). Trying next delta (0.149125 delta norm)
+[23:07:41] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1063 to -78.0616). Trying next delta (0.223688 delta norm)
+[23:07:45] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1063 to -78.0278). Trying next delta (0.0372813 delta norm)
+[23:07:49] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1063 to -78.0991). Trying next delta (0.0932032 delta norm)
+[23:07:57] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1076 to -77.902). Trying next delta (0.277559 delta norm)
+[23:08:01] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1076 to -78.0465). Trying next delta (0.13878 delta norm)
+[23:08:05] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1076 to -78.0465). Trying next delta (0.208169 delta norm)
+[23:08:09] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1076 to -77.9771). Trying next delta (0.0346949 delta norm)
+[23:08:14] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1076 to -78.1005). Trying next delta (0.0867372 delta norm)
+[23:08:18] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1076 to -78.1072). Trying next delta (0.060716 delta norm)
+[23:08:27] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1098 to -78.0057). Trying next delta (0.122057 delta norm)
+[23:08:31] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1098 to -78.0917). Trying next delta (0.0610287 delta norm)
+[23:08:35] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1098 to -78.1011). Trying next delta (0.091543 delta norm)
+[23:08:40] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1098 to -78.0935). Trying next delta (0.0152572 delta norm)
+[23:08:44] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1098 to -78.1085). Trying next delta (0.0381429 delta norm)
+[23:08:52] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1099 to -78.0553). Trying next delta (0.117647 delta norm)
+[23:08:57] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1099 to -78.0968). Trying next delta (0.0588236 delta norm)
+[23:09:01] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1099 to -78.1001). Trying next delta (0.0882354 delta norm)
+[23:09:05] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1099 to -78.09). Trying next delta (0.0147059 delta norm)
+[23:09:10] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1099 to -78.1086). Trying next delta (0.0367647 delta norm)
+[23:09:14] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1099 to -78.1099). Trying next delta (0.0257353 delta norm)
+[23:09:22] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1103 to -78.1027). Trying next delta (0.374347 delta norm)
+[23:09:26] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1103 to -78.1101). Trying next delta (0.187174 delta norm)
+[23:09:30] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1103 to -78.11). Trying next delta (0.280761 delta norm)
+[23:09:34] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1103 to -78.1098). Trying next delta (0.0467934 delta norm)
+[23:09:39] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1103 to -78.1102). Trying next delta (0.116984 delta norm)
+[23:09:54] [/home/george/au/chemistry/src/main.cpp:361] initial polar Direction: 1.16262  2.12448  1.28501  2.11428 0.483823  2.09229  1.19256  1.64726  1.57537  1.74152  1.39473
+chemcraft coords: 6	0	0	0
+6	1.3516	0.00148676	-0.012208
+1	-0.752106	0.788371	0
+1	-0.255866	-0.394471	0.995302
+1	1.92425	0.264767	-0.888295
+1	1.89199	-0.484245	0.781616
+
+
+[23:10:03] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1015 to -76.7273). Trying next delta (0.321451 delta norm)
+[23:10:07] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1015 to -77.8999). Trying next delta (0.160725 delta norm)
+[23:10:11] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1015 to -78.0464). Trying next delta (0.241088 delta norm)
+[23:10:16] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1015 to -78.005). Trying next delta (0.0401813 delta norm)
+[23:10:20] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1015 to -78.0928). Trying next delta (0.100453 delta norm)
+[23:10:24] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1015 to -78.1). Trying next delta (0.0703173 delta norm)
+[23:10:33] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1046 to -77.986). Trying next delta (0.173242 delta norm)
+[23:10:37] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1046 to -78.0719). Trying next delta (0.086621 delta norm)
+[23:10:41] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1046 to -78.0796). Trying next delta (0.129932 delta norm)
+[23:10:45] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1046 to -78.0516). Trying next delta (0.0216553 delta norm)
+[23:10:50] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1046 to -78.1017). Trying next delta (0.0541381 delta norm)
+[23:10:54] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1046 to -78.1037). Trying next delta (0.0378967 delta norm)
+[23:11:02] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1051 to -77.9926). Trying next delta (0.113542 delta norm)
+[23:11:06] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1051 to -78.085). Trying next delta (0.0567712 delta norm)
+[23:11:11] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1051 to -78.0968). Trying next delta (0.0851568 delta norm)
+[23:11:15] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1051 to -78.0893). Trying next delta (0.0141928 delta norm)
+[23:11:20] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1051 to -78.1039). Trying next delta (0.035482 delta norm)
+[23:11:24] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -78.1051 to -78.1048). Trying next delta (0.0248374 delta norm)
+[23:11:39] [/home/george/au/chemistry/src/main.cpp:361] initial polar Direction: 1.15933  2.13214  1.28005  2.09002 0.472694  2.14605  1.18723   1.6452  1.61283  1.75991  1.37056
+chemcraft coords: 6	0	0	0
+6	1.35191	0.00148676	-0.012208
+1	-0.792567	0.746408	0
+1	-0.230028	-0.352685	1.02274
+1	1.92586	0.211868	-0.903662
+1	1.89144	-0.423125	0.817126
+
+

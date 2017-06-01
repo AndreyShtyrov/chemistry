@@ -1,0 +1,8 @@
+[13:12:36] [/home/george/au/chemistry/src/main.cpp:511] nDims = 18
+[13:12:42] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:29] Delta strategy iteration:
+	iteration: 0
+	point: 0 0 0 0 0 0 0 0 0 0 0 0
+	grad:   0.119594 -0.0387632   0.130393 -0.0590857  -0.128948 0.00520173   0.105956   0.125978  0.0410166   0.058361  -0.147057 -0.0595913
+	delta:  -2.12181  0.098084 -0.550862  0.245926  0.859477 -0.359827  -1.58855  0.617844  0.305087   -2.7854    1.9618  0.999538
+
+[13:12:42] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 2.12181 > 0.0018 [        0         0         0  -2.12181         0         0  0.098084 -0.550862         0  0.245926  0.859477 -0.359827  -1.58855  0.617844  0.305087   -2.7854    1.9618  0.999538]

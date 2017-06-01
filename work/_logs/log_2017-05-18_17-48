@@ -1,0 +1,68 @@
+[17:48:43] [/home/george/au/chemistry/src/main.cpp:474] nDims = 18
+[17:48:46] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:31] Delta strategy iteration:
+	iteration: 0
+	value: -77.6537
+	point: 0 0 0 0 0 0 0 0 0 0 0 0
+	grad:   0.119594 -0.0387632   0.130393 -0.0590857  -0.128948 0.00520173   0.105956   0.125978  0.0410166   0.058361  -0.147057 -0.0595913
+	delta:   2.12181 -0.098084  0.550862 -0.245926 -0.859477  0.359827   1.58855 -0.617844 -0.305087    2.7854   -1.9618 -0.999538
+	hess values:  0.377025  0.137911  0.135775  0.129545  0.107345  0.100949 0.0906681 0.0895343 0.0797296 0.0772428 0.0554854 0.0431117
+
+[17:48:46] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 2.12181 > 0.0018 [        0         0         0   2.12181         0         0 -0.098084  0.550862         0 -0.245926 -0.859477  0.359827   1.58855 -0.617844 -0.305087    2.7854   -1.9618 -0.999538]
+[17:48:50] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -77.6537 to -76.7359). Trying next delta (4.62042 delta norm)
+[17:48:50] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:31] Delta strategy iteration:
+	iteration: 1
+	value: -76.7359
+	point:   2.12181 -0.098084  0.550862 -0.245926 -0.859477  0.359827   1.58855 -0.617844 -0.305087    2.7854   -1.9618 -0.999538
+	grad:     1.92973  -0.0169989   0.0795861  -0.0134902  -0.0531647  0.00565099    -1.92874     -2.8915   0.0837639  0.00384417  -0.0140477 -0.00564682
+	delta:   -1.0609  0.049042 -0.275431  0.122963  0.429738 -0.179913 -0.794273  0.308922  0.152544   -1.3927  0.980901  0.499769
+	hess values:    26.8277    9.08241    5.80871  0.0784719  0.0567609  0.0400406  0.0226849   0.021192  0.0157588  0.0055179 0.00447623 0.00381696
+
+[17:48:50] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 1.0609 > 0.0018 [        0         0         0   -1.0609         0         0  0.049042 -0.275431         0  0.122963  0.429738 -0.179913 -0.794273  0.308922  0.152544   -1.3927  0.980901  0.499769]
+[17:48:54] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -77.6537 to -77.3476). Trying next delta (2.31021 delta norm)
+[17:48:54] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:31] Delta strategy iteration:
+	iteration: 2
+	value: -77.3476
+	point:    1.0609 -0.049042  0.275431 -0.122963 -0.429738  0.179913  0.794273 -0.308922 -0.152544    1.3927 -0.980901 -0.499769
+	grad:     0.123846   -0.0183305    0.0918949   -0.0204779   -0.0747062 -0.000493808    -0.109388    -0.136376  -0.00881819   0.00956438   -0.0466206   -0.0146925
+	delta:  -1.59135  0.073563 -0.413146  0.184445  0.644608  -0.26987  -1.19141  0.463383  0.228815  -2.08905   1.47135  0.749654
+	hess values:     2.644  0.208341  0.182587 0.0982506 0.0722698 0.0598778 0.0501594 0.0386772 0.0352523 0.0231882 0.0212094 0.0164244
+
+[17:48:54] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 1.59135 > 0.0018 [        0         0         0  -1.59135         0         0  0.073563 -0.413146         0  0.184445  0.644608  -0.26987  -1.19141  0.463383  0.228815  -2.08905   1.47135  0.749654]
+[17:48:57] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:31] Delta strategy iteration:
+	iteration: 3
+	value: -77.8756
+	point:  -0.530451   0.024521  -0.137715  0.0614816   0.214869 -0.0899566  -0.397137   0.154461  0.0762718  -0.696349   0.490451   0.249885
+	grad:    -0.138292   -0.0374247     0.153462   -0.0650488    -0.151995 -2.35852e-05     0.105614     0.131132    0.0465447   -0.0171591    -0.045313   -0.0263519
+	delta:  -0.0600949   -0.445163     1.39407   -0.554872    -1.40859 -0.00726919     1.19502      1.5993    0.572995    0.325793    0.257891   0.0173333
+	hess values:   2.93072  0.907798  0.207757  0.156027  0.140145  0.138269  0.132603  0.110673  0.108103 0.0914134 0.0866606  0.068951
+
+[17:48:57] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0600949 > 0.0018 [          0           0           0  -0.0600949           0           0   -0.445163     1.39407           0   -0.554872    -1.40859 -0.00726919     1.19502      1.5993    0.572995    0.325793    0.257891   0.0173333]
+[17:49:00] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -77.8756 to -77.5092). Trying next delta (2.98737 delta norm)
+[17:49:00] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:31] Delta strategy iteration:
+	iteration: 4
+	value: -77.5092
+	point:  -0.590546  -0.420642    1.25635  -0.493391   -1.19372 -0.0972258   0.797879    1.75376   0.649267  -0.370557   0.748341   0.267218
+	grad:    -0.122893   -0.0101534    0.0322796  -0.00625296    -0.017591 -0.000707979   0.00588211   0.00719366   0.00246653    0.0465154   -0.0692448    -0.025793
+	delta:   0.0300475    0.222581   -0.697033    0.277436    0.704296   0.0036346   -0.597508   -0.799649   -0.286498   -0.162896   -0.128945 -0.00866666
+	hess values:    3.73565   0.693676   0.105016  0.0987319  0.0525038  0.0333199  0.0153243  0.0117249 0.00606995 0.00562511 0.00346651 0.00262593
+
+[17:49:00] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0300475 > 0.0018 [          0           0           0   0.0300475           0           0    0.222581   -0.697033           0    0.277436    0.704296   0.0036346   -0.597508   -0.799649   -0.286498   -0.162896   -0.128945 -0.00866666]
+[17:49:04] [/home/george/au/chemistry/src/optimization/delta_strategies/RepeatingDeltaStrategy.h:24] bad value change (from -77.8756 to -77.598). Trying next delta (1.49368 delta norm)
+[17:49:04] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:31] Delta strategy iteration:
+	iteration: 5
+	value: -77.598
+	point:  -0.560499   -0.19806   0.559318  -0.215954  -0.489427 -0.0935912   0.200371    0.95411    0.36277  -0.533453   0.619396   0.258551
+	grad:   -0.0487678   -0.0175777    0.0706368   -0.0235048   -0.0592505 -0.000742293    0.0309049    0.0392869    0.0139676  -0.00374387   -0.0473402   -0.0189491
+	delta:  0.0450712   0.333872   -1.04555   0.416154    1.05644 0.00545189  -0.896262   -1.19947  -0.429747  -0.244344  -0.193418     -0.013
+	hess values:   3.33434  0.861649  0.097519 0.0958672 0.0882733 0.0698789  0.067525 0.0405573 0.0318027  0.028161 0.0250431 0.0206822
+
+[17:49:04] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0450712 > 0.0018 [         0          0          0  0.0450712          0          0   0.333872   -1.04555          0   0.416154    1.05644 0.00545189  -0.896262   -1.19947  -0.429747  -0.244344  -0.193418     -0.013]
+[17:49:07] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:31] Delta strategy iteration:
+	iteration: 6
+	value: -78.0816
+	point:  -0.515428   0.135812  -0.486232     0.2002   0.567017 -0.0881393  -0.695891  -0.245364 -0.0669771  -0.777798   0.425978   0.245551
+	grad: -0.0647215 -0.0378689   0.166021 -0.0608413  -0.148332 0.00101521  0.0323533  0.0438247  0.0250463 -0.0237095 -0.0619709 -0.0328999
+	delta:  0.0519736   0.358162   -2.09892   0.350089   0.554025 -0.0347614 -0.0756628  0.0792428  -0.145863   0.318709   0.147826   0.225117
+	hess values:   3.32644  0.917951  0.791872  0.299206  0.272125  0.241562   0.19846  0.185416  0.157798  0.123262  0.100027 0.0783578
+
+[17:49:07] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0519736 > 0.0018 [         0          0          0  0.0519736          0          0   0.358162   -2.09892          0   0.350089   0.554025 -0.0347614 -0.0756628  0.0792428  -0.145863   0.318709   0.147826   0.225117]

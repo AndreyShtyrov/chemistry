@@ -1,0 +1,18 @@
+[20:06:10] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.119594 > 0.0018 [          0           0           0   -0.119594           0           0   0.0387632   -0.130393           0   0.0590857    0.128948 -0.00520173   -0.105956   -0.125978  -0.0410166   -0.058361    0.147057   0.0595913]
+[20:06:14] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.103351 > 0.0018 [          0           0           0   -0.103351           0           0   0.0448764   -0.149745           0   0.0667834    0.147968 -0.00687476   -0.118008   -0.107277  -0.0355456  -0.0800726    0.144498   0.0615434]
+[20:06:18] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0855039 > 0.0018 [          0           0           0  -0.0855039           0           0   0.0494559   -0.166606           0   0.0723627    0.163887 -0.00822996   -0.114825  -0.0743812  -0.0274198  -0.0962881    0.129854   0.0591629]
+[20:06:21] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0684626 > 0.0018 [          0           0           0  -0.0684626           0           0   0.0492633   -0.172079           0   0.0710182    0.166003 -0.00929531  -0.0949879  -0.0308801  -0.0175421   -0.099467   0.0993441   0.0513087]
+[20:06:24] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0455769 > 0.0018 [         0          0          0 -0.0455769          0          0  0.0363644    -0.1455          0  0.0506876   0.129396 -0.0102455 -0.0740581 0.00278072 -0.0105543 -0.0824948  0.0535176  0.0381275]
+[20:06:28] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0987701 > 0.0018 [         0          0          0 -0.0987701          0          0 -0.0899941  -0.109614          0 -0.0505383  0.0589296 0.00621596  -0.299634   0.171218  -0.173228  -0.154372 -0.0290507   0.230271]
+[20:06:31] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0238081 > 0.0018 [           0            0            0    0.0238081            0            0  -0.00819069 -0.000648454            0     0.012928   -0.0108213    0.0256796    0.0165331    -0.031155   0.00442316    0.0166338   0.00747314    0.0261537]
+[20:06:35] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.00188522 > 0.0018 [           0            0            0   0.00172883            0            0 -6.12369e-05 -3.57016e-05            0   0.00072552  3.36303e-05    0.0017397   0.00353557   0.00179409  -0.00103535   0.00103867 -0.000539877   0.00381502]
+[20:06:38] [/home/george/au/chemistry/src/main.cpp:339] local minima:
+6	0	0	0
+6	-0.495722	0	0
+1	0.120477	-0.874622	0
+1	0.283053	0.784344	-0.00621205
+1	-0.787401	-0.193879	-0.301919
+1	-0.553383	0.552153	0.529974
+
+[20:06:38] [/home/george/au/chemistry/src/main.cpp:340] gradient: -1.25808e-05  3.91331e-07   2.6618e-08 -7.56135e-07 -9.48537e-07 -5.49363e-07  -1.1945e-05 -1.95906e-05 -2.81318e-06  3.69155e-06 -6.84848e-06 -1.01265e-07
+[20:06:38] [/home/george/au/chemistry/src/main.cpp:341] hessian values:  3.50088  1.29456  1.28176  1.27256 0.956271 0.304382 0.252728 0.142609 0.130677 0.100099 0.099609 0.027717

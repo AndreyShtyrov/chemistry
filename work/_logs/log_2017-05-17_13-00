@@ -1,0 +1,12 @@
+[13:00:57] [/home/george/au/chemistry/src/main.cpp:512] nDims = 18
+[13:01:00] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:19] Delta strategy iteration:
+	iteration: 0
+	point: 0 0 0 0 0 0 0 0 0 0 0 0
+	grad:   0.119594 -0.0387632   0.130393 -0.0590857  -0.128948 0.00520173   0.105956   0.125978  0.0410166   0.058361  -0.147057 -0.0595913
+
+[13:00:58] [/home/george/au/chemistry/src/main.cpp:512] nDims = 18
+[13:01:02] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:19] Delta strategy iteration:
+	iteration: 0
+	point: 0 0 0 0 0 0 0 0 0 0 0 0
+	grad:   0.119594 -0.0387632   0.130393 -0.0590857  -0.128948 0.00520173   0.105956   0.125978  0.0410166   0.058361  -0.147057 -0.0595913
+

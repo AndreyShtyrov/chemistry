@@ -1,0 +1,41 @@
+[15:32:15] [/home/george/au/chemistry/src/main.cpp:472] nDims = 18
+[15:32:18] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:19] Delta strategy iteration:
+	iteration: 0
+	value: -77.6537
+	point: 0 0 0 0 0 0 0 0 0 0 0 0
+	grad:   0.119594 -0.0387632   0.130393 -0.0590857  -0.128948 0.00520173   0.105956   0.125978  0.0410166   0.058361  -0.147057 -0.0595913
+	delta:   -0.119594   0.0387632   -0.130393   0.0590857    0.128948 -0.00520173   -0.105956   -0.125978  -0.0410166   -0.058361    0.147057   0.0595913
+
+[15:32:18] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.119594 > 0.0018 [          0           0           0   -0.119594           0           0   0.0387632   -0.130393           0   0.0590857    0.128948 -0.00520173   -0.105956   -0.125978  -0.0410166   -0.058361    0.147057   0.0595913]
+[15:32:19] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:19] Delta strategy iteration:
+	iteration: 1
+	value: -77.7663
+	point:   -0.119594   0.0387632   -0.130393   0.0590857    0.128948 -0.00520173   -0.105956   -0.125978  -0.0410166   -0.058361    0.147057   0.0595913
+	grad:   0.103351 -0.0448764   0.149745 -0.0667834  -0.147968 0.00687476   0.118008   0.107277  0.0355456  0.0800726  -0.144498 -0.0615434
+	delta:   -0.103351   0.0448764   -0.149745   0.0667834    0.147968 -0.00687476   -0.118008   -0.107277  -0.0355456  -0.0800726    0.144498   0.0615434
+
+[15:32:19] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.103351 > 0.0018 [          0           0           0   -0.103351           0           0   0.0448764   -0.149745           0   0.0667834    0.147968 -0.00687476   -0.118008   -0.107277  -0.0355456  -0.0800726    0.144498   0.0615434]
+[15:32:20] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:19] Delta strategy iteration:
+	iteration: 2
+	value: -77.8858
+	point:  -0.222945  0.0836397  -0.280138   0.125869   0.276916 -0.0120765  -0.223964  -0.233255 -0.0765622  -0.138434   0.291555   0.121135
+	grad:  0.0855039 -0.0494559   0.166606 -0.0723627  -0.163887 0.00822996   0.114825  0.0743812  0.0274198  0.0962881  -0.129854 -0.0591629
+	delta:  -0.0855039   0.0494559   -0.166606   0.0723627    0.163887 -0.00822996   -0.114825  -0.0743812  -0.0274198  -0.0962881    0.129854   0.0591629
+
+[15:32:20] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0855039 > 0.0018 [          0           0           0  -0.0855039           0           0   0.0494559   -0.166606           0   0.0723627    0.163887 -0.00822996   -0.114825  -0.0743812  -0.0274198  -0.0962881    0.129854   0.0591629]
+[15:32:21] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:19] Delta strategy iteration:
+	iteration: 3
+	value: -78.0009
+	point:  -0.308449   0.133096  -0.446744   0.198232   0.440803 -0.0203065   -0.33879  -0.307636  -0.103982  -0.234722   0.421409   0.180298
+	grad:  0.0684626 -0.0492633   0.172079 -0.0710182  -0.166003 0.00929531  0.0949879  0.0308801  0.0175421   0.099467 -0.0993441 -0.0513087
+	delta:  -0.0684626   0.0492633   -0.172079   0.0710182    0.166003 -0.00929531  -0.0949879  -0.0308801  -0.0175421   -0.099467   0.0993441   0.0513087
+
+[15:32:21] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0684626 > 0.0018 [          0           0           0  -0.0684626           0           0   0.0492633   -0.172079           0   0.0710182    0.166003 -0.00929531  -0.0949879  -0.0308801  -0.0175421   -0.099467   0.0993441   0.0513087]
+[15:32:22] [/home/george/au/chemistry/src/optimization/stop_strategies/HistoryStrategyWrapper.h:19] Delta strategy iteration:
+	iteration: 4
+	value: -78.0932
+	point:  -0.376912   0.182359  -0.618823    0.26925   0.606806 -0.0296018  -0.433777  -0.338517  -0.121524  -0.334189   0.520753   0.231606
+	grad:   0.0455769  -0.0363644      0.1455  -0.0506876   -0.129396   0.0102455   0.0740581 -0.00278072   0.0105543   0.0824948  -0.0535176  -0.0381275
+	delta:   0.730258  0.0457399   -0.73052   0.435683    1.19156 -0.0351854   0.066919  -0.270453  -0.243409   0.397304   0.342914   0.274926
+
+[15:32:22] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.730258 > 0.0018 [         0          0          0   0.730258          0          0  0.0457399   -0.73052          0   0.435683    1.19156 -0.0351854   0.066919  -0.270453  -0.243409   0.397304   0.342914   0.274926]

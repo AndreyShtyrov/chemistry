@@ -1,0 +1,8 @@
+[19:06:23] [/home/george/au/chemistry/src/main.cpp:494] nDims = 9
+[19:06:27] [/home/george/au/chemistry/src/main.cpp:495] gradient:      1.81798     0.030366  -5.0596e-16     -1.67593   -0.0531065  5.59087e-16    -0.142052    0.0227405 -5.31272e-17
+[19:06:29] [/home/george/au/chemistry/src/main.cpp:496] gradient:  -1.67593 -0.142052 0.0227405
+[19:06:33] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.128052 > 0.0018 [       0        0        0 0.128052        0        0 0.274837 0.435516        0]
+[19:06:35] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.106144 > 0.0018 [        0         0         0  0.106144         0         0  0.271114 0.0595627         0]
+[19:06:38] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0685151 > 0.0018 [        0         0         0 0.0685151         0         0  0.160541 0.0902688         0]
+[19:06:41] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large delta single value: 0.0193844 > 0.0018 [         0          0          0  0.0193844          0          0 -0.0138556 -0.0195144          0]
+[19:06:43] [/home/george/au/chemistry/src/optimization/stop_strategies/AtomicStopStrategy.h:72] too large grad single value: 0.00174884 > 4.5e-05 [  0.00159143  0.000725118  4.03113e-15  -0.00210183   0.00025022  5.12068e-15  0.000510405 -0.000975338 -9.15181e-15]

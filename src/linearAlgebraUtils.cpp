@@ -101,3 +101,9 @@ vect randomVectOnSphere(size_t nDims, double r)
         v(i) = distribution(randomGen);
     return v / v.norm() * r;
 }
+
+vect projection(vect wich, vect to)
+{
+    to /= to.norm();
+    return wich.dot(to) * to;
+}
