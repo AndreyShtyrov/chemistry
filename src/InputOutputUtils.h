@@ -37,7 +37,7 @@ vector<size_t> readCharges(StreamT&& stream)
 }
 
 template<typename StreamT>
-tuple<vector<size_t>, vect> readMolecule(StreamT&& stream)
+tuple<vector<size_t>, vect> readChemcraft(StreamT&& stream)
 {
     vector<size_t> charges;
     vector<Eigen::Vector3d> poss;
@@ -59,7 +59,6 @@ tuple<vector<size_t>, vect> readMolecule(StreamT&& stream)
 
     return make_tuple(charges, pos);
 }
-
 
 string toChemcraftCoords(vector<size_t> const& charges, vect p);
 

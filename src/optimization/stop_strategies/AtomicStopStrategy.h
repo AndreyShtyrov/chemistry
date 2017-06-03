@@ -85,7 +85,7 @@ namespace optimization
 
         bool operator()(size_t iter, vect const& p, double value, vect const& grad, vect const& delta)
         {
-            if (iter > 100)
+            if (iter > 2)
                 return true;
 
             auto x0 = ExtractorType::applyTransformation(p, mFunc);

@@ -85,7 +85,7 @@ template<typename T>
 auto optimize(T& func, vect const& x, bool deltaHistory = false)
 {
     if (deltaHistory) {
-        auto optimizer = makeSecondGradientDescent(makeRepeatDeltaStrategy(HessianDeltaStrategy()),
+        auto optimizer = makeSecondGradientDescent(HessianDeltaStrategy(),
                                                    makeHistoryStrategy(makeStandardAtomicStopStrategy(func)));
         auto path = optimizer(func, x);
         return path;
@@ -102,7 +102,7 @@ void optimizeStructure()
 
     vector<size_t> charges;
     vect initState;
-    tie(charges, initState) = readMolecule(input);
+    tie(charges, initState) = readChemcraft(input);
 
     initState = rotateToFix(initState);
     auto molecule = GaussianProducer(charges);
@@ -374,7 +374,7 @@ void shs()
 
     auto projMatrix = makeRandomMatrix(2, linearHessian.nDims);
 
-    for (size_t i = 0; i < cnt; i++) {
+    for (size_t i = 1; i < cnt; i++) {
         auto direction = readVect(input);
         LOG_INFO("Path #{}. Initial direction: {}", i, direction.transpose());
 
@@ -422,8 +422,88 @@ void shs()
 int main()
 {
     initializeLogger();
-//    filterPolarDirectionsLogFile();
-    shs();
 
-//    findInitialPolarDirections(linearHessian, .3);
+    vector<size_t> charges = {6, 6, 1, 1, 1, 1};
+
+    GaussianProducer molecule(charges);
+    auto fixed = fixAtomSymmetry(molecule);
+
+    auto state = makeVect(1.3387, -1.08394, -0.00297206, -0.135368, 0.00155787, -1.13625, 1.94332, -0.000685995,
+                          0.908709, 1.89979, 0.00136237, -0.926456);
+
+    auto path = optimize(fixed, state, true);
+    auto opt = path.back();
+    cout << (opt - state).norm() << endl;
+    cout << toChemcraftCoords(charges, fixed.fullTransform(opt)) << endl;
+
+    opt = fixed.fullTransform(opt);
+    auto grad = molecule.grad(opt);
+
+    LOG_INFO("grad = {} [{}]", grad.norm(), grad.transpose());
+
+    vect v1 = opt;
+    vect v2 = v1 + grad / grad.norm() * 1e-3;
+    auto val1 = molecule(v1);
+    auto val2 = molecule(v2);
+    auto approxGrad = (val2 - val1) / (v2 - v1).norm();
+    LOG_INFO("f(v1) = {:.13f}, f(v2) = {:.13f}, approx grad = {:.13f} [delta = {:.13f}]", val1, val2, approxGrad, (v2 - v1).norm());
+
+    LOG_INFO("not rotated:\n\tv1 = {}\n\tv2 = {}", v1.transpose(), v2.transpose());
+    v1 = rotateToFix(v1);
+    v2 = rotateToFix(v2);
+    LOG_INFO("rotated:\n\tv1 = {}\n\tv2 = {}", v1.transpose(), v2.transpose());
+    val1 = fixed(fixed.backTransform(v1));
+    val2 = fixed(fixed.backTransform(v2));
+    approxGrad = (val2 - val1) / (v2 - v1).norm();
+    LOG_INFO("f(v1) = {:.13f}, f(v2) = {:.13f}, approx grad = {:.13f} [delta = {:.13f}]", val1, val2, approxGrad, (v2 - v1).norm());
+
+    return 0;
+
+//    vector<vect> states;
+//    for (size_t i = 0; i < 200; i++) {
+//        vector<size_t> charges;
+//        vect state;
+//        tie(charges, state) = readChemcraft(ifstream(str(boost::format("./0/%1%.xyz") % i)));
+//
+//        states.push_back(state);
+//    }
+//
+//    vect d1 = states[165] - states[164];
+//    vect d2 = states[166] - states[165];
+//
+//    cout << d1.transpose() << endl << d2.transpose() << endl << d1.dot(d2) / d1.norm() / d2.norm() << endl;
+//    cout << d1.norm() << ' ' << d2.norm() << endl;
+
+//    filterPolarDirectionsLogFile();
+//    shs();
+
+//    vector<double> energies;
+//    vector<vect> states;
+//    for (size_t i = 0; i < 200; i++) {
+//        vector<size_t> charges;
+//        vect state;
+//        tie(charges, state) = readChemcraft(ifstream(str(boost::format("./0/%1%.xyz") % i)));
+//
+//        GaussianProducer molecule(charges);
+//        auto fixed = fixAtomSymmetry(molecule);
+//        state = fixed.backTransform(state);
+//
+//        auto hess = fixed.hess(state);
+//        auto grad = fixed.grad(state);
+//        auto energy = fixed(state);
+//
+//        energies.push_back(energy);
+//        states.push_back(state);
+//
+//        LOG_INFO("State #{}: {}\n\tenergy = {}\n\tgradient = {} [{}]\n\thess values = {}\nchemcraft coords:\n{}", i,
+//                 state.transpose(), energy, grad.norm(), grad.transpose(), singularValues(hess).transpose(),
+//                 toChemcraftCoords(charges, fixed.fullTransform(state)));
+//    }
+//
+//    for (size_t i = 0; i < energies.size(); i++) {
+//        LOG_INFO("#{}: {}, {}", i, i == 0 || energies[i - 1] < energies[i] ? '+' : '-',
+//                 i + 1 == energies.size() || energies[i] < energies[i + 1] ? '+' : '-');
+//    }
+
+////    findInitialPolarDirections(linearHessian, .3);
 }

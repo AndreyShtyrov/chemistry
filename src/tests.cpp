@@ -200,6 +200,28 @@ TEST(FunctionProducer, Stack2)
     testProducer(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
 }
 
+TEST(FunctionProducer, Stack3)
+{
+    ifstream input("./C2H4");
+
+    auto charges = readCharges(input);
+    auto state = readVect(input);
+
+//    state = rotateToFix(state);
+    auto molecule = GaussianProducer(charges);
+    auto prepared = fixAtomSymmetry(molecule);
+
+    state = prepared.backTransform(state);
+    auto linearHessian = prepareForPolar(prepared, state);
+    auto polar = makePolar(linearHessian, .3);
+
+    auto lowerBound = makeConstantVect(polar.nDims, M_PI / 2 - 1);
+    auto upperBound = makeConstantVect(polar.nDims, M_PI / 2 + 1);
+
+//    testHessian(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
+    testProducer(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
+}
+
 
 TEST(FunctionProducer, ModelMultidimensionalFunction)
 {

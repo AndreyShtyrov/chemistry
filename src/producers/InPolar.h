@@ -3,6 +3,7 @@
 #include "helper.h"
 
 #include "FunctionProducer.h"
+#include "linearAlgebraUtils.h"
 
 template<typename FuncT>
 class InPolar : public FunctionProducer
