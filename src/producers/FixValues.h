@@ -21,11 +21,15 @@ public:
 
     double operator()(vect const& x) override
     {
+        assert((size_t) x.rows() == nDims);
+
         return mFunc(transform(x));
     }
 
     vect grad(vect const& x) override
     {
+        assert((size_t) x.rows() == nDims);
+
         auto grad = mFunc.grad(transform(x));
         vect result(nDims);
         for (size_t i = 0, j = 0, k = 0; i < mFunc.nDims; i++)
@@ -38,6 +42,8 @@ public:
 
     matrix hess(vect const& x) override
     {
+        assert((size_t) x.rows() == nDims);
+
         auto hess = mFunc.hess(transform(x));
         matrix result(nDims, nDims);
         for (size_t i1 = 0, j1 = 0, k1 = 0; i1 < mFunc.nDims; i1++)
@@ -110,6 +116,12 @@ auto fixAtomSymmetry(FuncT&& func)
 };
 
 template<typename FuncT>
+auto fixAtomTranslations(FuncT&& func)
+{
+    return fix(forward<FuncT>(func), {0, 1, 2, 4, 5}, {0., 0., 0., 0., 0.});
+};
+
+template<typename FuncT>
 auto fixAtomSymmetry(FuncT&& func, vect const& pos)
 {
     return fix(forward<FuncT>(func), {0, 1, 2, 4, 5, 8}, {pos(0), pos(1), pos(2), pos(4), pos(5), pos(8)});
@@ -168,5 +180,47 @@ vect rotateToFix(vect p)
             assert(abs(p(0)) < 1e-7);
 
     return p;
+}
+
+vect moveToFix(vect p)
+{
+    vector<Eigen::Vector3d> ps;
+    for (size_t i = 0; i < (size_t) p.rows(); i += 3) {
+        ps.push_back(p.block(i, 0, 3, 1));
+    }
+
+    auto delta = ps[0];
+    for (auto& p : ps)
+        p -= delta;
+    for (size_t i = 0; i < ps.size(); i++) {
+        p.block(i * 3, 0, 3, 1) = ps[i];
+    }
+
+    if (ps[1].block(1, 0, 2, 1).norm() > 1e-7) {
+        Eigen::Vector3d ox = {1, 0, 0};
+        Eigen::Vector3d axis = ps[1].cross(ox);
+        axis /= axis.norm();
+        double angle = atan2(ps[1].cross(ox).norm(), ps[1].dot(ox));
+        Eigen::Matrix3d m = Eigen::AngleAxisd(angle, axis).matrix();
+
+        for (auto& p : ps)
+            p = m * p;
+        for (size_t i = 0; i < ps.size(); i++) {
+            p.block(i * 3, 0, 3, 1) = ps[i];
+        }
+    }
+
+    for (size_t i = 0; i < 9; i++)
+        assert(i == 3 || abs(p(0)) < 1e-7);
+
+    return p;
+
+//    assert(p.size() % 3 == 0);
+//
+//    for (size_t i = p.rows(); i; i -= 3)
+//        p.block(i - 3, 0, 3, 1) -= p.block(0, 0, 3, 1);
+//
+//
+//    return p;
 }
 

@@ -193,7 +193,7 @@ vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, do
 
         return path;
     } catch (GaussianException const& exc) {
-        return {};
+        throw exc;
     }
 }
 
@@ -201,13 +201,16 @@ template<typename FuncT>
 void findInitialPolarDirections(FuncT& func, double r)
 {
     auto axis = framework.newPlot();
-    auto projMatrix = makeRandomMatrix(2, func.nDims + 6);
+    auto projMatrix = makeRandomMatrix(2, func.nDims + 5);
 
     while (true) {
         try {
             vector<double> xs, ys;
 
             vect pos = randomVectOnSphere(func.nDims, r);
+
+            LOG_INFO("\n{}\n{}\n{}", pos.transpose(), func.fullTransform(pos).transpose(),
+                     toChemcraftCoords({6, 6, 1, 1, 1, 1}, func.fullTransform(pos).transpose()));
 
             auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 100);
             if (path.empty())
@@ -234,7 +237,8 @@ void findInitialPolarDirections(FuncT& func, double r)
             LOG_INFO("read grad norm is {}\nfirst norm = {}\nsecond norm = {}", grad.norm(), first.norm(),
                      second.norm());
         } catch (GaussianException const& exc) {
-            LOG_ERROR("exception: {}", exc.what());
+            throw exc;
+//            LOG_ERROR("exception: {}", exc.what());
         }
     }
 }
@@ -419,45 +423,124 @@ void shs()
     }
 }
 
+vector<vect> fromCartesianToPositions(vect v)
+{
+    assert(v.rows() % 3 == 0);
+
+    vector<vect> rs;
+    for (size_t i = 0; i < (size_t) v.rows(); i += 3)
+        rs.push_back(v.block(i, 0, 3, 1));
+    return rs;
+}
+
+vect massCenter(vector<vect> const& rs)
+{
+    auto p = makeConstantVect(3, 0);
+    for (auto r : rs)
+        p += r;
+    return p;
+}
+
+matrix inertyTensor(vector<vect> const& rs)
+{
+    auto J = makeConstantMatrix(3, 3, 0);
+    for (auto r : rs)
+        J += identity(3) * r.dot(r) + r * r.transpose();
+    return J;
+}
+
+vect solveEquations(vect v)
+{
+    auto withZeros = makeConstantVect((size_t) v.rows() +  6, 0);
+    for (size_t i = 0, j = 0; i < (size_t) withZeros.rows(); i++)
+        if (i < 7 && i != 5)
+            withZeros(i) = 0;
+        else
+            withZeros(i) = v(j++);
+    LOG_INFO("\nv = {}\nw = {}", v.transpose(), withZeros.transpose());
+    v = withZeros;
+
+    auto rs = fromCartesianToPositions(v);
+    auto p = massCenter(rs);
+    auto J = inertyTensor(rs);
+
+    LOG_INFO("before:\np: {}\nJ:\n{}", p.transpose(), J);
+
+    double A = -p(0);
+    double B = -p(1);
+    double C = -p(2);
+    double D = -J(0, 1);
+    double E = -J(0, 2);
+    double F = -J(1, 2);
+
+    LOG_INFO("values: {} {} {} {} {} {}", A, B, C, D, E, F);
+
+    {
+        LOG_INFO("Linear Equasions #2: x: {}", C);
+        v(2) = C;
+    }
+
+    {
+        Eigen::Matrix2d m;
+        m << 1, 1,
+             v(2), v(5);
+        Eigen::Vector2d b;
+        b << B, F;
+        Eigen::Vector2d x = m.colPivHouseholderQr().solve(b);
+        LOG_INFO("Linear Equasions #2:\nm:\n{}\nb: {}\nx: {}", m, b.transpose(), x.transpose());
+        v(1) = x(0);
+        v(4) = x(1);
+    }
+
+    {
+        Eigen::Matrix3d m;
+        m << 1, 1, 1,
+             v(1), v(4), v(7),
+             v(2), v(5), v(8);
+        Eigen::Vector3d b;
+        b << A, D, E;
+        Eigen::Vector3d x = m.colPivHouseholderQr().solve(b);
+        LOG_INFO("Linear Equasions #3:\nm:\n{}\nb: {}\nx: {}", m, b.transpose(), x.transpose());
+        v(0) = x(0);
+        v(3) = x(1);
+        v(6) = x(2);
+    }
+
+    rs = fromCartesianToPositions(v);
+    p = massCenter(rs);
+    J = inertyTensor(rs);
+    LOG_INFO("after:\np: {}\nJ:\n{}", p.transpose(), J);
+    LOG_INFO("result: {}", v.transpose());
+
+    return v;
+}
+
 int main()
 {
     initializeLogger();
 
-    vector<size_t> charges = {6, 6, 1, 1, 1, 1};
+//    auto v = makeRandomVect(9);
+//    auto rs = fromCartesianToPositions(v);
+//
+//    LOG_INFO("\n{}", v.transpose());
+//    LOG_INFO("\n{}", massCenter(rs).transpose());
+//    LOG_INFO("\n{}", inertyTensor(rs));
 
-    GaussianProducer molecule(charges);
-    auto fixed = fixAtomSymmetry(molecule);
-
-    auto state = makeVect(1.3387, -1.08394, -0.00297206, -0.135368, 0.00155787, -1.13625, 1.94332, -0.000685995,
-                          0.908709, 1.89979, 0.00136237, -0.926456);
-
-    auto path = optimize(fixed, state, true);
-    auto opt = path.back();
-    cout << (opt - state).norm() << endl;
-    cout << toChemcraftCoords(charges, fixed.fullTransform(opt)) << endl;
-
-    opt = fixed.fullTransform(opt);
-    auto grad = molecule.grad(opt);
-
-    LOG_INFO("grad = {} [{}]", grad.norm(), grad.transpose());
-
-    vect v1 = opt;
-    vect v2 = v1 + grad / grad.norm() * 1e-3;
-    auto val1 = molecule(v1);
-    auto val2 = molecule(v2);
-    auto approxGrad = (val2 - val1) / (v2 - v1).norm();
-    LOG_INFO("f(v1) = {:.13f}, f(v2) = {:.13f}, approx grad = {:.13f} [delta = {:.13f}]", val1, val2, approxGrad, (v2 - v1).norm());
-
-    LOG_INFO("not rotated:\n\tv1 = {}\n\tv2 = {}", v1.transpose(), v2.transpose());
-    v1 = rotateToFix(v1);
-    v2 = rotateToFix(v2);
-    LOG_INFO("rotated:\n\tv1 = {}\n\tv2 = {}", v1.transpose(), v2.transpose());
-    val1 = fixed(fixed.backTransform(v1));
-    val2 = fixed(fixed.backTransform(v2));
-    approxGrad = (val2 - val1) / (v2 - v1).norm();
-    LOG_INFO("f(v1) = {:.13f}, f(v2) = {:.13f}, approx grad = {:.13f} [delta = {:.13f}]", val1, val2, approxGrad, (v2 - v1).norm());
-
-    return 0;
+    solveEquations(makeRandomVect(3));
+//
+//    ifstream input("./C2H4");
+//    vector<size_t> charges = readCharges(input);
+//    vect state = readVect(input);
+//
+//    GaussianProducer molecule(charges);
+//    auto fixed = fixAtomTranslations(molecule);
+//
+//    LOG_INFO("{}", state.transpose());
+//    state = fixed.backTransform(moveToFix(state));
+//    LOG_INFO("{}", state.transpose());
+//    auto linearHessian = prepareForPolar(fixed, state);
+//
+//    findInitialPolarDirections(linearHessian, 0.01);
 
 //    vector<vect> states;
 //    for (size_t i = 0; i < 200; i++) {

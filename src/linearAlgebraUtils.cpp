@@ -108,7 +108,7 @@ vect projection(vect wich, vect to)
     return wich.dot(to) * to;
 }
 
-vect singularValues(matrix m)
+matrix singularValues(matrix m)
 {
     return Eigen::JacobiSVD<matrix>(m).singularValues().transpose();
 }

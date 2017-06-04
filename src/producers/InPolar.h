@@ -15,17 +15,23 @@ public:
 
     virtual double operator()(vect const& phi) override
     {
+        assert((size_t) phi.rows() == nDims);
+
         return mFunc(transform(phi));
     }
 
     virtual vect grad(vect const& phi) override
     {
+        assert((size_t) phi.rows() == nDims);
+
         auto grad = mFunc.grad(transform(phi));
         return grad.transpose() * calculateDerivatives(phi);
     }
 
     virtual matrix hess(vect const& phi) override
     {
+        assert((size_t) phi.rows() == nDims);
+
         auto grad = mFunc.grad(transform(phi));
         auto hess = mFunc.hess(transform(phi));
 

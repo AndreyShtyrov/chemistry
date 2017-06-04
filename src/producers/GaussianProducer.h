@@ -84,6 +84,8 @@ public:
 
     virtual double operator()(vect const& x)
     {
+        assert((size_t) x.rows() == nDims);
+
         if (testCache(mValue, x))
             return mValue.get();
         processNewPos(x, false, false);
@@ -92,6 +94,8 @@ public:
 
     virtual vect grad(vect const& x)
     {
+        assert((size_t) x.rows() == nDims);
+
         if (testCache(mGrad, x))
             return mGrad.get();
         processNewPos(x, true, false);
@@ -100,6 +104,8 @@ public:
 
     virtual matrix hess(vect const& x)
     {
+        assert((size_t) x.rows() == nDims);
+
         if (testCache(mHess, x))
             return mHess.get();
         processNewPos(x, true, true);

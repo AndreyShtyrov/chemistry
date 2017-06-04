@@ -16,16 +16,22 @@ public:
 
     virtual double operator()(vect const& x) override
     {
+        assert((size_t) x.rows() == nDims);
+
         return mFunc(transform(x));
     }
 
     virtual vect grad(vect const& x) override
     {
+        assert((size_t) x.rows() == nDims);
+
         return mBasisT * mFunc.grad(transform(x));
     }
 
     virtual matrix hess(vect const& x) override
     {
+        assert((size_t) x.rows() == nDims);
+
         return mBasisT * mFunc.hess(transform(x)) * mBasis;
     }
 
@@ -75,5 +81,6 @@ template<typename FuncT>
 auto prepareForPolar(FuncT&& func, vect const& v)
 {
     auto A = linearizationNormalization(func.hess(v));
+    LOG_INFO("{}", singularValues(func.hess(v)));
     return makeAffineTransfomation(func, v, A);
 }

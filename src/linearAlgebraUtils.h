@@ -30,4 +30,4 @@ vect randomVectOnSphere(size_t nDims, double r=1.);
 
 vect projection(vect wich, vect to);
 
-vect singularValues(matrix m);
+matrix singularValues(matrix m);
