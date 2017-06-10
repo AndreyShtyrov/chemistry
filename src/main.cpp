@@ -382,7 +382,7 @@ void shs()
         auto direction = readVect(input);
         LOG_INFO("Path #{}. Initial direction: {}", i, direction.transpose());
 
-        if (i < 2)
+        if (i < 3)
             continue;
 
         system(str(boost::format("mkdir %1%") % i).c_str());
@@ -399,7 +399,8 @@ void shs()
             vect prev = direction;
             direction = direction / direction.norm() * r;
             try {
-                auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(5e-4, 5e-4)), linearHessian, direction, r, 0);
+                auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(5e-4, 5e-4)), linearHessian, direction, r,
+                                             0);
 
                 if (path.empty()) {
                     LOG_ERROR("empty path");
@@ -408,21 +409,21 @@ void shs()
                 direction = path.back();
 
                 double newValue = linearHessian(direction);
-                LOG_INFO("New {} point in path:\n\tvalue = {:.13f}\n\tdelta norm = {:.13f}\n\t{}\nchemcraft coords:\n{}", j,
-                         newValue, (direction / direction.norm() - prev / prev.norm()).norm(), direction.transpose(),
-                         toChemcraftCoords(charges, linearHessian.fullTransform(direction)));
+                LOG_INFO(
+                   "New {} point in path:\n\tvalue = {:.13f}\n\tdelta norm = {:.13f}\n\t{}\nchemcraft coords:\n{}", j,
+                   newValue, (direction / direction.norm() - prev / prev.norm()).norm(), direction.transpose(),
+                   toChemcraftCoords(charges, linearHessian.fullTransform(direction)));
 
                 ofstream output(str(boost::format("./%1%/%2%.xyz") % i % j));
                 output << toChemcraftCoords(charges, linearHessian.fullTransform(direction)) << endl;
 
                 if (newValue < value) {
                     LOG_ERROR("newValue < value [{:.13f} < {:.13f}]. Stopping", newValue, value);
-    //                break;
+                    //                break;
                 }
 
                 value = newValue;
-            }
-            catch (GaussianException const& exc) {
+            } catch (GaussianException const& exc) {
                 break;
             }
         }
@@ -460,7 +461,7 @@ matrix tensorOfInertia(vector<vect> const& rs)
 
 vect solveEquations(vect v)
 {
-    auto withZeros = makeConstantVect((size_t) v.rows() +  6, 0);
+    auto withZeros = makeConstantVect((size_t) v.rows() + 6, 0);
     for (size_t i = 0, j = 0; i < (size_t) withZeros.rows(); i++)
         if (i < 7 && i != 5)
             withZeros(i) = 0;
@@ -491,8 +492,7 @@ vect solveEquations(vect v)
 
     {
         Eigen::Matrix2d m;
-        m << 1, 1,
-             v(2), v(5);
+        m << 1, 1, v(2), v(5);
         Eigen::Vector2d b;
         b << B, F;
         Eigen::Vector2d x = m.colPivHouseholderQr().solve(b);
@@ -503,9 +503,7 @@ vect solveEquations(vect v)
 
     {
         Eigen::Matrix3d m;
-        m << 1, 1, 1,
-             v(1), v(4), v(7),
-             v(2), v(5), v(8);
+        m << 1, 1, 1, v(1), v(4), v(7), v(2), v(5), v(8);
         Eigen::Vector3d b;
         b << A, D, E;
         Eigen::Vector3d x = m.colPivHouseholderQr().solve(b);
@@ -524,11 +522,64 @@ vect solveEquations(vect v)
     return v;
 }
 
+void analizeFolder()
+{
+    vector<double> energies;
+    vector<vect> states;
+    for (size_t i = 0; i < 200; i++) {
+        vector<size_t> charges;
+        vect state;
+        tie(charges, state) = readChemcraft(ifstream(str(boost::format("./2/%1%.xyz") % i)));
+
+        GaussianProducer molecule(charges);
+        auto fixed = fixAtomSymmetry(molecule);
+        state = fixed.backTransform(state);
+
+        auto hess = fixed.hess(state);
+        auto grad = fixed.grad(state);
+        auto energy = fixed(state);
+
+        energies.push_back(energy);
+        states.push_back(state);
+
+        LOG_INFO("State #{}: {}\n\tenergy = {}\n\tgradient = {} [{}]\n\thess values = {}\nchemcraft coords:\n{}", i,
+                 state.transpose(), energy, grad.norm(), grad.transpose(), singularValues(hess),
+                 toChemcraftCoords(charges, fixed.fullTransform(state)));
+    }
+
+    framework.plot(framework.newPlot(), energies);
+
+    for (size_t i = 0; i < energies.size(); i++) {
+        LOG_INFO("#{}: {}, {}", i, i == 0 || energies[i - 1] < energies[i] ? '+' : '-',
+                 i + 1 == energies.size() || energies[i] < energies[i + 1] ? '+' : '-');
+    }
+}
+
 int main()
 {
     initializeLogger();
 //    shs();
 //    return 0;
+
+    ifstream input("./C2H4");
+    auto charges = readCharges(input);
+    auto equilStruct = readVect(input);
+
+    auto molecule = GaussianProducer(charges);
+
+    LOG_INFO("Initial structure:\nlocal minima: {}\nchemcraft coords:\n{}energy: {}\ngradient: {}\nhessian: {}",
+             equilStruct.transpose(), toChemcraftCoords(charges, equilStruct), molecule(equilStruct),
+             molecule.grad(equilStruct).transpose(), singularValues(molecule.hess(equilStruct)));
+
+    auto fixedSym = fixAtomSymmetry(molecule);
+    equilStruct = fixedSym.backTransform(equilStruct);
+
+    LOG_INFO("For fixed coordinates:");
+    LOG_INFO("local minima: {}", equilStruct.transpose());
+    LOG_INFO("chemcraft coords:\n{}", toChemcraftCoords(charges, fixedSym.fullTransform(equilStruct)));
+    LOG_INFO("energy: {:.13f}", fixedSym(equilStruct));
+    LOG_INFO("gradient: {}", fixedSym.grad(equilStruct).transpose());
+    LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(fixedSym.hess(equilStruct)).singularValues().transpose());
 
 //    auto v = makeRandomVect(9);
 //    auto rs = fromCartesianToPositions(v);
@@ -568,35 +619,6 @@ int main()
 
 //    filterPolarDirectionsLogFile();
 
-    vector<double> energies;
-    vector<vect> states;
-    for (size_t i = 0; i < 200; i++) {
-        vector<size_t> charges;
-        vect state;
-        tie(charges, state) = readChemcraft(ifstream(str(boost::format("./2/%1%.xyz") % i)));
-
-        GaussianProducer molecule(charges);
-        auto fixed = fixAtomSymmetry(molecule);
-        state = fixed.backTransform(state);
-
-        auto hess = fixed.hess(state);
-        auto grad = fixed.grad(state);
-        auto energy = fixed(state);
-
-        energies.push_back(energy);
-        states.push_back(state);
-
-        LOG_INFO("State #{}: {}\n\tenergy = {}\n\tgradient = {} [{}]\n\thess values = {}\nchemcraft coords:\n{}", i,
-                 state.transpose(), energy, grad.norm(), grad.transpose(), singularValues(hess),
-                 toChemcraftCoords(charges, fixed.fullTransform(state)));
-    }
-
-    framework.plot(framework.newPlot(), energies);
-
-    for (size_t i = 0; i < energies.size(); i++) {
-        LOG_INFO("#{}: {}, {}", i, i == 0 || energies[i - 1] < energies[i] ? '+' : '-',
-                 i + 1 == energies.size() || energies[i] < energies[i + 1] ? '+' : '-');
-    }
 
 ////    findInitialPolarDirections(linearHessian, .3);
 }
