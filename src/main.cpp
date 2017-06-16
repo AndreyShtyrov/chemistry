@@ -567,19 +567,16 @@ int main()
 
     auto molecule = GaussianProducer(charges);
 
-    LOG_INFO("Initial structure:\nlocal minima: {}\nchemcraft coords:\n{}energy: {}\ngradient: {}\nhessian: {}",
+    LOG_INFO("Initial structure:\n\tlocal minima: {}\nchemcraft coords:\n\t{}\tenergy: {}\n\tgradient: {}\n\thessian: {}\n\n",
              equilStruct.transpose(), toChemcraftCoords(charges, equilStruct), molecule(equilStruct),
              molecule.grad(equilStruct).transpose(), singularValues(molecule.hess(equilStruct)));
 
     auto fixedSym = fixAtomSymmetry(molecule);
     equilStruct = fixedSym.backTransform(equilStruct);
 
-    LOG_INFO("For fixed coordinates:");
-    LOG_INFO("local minima: {}", equilStruct.transpose());
-    LOG_INFO("chemcraft coords:\n{}", toChemcraftCoords(charges, fixedSym.fullTransform(equilStruct)));
-    LOG_INFO("energy: {:.13f}", fixedSym(equilStruct));
-    LOG_INFO("gradient: {}", fixedSym.grad(equilStruct).transpose());
-    LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(fixedSym.hess(equilStruct)).singularValues().transpose());
+    LOG_INFO("For fixed coordinates:\n\tlocal minima: {}\nchemcraft coords:\n\t{}\tenergy: {}\n\tgradient: {}\n\thessian: {}\n\n",
+             equilStruct.transpose(), toChemcraftCoords(charges, fixedSym.fullTransform(equilStruct)), fixedSym(equilStruct),
+             fixedSym.grad(equilStruct).transpose(), singularValues(fixedSym.hess(equilStruct)));
 
 //    auto v = makeRandomVect(9);
 //    auto rs = fromCartesianToPositions(v);
