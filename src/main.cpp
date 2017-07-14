@@ -555,9 +555,14 @@ void analizeFolder()
     }
 }
 
+#include "testing/newDegreeDelition.h"
+
 int main()
 {
     initializeLogger();
+    testDegreesDelition();
+    return 0;
+
 //    shs();
 //    return 0;
 

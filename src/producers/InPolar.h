@@ -147,12 +147,12 @@ InPolar<FuncT> makePolar(FuncT const& func, double r)
     return InPolar<FuncT>(func, r);
 }
 
-vect polarVectLowerBound(int rows)
+inline vect polarVectLowerBound(int rows)
 {
     return makeConstantVect(rows, 0.);
 }
 
-vect polarVectUpperBound(int rows)
+inline vect polarVectUpperBound(int rows)
 {
     if (rows == 1)
         return makeConstantVect(1, 2 * M_PI);
@@ -164,7 +164,7 @@ vect polarVectUpperBound(int rows)
     return upperBound;
 }
 
-vect randomPolarPoint(size_t nDims)
+inline vect randomPolarPoint(size_t nDims)
 {
     vect v(nDims);
     normal_distribution<double> distribution(.0, 1.);

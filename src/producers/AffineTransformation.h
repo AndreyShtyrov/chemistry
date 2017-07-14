@@ -9,9 +9,9 @@ template<typename FuncT>
 class AffineTransformation : public FunctionProducer
 {
 public:
-    AffineTransformation(FuncT func, vect delta, matrix const& basis) : FunctionProducer(func.nDims), mFunc(move(func)), mDelta(move(delta)),
-                                                                                 mBasis(basis),
-                                                                                 mBasisT(basis.transpose())
+    AffineTransformation(FuncT func, vect delta, matrix const& basis) : FunctionProducer((size_t) basis.cols()),
+                                                                        mFunc(move(func)), mDelta(move(delta)),
+                                                                        mBasis(basis), mBasisT(basis.transpose())
     {}
 
     virtual double operator()(vect const& x) override
@@ -53,7 +53,6 @@ public:
 private:
     FuncT mFunc;
 
-    size_t mN;
     vect mDelta;
     matrix mBasis;
     matrix mBasisT;
@@ -74,7 +73,7 @@ auto makeAffineTransfomation(FuncT&& func, vect delta, matrix const& A)
 template<typename FuncT>
 auto makeAffineTransfomation(FuncT&& func, matrix const& A)
 {
-    return AffineTransformation<decay_t<FuncT>>(forward<FuncT>(func), makeConstantVect(func.nDims, 0), A);
+    return AffineTransformation<decay_t<FuncT>>(forward<FuncT>(func), makeConstantVect(A.rows(), 0), A);
 }
 
 template<typename FuncT>

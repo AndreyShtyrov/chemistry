@@ -12,7 +12,7 @@ vect eye(size_t n, size_t i);
 
 matrix makeRandomMatrix(size_t rows, size_t cols);
 
-matrix makeConstantMatrix(size_t rows, size_t cols, double constant);
+matrix makeConstantMatrix(size_t rows, size_t cols, double constant=0.);
 
 matrix identity(size_t nDims);
 
