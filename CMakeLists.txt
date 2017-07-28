@@ -7,7 +7,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-pthread")
 SET(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 
 find_package(Eigen3 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system filesystem)
+#find_package(Boost REQUIRED COMPONENTS system filesystem)
 
 # gtest
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
@@ -37,7 +37,7 @@ include_directories(${SOURCE_DIR})
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 #include_directories(${SRC)
-SET(SOURCE_FILES src/helper.cpp src/InputOutputUtils.cpp src/linearAlgebraUtils.cpp src/testing/newDegreeDelition.cpp src/producers/FixValues.cpp)
+SET(SOURCE_FILES src/helper.cpp src/InputOutputUtils.cpp src/linearAlgebraUtils.cpp src/testing/newDegreeDelition.cpp src/testing/CoordinateSystemChange.cpp src/producers/FixValues.cpp)
 
 add_executable(chemistry ${SOURCE_DIR}/main.cpp ${SOURCE_FILES})
 target_link_libraries(chemistry ${Boost_LIBRARIES})

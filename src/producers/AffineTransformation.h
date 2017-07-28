@@ -45,6 +45,11 @@ public:
         return mFunc.fullTransform(transform(x));
     }
 
+    vect backTransform(vect const& x) const
+    {
+        return mBasis.inverse() * (x - mDelta);
+    }
+
     FuncT const& getInnerFunction() const
     {
         return mFunc;

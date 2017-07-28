@@ -1,3 +1,0 @@
-*** [20:32:50 +03:00] [thread 3894] [/home/george/au/chemistry/src/main.cpp:500] nDims = 9 ***
-*** [20:32:51 +03:00] [thread 3894] [/home/george/au/chemistry/src/main.cpp:501] gradient: -3.10871e-17  1.63645e-14    0.0556968 -9.47018e-16    -0.045794   -0.0278484  9.78106e-16     0.045794   -0.0278484 ***
-*** [20:32:52 +03:00] [thread 3894] [/home/george/au/chemistry/src/main.cpp:502] gradient:  3.17353e-17 -1.09459e-16     0.045794 ***

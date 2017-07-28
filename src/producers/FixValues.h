@@ -116,6 +116,12 @@ auto fixAtomSymmetry(FuncT&& func)
 };
 
 template<typename FuncT>
+auto fixAtomSymmetry(FuncT&& func, size_t a, size_t b, size_t c)
+{
+    return fix(forward<FuncT>(func), {a * 3, a * 3 + 1, a * 3 + 2, b * 3 + 1, b * 3 + 2, c * 3 + 2}, {0., 0., 0., 0., 0., 0.});
+}
+
+template<typename FuncT>
 auto fixAtomTranslations(FuncT&& func)
 {
     return fix(forward<FuncT>(func), {0, 1, 2, 4, 5}, {0., 0., 0., 0., 0.});
@@ -128,5 +134,4 @@ auto fixAtomSymmetry(FuncT&& func, vect const& pos)
 };
 
 vect rotateToFix(vect p);
-
-vect moveToFix(vect p);
+vect rotateToXYZ(vect v, size_t a, size_t b, size_t c);

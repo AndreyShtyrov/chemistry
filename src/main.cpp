@@ -348,11 +348,7 @@ void filterPolarDirectionsLogFile()
     }
 }
 
-#include <boost/filesystem.hpp>
-
-using namespace boost::filesystem;
-
-void shs()
+static void shs()
 {
     ifstream input("./C2H4");
     auto charges = readCharges(input);
@@ -429,7 +425,6 @@ void shs()
         }
 
         framework.plot(framework.newPlot(), xs, ys);
-//        return;
     }
 }
 
@@ -555,72 +550,14 @@ void analizeFolder()
     }
 }
 
-#include "testing/newDegreeDelition.h"
+#include "testing/tests.h"
 
 int main()
 {
     initializeLogger();
-    testDegreesDelition();
+//    testTrajectory();
+    coordinateSystemChanges();
+
     return 0;
-
-//    shs();
-//    return 0;
-
-    ifstream input("./C2H4");
-    auto charges = readCharges(input);
-    auto equilStruct = readVect(input);
-
-    auto molecule = GaussianProducer(charges);
-
-    LOG_INFO("Initial structure:\n\tlocal minima: {}\nchemcraft coords:\n\t{}\tenergy: {}\n\tgradient: {}\n\thessian: {}\n\n",
-             equilStruct.transpose(), toChemcraftCoords(charges, equilStruct), molecule(equilStruct),
-             molecule.grad(equilStruct).transpose(), singularValues(molecule.hess(equilStruct)));
-
-    auto fixedSym = fixAtomSymmetry(molecule);
-    equilStruct = fixedSym.backTransform(equilStruct);
-
-    LOG_INFO("For fixed coordinates:\n\tlocal minima: {}\nchemcraft coords:\n\t{}\tenergy: {}\n\tgradient: {}\n\thessian: {}\n\n",
-             equilStruct.transpose(), toChemcraftCoords(charges, fixedSym.fullTransform(equilStruct)), fixedSym(equilStruct),
-             fixedSym.grad(equilStruct).transpose(), singularValues(fixedSym.hess(equilStruct)));
-
-//    auto v = makeRandomVect(9);
-//    auto rs = fromCartesianToPositions(v);
-//
-//    LOG_INFO("\n{}", v.transpose());
-//    LOG_INFO("\n{}", centerOfMass(rs).transpose());
-//    LOG_INFO("\n{}", inertyTensor(rs));
-
-//    ifstream input("./C2H4");
-//    vector<size_t> charges = readCharges(input);
-//    vect state = readVect(input);
-//
-//    GaussianProducer molecule(charges);
-//    auto fixed = fixAtomTranslations(molecule);
-//
-//    LOG_INFO("{}", state.transpose());
-//    state = fixed.backTransform(moveToFix(state));
-//    LOG_INFO("{}", state.transpose());
-//    auto linearHessian = prepareForPolar(fixed, state);
-//
-//    findInitialPolarDirections(linearHessian, 0.01);
-
-//    vector<vect> states;
-//    for (size_t i = 0; i < 200; i++) {
-//        vector<size_t> charges;
-//        vect state;
-//        tie(charges, state) = readChemcraft(ifstream(str(boost::format("./0/%1%.xyz") % i)));
-//
-//        states.push_back(state);
-//    }
-//
-//    vect d1 = states[165] - states[164];
-//    vect d2 = states[166] - states[165];
-//
-//    cout << d1.transpose() << endl << d2.transpose() << endl << d1.dot(d2) / d1.norm() / d2.norm() << endl;
-//    cout << d1.norm() << ' ' << d2.norm() << endl;
-
-//    filterPolarDirectionsLogFile();
-
-
-////    findInitialPolarDirections(linearHessian, .3);
+    shs();
 }
