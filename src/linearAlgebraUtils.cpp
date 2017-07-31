@@ -90,7 +90,10 @@ matrix rotationMatrix(vect from, vect to)
 
     double alpha = acos(from.dot(to) / from.norm() / to.norm());
 
-    return rotationMatrix(v, u, alpha);
+    auto M = rotationMatrix(v, u, alpha);
+    LOG_ERROR("vectors [alpha = {}]\nv = {}\nu = {}\nto = {}\nM * from = {}\nM' * from = {}\n{}",
+              alpha, v.transpose(), u.transpose(), to.transpose(), (M * from).transpose(), (rotationMatrix(v, u, -alpha) * from).transpose(), M);
+    return M;
 }
 
 vect randomVectOnSphere(size_t nDims, double r)

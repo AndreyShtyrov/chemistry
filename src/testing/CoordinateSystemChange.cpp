@@ -167,21 +167,18 @@ void testTrajectory()
 }
 
 template<typename FuncT>
-void runSHS(FuncT& func, vect equilStruct, vect diraction)
+void runSHS(FuncT& func, vect equilStruct, vect direction)
 {
-    auto prepared = prepareForPolar(func, equilStruct);
-
-    equilStruct = prepared.backTransform(equilStruct);
-    diraction = prepared.backTransform(diraction);
-
-    LOG_INFO("\nnew equilStruct = {}\nnew diraction = {}\ndist = {}",
-             equilStruct.transpose(), diraction.transpose(), diraction.norm());
-
-    double r = diraction.norm();
-    auto polar = makePolar(prepared, r);
-
-    cout <<
-
+//    auto prepared = prepareForPolar(func, equilStruct, direction);
+//
+//    equilStruct = prepared.backTransform(equilStruct);
+//    direction = prepared.backTransform(direction);
+//
+//    LOG_INFO("\nnew equilStruct = {}\nnew diraction = {}\ndist = {}",
+//             equilStruct.transpose(), direction.transpose(), direction.norm());
+//
+//    double r = direction.norm();
+//    auto polar = makePolar(prepared, r);
 }
 
 void shs()

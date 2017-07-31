@@ -15,6 +15,7 @@ void logFunctionInfo(string const& title, FuncT& func, vect const& p)
              title, p.transpose(), value, grad.norm(), grad.transpose(), singularValues(hess));
 }
 
+void shs();
 void testTrajectory();
 void testDegreesDelition();
 void coordinateSystemChanges();

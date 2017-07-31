@@ -37,16 +37,22 @@ public:
 
     vect transform(vect const& x) const
     {
+        assert((size_t) x.rows() == nDims);
+
         return mBasis * x + mDelta;
     }
 
     vect fullTransform(vect const& x) const
     {
+        assert((size_t) x.rows() == nDims);
+
         return mFunc.fullTransform(transform(x));
     }
 
     vect backTransform(vect const& x) const
     {
+        assert((size_t) x.rows() == nDims);
+
         return mBasis.inverse() * (x - mDelta);
     }
 
@@ -86,5 +92,5 @@ auto prepareForPolar(FuncT&& func, vect const& v)
 {
     auto A = linearizationNormalization(func.hess(v));
     LOG_INFO("{}", singularValues(func.hess(v)));
-    return makeAffineTransfomation(func, v, A);
+    return makeAffineTransfomation(forward<FuncT>(func), v, A);
 }
