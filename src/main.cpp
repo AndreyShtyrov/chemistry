@@ -290,7 +290,7 @@ void filterPolarDirectionsLogFile()
     auto fixedSym = fixAtomSymmetry(molecule);
     equilStruct = fixedSym.backTransform(equilStruct);
 
-    auto linearHessian = prepareForPolar(fixedSym, equilStruct);
+    auto linearHessian = normalizeForPolar(fixedSym, equilStruct);
 
     auto ps = parseLogForStartingPoints("./logs/log_2017-05-31_13-38", 12);
     cout << ps.size() << endl;
@@ -476,8 +476,8 @@ int main()
 {
     initializeLogger();
 //    testTrajectory();
-    shs();
-//    coordinateSystemChanges();
+//    shs();
+    coordinateSystemChanges();
 
     return 0;
 }

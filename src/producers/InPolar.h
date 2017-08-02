@@ -54,6 +54,8 @@ public:
 
     vect transform(vect const &phi) const
     {
+        assert((size_t) phi.rows() == nDims);
+
         vect x(nDims + 1);
         double sinProduct = 1;
         for (size_t i = 0; i < nDims; i++) {

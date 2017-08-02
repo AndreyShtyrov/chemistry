@@ -169,8 +169,20 @@ void testTrajectory()
 template<typename FuncT>
 void runSHS(FuncT& func, vect equilStruct, vect direction)
 {
-//    auto prepared = prepareForPolar(func, equilStruct, direction);
-//
+    auto normalized = normalizeForPolar(func, equilStruct);
+    direction = normalized.backTransform(direction);
+
+    vect u = eye(func.nDims, func.nDims - 1);
+    vect v = direction.normalized();
+    auto M = rotationMatrix(u, v);
+    auto rotated = makeAffineTransfomation(normalized, M);
+    direction = rotated.backTransform(direction);
+
+    auto polar = makePolar(rotated, direction.norm());
+    auto phi = makeConstantVect(polar.nDims, M_PI / 2);
+
+    LOG_INFO("{}", polar.grad(phi).norm());
+
 //    equilStruct = prepared.backTransform(equilStruct);
 //    direction = prepared.backTransform(direction);
 //
@@ -197,7 +209,7 @@ void shs()
     LOG_INFO("gradient: {}", fixedSym.grad(equilStruct).transpose());
     LOG_INFO("hessian values: {}", Eigen::JacobiSVD<matrix>(fixedSym.hess(equilStruct)).singularValues().transpose());
 
-    auto linearHessian = prepareForPolar(fixedSym, equilStruct);
+    auto linearHessian = normalizeForPolar(fixedSym, equilStruct);
 
     size_t cnt;
     input >> cnt;
@@ -270,6 +282,21 @@ void coordinateSystemChanges()
     tie(charges, diraction) = readChemcraft(ifstream("./0/0.xyz"));
 
     auto molecule = GaussianProducer(charges);
+    auto fixedSym = fixAtomSymmetry(molecule);
+    auto normalized = normalizeForPolar(fixedSym, fixedSym.backTransform(equilStruct)) ;
+
+    int const N = 10;
+    double const EPS = .1 / N;
+
+    for (size_t i = 0; i < normalized.nDims; i++) {
+        system(str(format("mkdir ./normalized/%1%") % i).c_str());
+        for (int j = -N; j <= N; j++) {
+            ofstream output(str(format("./normalized/%1%/%2%.xyz") % i % j));
+            output << toChemcraftCoords(charges, normalized.fullTransform(eye(normalized.nDims, i) * EPS * j));
+        }
+    }
+
+    return;
 
     {
         auto fixedSym = fixAtomSymmetry(molecule);
@@ -278,6 +305,7 @@ void coordinateSystemChanges()
 
     {
         auto fixedSym = fixAtomSymmetry(molecule, 0, 2, 4);
-        runSHS(fixedSym, fixedSym.backTransform(rotateToXYZ(equilStruct, 0, 2, 4)), fixedSym.backTransform(rotateToXYZ(diraction, 0, 2, 4)));
+        runSHS(fixedSym, fixedSym.backTransform(rotateToXYZ(equilStruct, 0, 2, 4)),fixedSym.backTransform(rotateToXYZ(diraction, 0, 2, 4)));
     }
 }
+

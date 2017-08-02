@@ -87,7 +87,7 @@ TEST(FunctionProducer, AffineTransformation)
     auto upperBound = makeConstantVect(2, 1.);
 
     testProducer(makeAffineTransfomation(type(), b, A), lowerBound, upperBound, 1000);
-    testProducer(prepareForPolar(type(), b), lowerBound, upperBound, 1000);
+    testProducer(normalizeForPolar(type(), b), lowerBound, upperBound, 1000);
 }
 
 TEST(FunctionProducer, InPolar)
@@ -167,7 +167,7 @@ TEST(FunctionProducer, Stack)
     vector<size_t> weights = {8, 1, 1};
     auto atomicFunc = GaussianProducer(weights);
     auto func = fixAtomSymmetry(atomicFunc);
-    auto linear_hessian = prepareForPolar(func, startPoint);
+    auto linear_hessian = normalizeForPolar(func, startPoint);
     auto polar = makePolar(linear_hessian, .3);
 
     auto lowerBound = makeConstantVect(polar.nDims, 0);
@@ -189,7 +189,7 @@ TEST(FunctionProducer, Stack2)
 
     auto localMinima = makeVect(-0.495722, 0.120477, -0.874622, 0.283053, 0.784344, -0.00621205, -0.787401, -0.193879,
                                 -0.301919, -0.553383, 0.552153, 0.529974);
-    auto linearHessian = prepareForPolar(prepared, localMinima);
+    auto linearHessian = normalizeForPolar(prepared, localMinima);
     auto polar = makePolar(linearHessian, .3);
 
 
@@ -212,7 +212,7 @@ TEST(FunctionProducer, Stack3)
     auto prepared = fixAtomSymmetry(molecule);
 
     state = prepared.backTransform(state);
-    auto linearHessian = prepareForPolar(prepared, state);
+    auto linearHessian = normalizeForPolar(prepared, state);
     auto polar = makePolar(linearHessian, .3);
 
     auto lowerBound = makeConstantVect(polar.nDims, M_PI / 2 - 1);

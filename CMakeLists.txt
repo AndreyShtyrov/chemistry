@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project(chemistry)
 
-set(CMAKE_CXX_FLAGS "-Wall -Werror -std=c++14 -DSPDLOG_DEBUG_ON")
+set(CMAKE_CXX_FLAGS "-Wall -Werror -std=c++17 -DSPDLOG_DEBUG_ON")
 set(CMAKE_EXE_LINKER_FLAGS "-pthread")
 SET(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 
@@ -37,7 +37,7 @@ include_directories(${SOURCE_DIR})
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 #include_directories(${SRC)
-SET(SOURCE_FILES src/helper.cpp src/InputOutputUtils.cpp src/linearAlgebraUtils.cpp src/testing/newDegreeDelition.cpp src/testing/CoordinateSystemChange.cpp src/producers/FixValues.cpp)
+SET(SOURCE_FILES src/helper.cpp src/InputOutputUtils.cpp src/linearAlgebraUtils.cpp src/testing/newDegreeDelition.cpp src/testing/coordinateSystemChange.cpp src/producers/FixValues.cpp)
 
 add_executable(chemistry ${SOURCE_DIR}/main.cpp ${SOURCE_FILES})
 target_link_libraries(chemistry ${Boost_LIBRARIES})

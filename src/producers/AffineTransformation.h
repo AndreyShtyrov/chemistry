@@ -39,13 +39,13 @@ public:
     {
         assert((size_t) x.rows() == nDims);
 
+//        LOG_INFO("step: {}", (mBasis * x + mDelta).transpose());
         return mBasis * x + mDelta;
     }
 
     vect fullTransform(vect const& x) const
     {
         assert((size_t) x.rows() == nDims);
-
         return mFunc.fullTransform(transform(x));
     }
 
@@ -84,13 +84,11 @@ auto makeAffineTransfomation(FuncT&& func, vect delta, matrix const& A)
 template<typename FuncT>
 auto makeAffineTransfomation(FuncT&& func, matrix const& A)
 {
-    return AffineTransformation<decay_t<FuncT>>(forward<FuncT>(func), makeConstantVect(A.rows(), 0), A);
+    return AffineTransformation<decay_t<FuncT>>(forward<FuncT>(func), makeConstantVect((size_t) A.rows(), 0), A);
 }
 
 template<typename FuncT>
-auto prepareForPolar(FuncT&& func, vect const& v)
+auto normalizeForPolar(FuncT&& func, vect const& v)
 {
-    auto A = linearizationNormalization(func.hess(v));
-    LOG_INFO("{}", singularValues(func.hess(v)));
-    return makeAffineTransfomation(forward<FuncT>(func), v, A);
+    return makeAffineTransfomation(forward<FuncT>(func), v, linearizationNormalization(func.hess(v)));
 }
