@@ -122,7 +122,7 @@ vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, do
 
         vector<vect> path;
 
-        for (size_t iter = 0;; iter++) {
+        for (size_t iter = 0; iter < preHessIters; iter++) {
             auto rotation = rotationMatrix(e, p);
             auto rotated = makeAffineTransfomation(func, rotation);
             auto polar = makePolar(rotated, r);
@@ -157,6 +157,51 @@ vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, do
         throw exc;
     }
 }
+
+template<typename FuncT, typename StopStrategy>
+vector<vect> optimizeOnSphere2(StopStrategy stopStrategy, FuncT& func, vect p, double r, size_t preHessIters)
+{
+    try {
+        assert(abs(r - p.norm()) < 1e-7);
+
+        auto e = eye(func.nDims, func.nDims - 1);
+        auto theta = makeConstantVect(func.nDims - 1, M_PI / 2);
+
+        vector<vect> path;
+
+        vect momentum;
+        double gamma = 1;
+        double alpha = 1;
+
+        for (size_t iter = 0; iter < preHessIters; iter++) {
+            auto rotation = rotationMatrix(e, p);
+            auto rotated = makeAffineTransfomation(func, rotation);
+            auto polar = makePolar(rotated, r);
+
+            auto grad = polar.grad(theta);
+            auto value = polar(theta);
+            matrix hess(func.nDims, func.nDims);
+            hess.setZero();
+
+            if (iter)
+                momentum = gamma * momentum + alpha * grad;
+            else
+                momentum = 2 * grad;
+
+            auto lastP = p;
+            p = rotated.transform(polar.transform(theta - grad));
+            path.push_back(p);
+
+            if (stopStrategy(iter, p, value, grad, hess, p - lastP))
+                break;
+        }
+
+        return path;
+    } catch (GaussianException const& exc) {
+        throw exc;
+    }
+}
+
 
 vector<vector<double>> calcPairwiseDists(vect v)
 {
@@ -424,7 +469,7 @@ void findInitialPolarDirections(FuncT& func, double r)
             LOG_INFO("\n{}\n{}\n{}", pos.transpose(), func.fullTransform(pos).transpose(),
                      toChemcraftCoords({6, 6, 1, 1, 1, 1}, func.fullTransform(pos).transpose()));
 
-            auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 600);
+            auto path = optimizeOnSphere2(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 600);
             if (path.empty())
                 continue;
 
