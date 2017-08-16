@@ -97,6 +97,11 @@ public:
         return mFunc;
     }
 
+    auto const& getFullInnerFunction() const
+    {
+        return mFunc.getFullInnerFunction();
+    }
+
 private:
     FuncT mFunc;
     vector<size_t> mPoss;

@@ -31,3 +31,21 @@ vect randomVectOnSphere(size_t nDims, double r=1.);
 vect projection(vect wich, vect to);
 
 matrix singularValues(matrix m);
+
+vect toDistanceSpace(vect v, bool sorted=true);
+
+class RandomProjection
+{
+public:
+    explicit RandomProjection(size_t n, size_t m=2) : mA(m, n) {
+        mA.setRandom();
+    }
+
+    vect operator()(vect v) {
+        assert(v.rows() == mA.cols());
+        return mA * v;
+    }
+
+private:
+    matrix mA;
+};

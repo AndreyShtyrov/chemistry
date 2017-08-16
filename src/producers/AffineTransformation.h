@@ -39,7 +39,6 @@ public:
     {
         assert((size_t) x.rows() == nDims);
 
-//        LOG_INFO("step: {}", (mBasis * x + mDelta).transpose());
         return mBasis * x + mDelta;
     }
 
@@ -59,6 +58,11 @@ public:
     FuncT const& getInnerFunction() const
     {
         return mFunc;
+    }
+
+    auto const& getFullInnerFunction() const
+    {
+        return mFunc.getFullInnerFunction();
     }
 
 private:

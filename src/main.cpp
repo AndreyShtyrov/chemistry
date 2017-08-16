@@ -14,6 +14,7 @@ ofstream out;
 #include "InputOutputUtils.h"
 
 using namespace std;
+using namespace boost;
 using namespace optimization;
 
 constexpr double EPS = 1e-7;
@@ -34,46 +35,6 @@ constexpr double DX = calculate_delta(MIN_X, MAX_X, N);
 constexpr double DY = calculate_delta(MIN_Y, MAX_Y, N);
 
 constexpr size_t PHI = 1000;
-
-double get_linear_comb(double from, double to, double t)
-{
-    return from + (to - from) * t;
-}
-
-template<typename FuncT>
-string drawPlot(FuncT&& func, double from, double to, size_t iters)
-{
-    vector<double> xs, ys;
-    for (size_t i = 0; i < iters; i++) {
-        auto x = get_linear_comb(from, to, (double) i / (iters - 1));
-        xs.push_back(x);
-        ys.push_back(func(makeVect(x)));
-    }
-
-    auto axis = framework.newPlot();
-    framework.plot(axis, xs, ys);
-
-    return axis;
-}
-
-template<typename FuncT>
-string draw3dPlot(FuncT&& func, vect from, vect to, size_t iters)
-{
-    vector<double> xs, ys, zs;
-    for (size_t i = 0; i < iters; i++)
-        for (size_t j = 0; j < iters; j++) {
-            double x = get_linear_comb(from(0), to(0), (double) i / (iters - 1));
-            double y = get_linear_comb(from(1), to(1), (double) j / (iters - 1));
-            xs.push_back(x);
-            ys.push_back(y);
-            zs.push_back(func(makeVect(x, y)));
-        }
-
-    auto axis = framework.newPlot();
-    framework.contour(axis, reshape(xs, iters), reshape(ys, iters), reshape(zs, iters), 250);
-
-    return axis;
-}
 
 vect getRandomPoint(vect const& lowerBound, vect const& upperBound)
 {
@@ -194,52 +155,6 @@ vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, do
         return path;
     } catch (GaussianException const& exc) {
         throw exc;
-    }
-}
-
-template<typename FuncT>
-void findInitialPolarDirections(FuncT& func, double r)
-{
-    auto axis = framework.newPlot();
-    auto projMatrix = makeRandomMatrix(2, func.nDims + 5);
-
-    while (true) {
-        try {
-            vector<double> xs, ys;
-
-            vect pos = randomVectOnSphere(func.nDims, r);
-
-            LOG_INFO("\n{}\n{}\n{}", pos.transpose(), func.fullTransform(pos).transpose(),
-                     toChemcraftCoords({6, 6, 1, 1, 1, 1}, func.fullTransform(pos).transpose()));
-
-            auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 100);
-            if (path.empty())
-                continue;
-
-            for (auto const& p : path) {
-                vect t = func.fullTransform(p);
-                vect proj = projMatrix * t;
-                xs.push_back(proj(0));
-                ys.push_back(proj(1));
-            }
-
-
-            framework.plot(axis, xs, ys);
-            framework.scatter(axis, xs, ys);
-
-            LOG_INFO("initial polar Direction: {}", path.back().transpose());
-
-            vect p = path.back();
-            vect grad = func.grad(p);
-            vect dir = p / p.norm();
-            vect first = dir * grad.dot(dir);
-            vect second = grad - first;
-            LOG_INFO("read grad norm is {}\nfirst norm = {}\nsecond norm = {}", grad.norm(), first.norm(),
-                     second.norm());
-        } catch (GaussianException const& exc) {
-            throw exc;
-//            LOG_ERROR("exception: {}", exc.what());
-        }
     }
 }
 
@@ -470,14 +385,89 @@ void analizeFolder()
     }
 }
 
+
+
 #include "testing/tests.h"
+
+void drawTrajectories()
+{
+    RandomProjection proj(15);
+    vector<size_t> quantities = {335, 318, 218, 43};
+    auto axis = framework.newPlot();
+    for (size_t i = 0; i < quantities.size(); i++) {
+        vector<double> xs, ys;
+        for (size_t j = 0; j < quantities[i]; j++) {
+            vector<size_t> charges;
+            vect state;
+            tie(charges, state) = readChemcraft(ifstream(str(format("./%1%/%2%.xyz") % i % j)));
+            auto cur = proj(toDistanceSpace(state, false));
+            xs.push_back(cur(0));
+            ys.push_back(cur(1));
+        }
+
+        framework.plot(axis, xs, ys);
+    }
+}
+
+template<typename FuncT>
+void findInitialPolarDirections(FuncT& func, double r)
+{
+    auto axis = framework.newPlot();
+    RandomProjection projection(func.getFullInnerFunction().nDims);
+
+    while (true) {
+        try {
+            vector<double> xs, ys;
+
+            vect pos = randomVectOnSphere(func.nDims, r);
+
+            LOG_INFO("\n{}\n{}\n{}", pos.transpose(), func.fullTransform(pos).transpose(),
+                     toChemcraftCoords({6, 6, 1, 1, 1, 1}, func.fullTransform(pos).transpose()));
+
+            auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 600);
+            if (path.empty())
+                continue;
+
+            for (auto const& p : path) {
+                vect t = func.fullTransform(p);
+                vect proj = projection(t);
+                xs.push_back(proj(0));
+                ys.push_back(proj(1));
+            }
+
+
+            framework.plot(axis, xs, ys);
+            framework.scatter(axis, xs, ys);
+
+            LOG_INFO("initial polar Direction: {}", path.back().transpose());
+
+            vect p = path.back();
+            vect grad = func.grad(p);
+            vect dir = p / p.norm();
+            vect first = dir * grad.dot(dir);
+            vect second = grad - first;
+            LOG_INFO("read grad norm is {}\nfirst norm = {}\nsecond norm = {}", grad.norm(), first.norm(),
+                     second.norm());
+        } catch (GaussianException const& exc) {
+            throw exc;
+//            LOG_ERROR("exception: {}", exc.what());
+        }
+    }
+}
 
 int main()
 {
     initializeLogger();
-//    testTrajectory();
-//    shs();
-    coordinateSystemChanges();
+
+    ifstream input("./C2H4");
+    auto charges = readCharges(input);
+    auto equilStruct = readVect(input);
+
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges));
+    equilStruct = molecule.backTransform(equilStruct);
+    auto normalized = normalizeForPolar(molecule, equilStruct);
+
+    findInitialPolarDirections(normalized, 0.1);
 
     return 0;
 }

@@ -112,3 +112,23 @@ matrix singularValues(matrix m)
 {
     return Eigen::JacobiSVD<matrix>(m).singularValues().transpose();
 }
+
+vect toDistanceSpace(vect v, bool sorted)
+{
+    assert(v.rows() % 3 == 0);
+
+    size_t n = (size_t) v.rows() / 3;
+
+    vector<double> dists(n * (n - 1) / 2);
+    for (size_t i = 0, num = 0; i < n;  i++)
+        for (size_t j = i + 1; j < n; j++, num++)
+            dists[num] = (v.block(i * 3, 0, 3, 1) - v.block(j * 3, 0, 3, 1)).norm();
+    if (sorted)
+        sort(dists.begin(), dists.end());
+
+    vect res(dists.size());
+    for (size_t i = 0; i < dists.size(); i++)
+        res(i) = dists[i];
+
+    return res;
+};

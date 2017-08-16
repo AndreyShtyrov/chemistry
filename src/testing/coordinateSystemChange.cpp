@@ -60,40 +60,6 @@ vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT &func, vect p, do
     }
 }
 
-class RandomProjection
-{
-public:
-    explicit RandomProjection(size_t n, size_t m=2) : mA(m, n) {
-        mA.setRandom();
-    }
-
-    vect operator()(vect v) {
-        assert(v.rows() == mA.cols());
-        return mA * v;
-    }
-
-private:
-    matrix mA;
-};
-
-vect toDistanceSpace(vect v)
-{
-    assert(v.rows() % 3 == 0);
-
-    size_t n = (size_t) v.rows() / 3;
-
-    vector<double> dists(n * (n - 1) / 2);
-    for (size_t i = 0, num = 0; i < n;  i++)
-        for (size_t j = i + 1; j < n; j++, num++)
-            dists[num] = (v.block(i * 3, 0, 3, 1) - v.block(j * 3, 0, 3, 1)).norm();
-//    sort(dists.begin(), dists.end());
-
-    vect res(dists.size());
-    for (size_t i = 0; i < dists.size(); i++)
-        res(i) = dists[i];
-
-    return res;
-};
 
 void testTrajectory()
 {
@@ -308,4 +274,3 @@ void coordinateSystemChanges()
         runSHS(fixedSym, fixedSym.backTransform(rotateToXYZ(equilStruct, 0, 2, 4)),fixedSym.backTransform(rotateToXYZ(diraction, 0, 2, 4)));
     }
 }
-

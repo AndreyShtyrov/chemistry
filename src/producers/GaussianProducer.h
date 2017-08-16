@@ -147,6 +147,11 @@ public:
         return from;
     }
 
+    GaussianProducer const& getFullInnerFunction() const
+    {
+        return *this;
+    }
+
 private:
     vect mLastPos;
     Cache<double> mValue;
