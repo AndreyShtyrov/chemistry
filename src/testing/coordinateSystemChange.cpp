@@ -61,76 +61,76 @@ vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT &func, vect p, do
 }
 
 
-void testTrajectory()
-{
-    ifstream input("./2/148.xyz");
-    vect state;
-    vector<size_t> charges;
-    tie(charges, state) = readChemcraft(input);
-
-    GaussianProducer func(charges);
-
-    logFunctionInfo("", func, state);
-
-    auto hess = func.hess(state);
-    auto A = linearization(hess);
-    cout << A.transpose() * hess * A << endl << endl;
-
-
-    auto fixed = fixAtomSymmetry(func);
-    state = fixed.backTransform(state);
-    logFunctionInfo("", fixed, state);
-
-    hess = fixed.hess(state);
-    A = linearization(hess);
-    cout << A.transpose() * hess * A << endl << endl;
-
-    return;
-
-    vector<double> vs;
-    vector<vect> grads;
-    vector<double> xs, ys;
-
-    RandomProjection proj(15, 2);
-
-    for (size_t i = 0; i < 217; i++) {
-        ifstream input(str(format("./2/%1%.xyz") % i));
-
-        vect state;
-        vector<size_t> charges;
-        tie(charges, state) = readChemcraft(input);
-
-        GaussianProducer func(charges);
-
-        vect grad = func.grad(state);
-        double value = func(state);
-
-        vs.push_back(value);
-        grads.push_back(grad);
-
-        auto cur = proj(toDistanceSpace(state));
-        assert(cur.rows() == 2);
-        xs.push_back(cur(0));
-        ys.push_back(cur(1));
-    }
-
-    for (size_t i = 0; i < vs.size(); i++) {
-        if (i == 0 || vs[i - 1] < vs[i])
-            cout << '+';
-        else
-            cout << '-';
-
-        if (i + 1 < vs.size() && vs[i] < vs[i + 1])
-            cout << '+';
-        else
-            cout << '-';
-
-        cout << i << ' ' << vs[i] << ' ' << grads[i].norm() << endl;
-    }
-
-    framework.plot(framework.newPlot(), vs);
-    framework.plot(framework.newPlot(), xs, ys);
-}
+//void testTrajectory()
+//{
+//    ifstream input("./2/148.xyz");
+//    vect state;
+//    vector<size_t> charges;
+//    tie(charges, state) = readChemcraft(input);
+//
+//    GaussianProducer func(charges);
+//
+//    logFunctionInfo("", func, state);
+//
+//    auto hess = func.hess(state);
+//    auto A = linearization(hess);
+//    cout << A.transpose() * hess * A << endl << endl;
+//
+//
+//    auto fixed = fixAtomSymmetry(func);
+//    state = fixed.backTransform(state);
+//    logFunctionInfo("", fixed, state);
+//
+//    hess = fixed.hess(state);
+//    A = linearization(hess);
+//    cout << A.transpose() * hess * A << endl << endl;
+//
+//    return;
+//
+//    vector<double> vs;
+//    vector<vect> grads;
+//    vector<double> xs, ys;
+//
+//    RandomProjection proj(15, 2);
+//
+//    for (size_t i = 0; i < 217; i++) {
+//        ifstream input(str(format("./2/%1%.xyz") % i));
+//
+//        vect state;
+//        vector<size_t> charges;
+//        tie(charges, state) = readChemcraft(input);
+//
+//        GaussianProducer func(charges);
+//
+//        vect grad = func.grad(state);
+//        double value = func(state);
+//
+//        vs.push_back(value);
+//        grads.push_back(grad);
+//
+//        auto cur = proj(toDistanceSpace(state));
+//        assert(cur.rows() == 2);
+//        xs.push_back(cur(0));
+//        ys.push_back(cur(1));
+//    }
+//
+//    for (size_t i = 0; i < vs.size(); i++) {
+//        if (i == 0 || vs[i - 1] < vs[i])
+//            cout << '+';
+//        else
+//            cout << '-';
+//
+//        if (i + 1 < vs.size() && vs[i] < vs[i + 1])
+//            cout << '+';
+//        else
+//            cout << '-';
+//
+//        cout << i << ' ' << vs[i] << ' ' << grads[i].norm() << endl;
+//    }
+//
+//    framework.plot(framework.newPlot(), vs);
+//    framework.plot(framework.newPlot(), xs, ys);
+//}
 
 template<typename FuncT>
 void runSHS(FuncT& func, vect equilStruct, vect direction)

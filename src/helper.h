@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>
 #include <cmath>
+#include <random>
 
 #include <Eigen/Core>
 #include <Eigen/Dense>

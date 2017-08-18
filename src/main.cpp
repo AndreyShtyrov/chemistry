@@ -137,7 +137,7 @@ vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, do
                 grad = polar.grad(theta);
                 value = polar(theta);
 
-                p = rotated.transform(polar.transform(theta - 2 * grad));
+                p = rotated.transform(polar.transform(theta - grad));
             } else {
                 hess = polar.hess(theta);
                 grad = polar.grad(theta);
@@ -460,7 +460,8 @@ void findInitialPolarDirections(FuncT& func, double r)
     auto axis = framework.newPlot();
     RandomProjection projection(func.getFullInnerFunction().nDims);
 
-    while (true) {
+//#pragma omp parallel for
+    for (size_t i = 0; i < 10; i++) {
         try {
             vector<double> xs, ys;
 
@@ -469,7 +470,7 @@ void findInitialPolarDirections(FuncT& func, double r)
             LOG_INFO("\n{}\n{}\n{}", pos.transpose(), func.fullTransform(pos).transpose(),
                      toChemcraftCoords({6, 6, 1, 1, 1, 1}, func.fullTransform(pos).transpose()));
 
-            auto path = optimizeOnSphere2(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 600);
+            auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 3);
             if (path.empty())
                 continue;
 
@@ -500,6 +501,17 @@ void findInitialPolarDirections(FuncT& func, double r)
     }
 }
 
+template<typename FuncT>
+void logFunctionInfo(string const& title, FuncT& func, vect const& p)
+{
+    auto hess = func.hess(p);
+    auto grad = func.grad(p);
+    auto value = func(p);
+
+    LOG_INFO("{}\n\tposition: {}\n\tenergy: {}\n\tgradient: {} [{}]\n\thessian: {}\n\n",
+             title, p.transpose(), value, grad.norm(), grad.transpose(), singularValues(hess));
+}
+
 int main()
 {
     initializeLogger();
@@ -512,7 +524,9 @@ int main()
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
 
+    auto startTime = chrono::system_clock::now();
     findInitialPolarDirections(normalized, 0.1);
+    LOG_INFO("time passed: {}s", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
 
     return 0;
 }
