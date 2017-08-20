@@ -133,15 +133,19 @@ vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, do
 
             vect lastP = p;
             if (iter < preHessIters) {
+                auto valueGrad = polar.valueGrad(theta);
+
+                value = get<0>(valueGrad);
+                grad = get<1>(valueGrad);
                 hess.setZero();
-                grad = polar.grad(theta);
-                value = polar(theta);
 
                 p = rotated.transform(polar.transform(theta - grad));
             } else {
-                hess = polar.hess(theta);
-                grad = polar.grad(theta);
-                value = polar(theta);
+                auto valueGradHess = polar.valueGradHess(theta);
+
+                value = get<0>(valueGradHess);
+                grad = get<1>(valueGradHess);
+                hess = get<2>(valueGradHess);
 
                 p = rotated.transform(polar.transform(theta - hess.inverse() * grad));
             }
@@ -460,7 +464,7 @@ void findInitialPolarDirections(FuncT& func, double r)
     auto axis = framework.newPlot();
     RandomProjection projection(func.getFullInnerFunction().nDims);
 
-//#pragma omp parallel for
+#pragma omp parallel for
     for (size_t i = 0; i < 10; i++) {
         try {
             vector<double> xs, ys;
@@ -470,7 +474,7 @@ void findInitialPolarDirections(FuncT& func, double r)
             LOG_INFO("\n{}\n{}\n{}", pos.transpose(), func.fullTransform(pos).transpose(),
                      toChemcraftCoords({6, 6, 1, 1, 1, 1}, func.fullTransform(pos).transpose()));
 
-            auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 3);
+            auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 150);
             if (path.empty())
                 continue;
 
@@ -551,29 +555,32 @@ void benchmark(string const &method, size_t nProc, size_t mem, size_t iters)
     LOG_INFO("{}.{}.{} all iters : {}, {} per iteration", method, nProc, mem, duration, duration / iters);
 }
 
+void runBenchmarks()
+{
+    for (string const& method : {"scf", "force", "freq"})
+        for (size_t nProc : {1, 2, 3, 4})
+            for (size_t mem : {250, 500, 750, 1000, 1250})
+                benchmark(method, nProc, mem, 100);
+}
+
 
 
 int main()
 {
     initializeLogger();
 
-    for (string const& method : {"scf", "force", "freq"})
-        for (size_t nProc : {1, 2, 3, 4})
-            for (size_t mem : {250, 500, 750, 1000, 1250})
-                benchmark(method, nProc, mem, 100);
+    ifstream input("./C2H4");
+    auto charges = readCharges(input);
+    auto equilStruct = readVect(input);
 
-//    ifstream input("./C2H4");
-//    auto charges = readCharges(input);
-//    auto equilStruct = readVect(input);
-//
-//    auto molecule = fixAtomSymmetry(GaussianProducer(charges));
-//    logFunctionInfo("", molecule, molecule.backTransform(equilStruct));
-//    equilStruct = molecule.backTransform(equilStruct);
-//    auto normalized = normalizeForPolar(molecule, equilStruct);
-//
-//    auto startTime = chrono::system_clock::now();
-//    findInitialPolarDirections(normalized, 0.1);
-//    LOG_INFO("time passed: {}s", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges));
+    logFunctionInfo("", molecule, molecule.backTransform(equilStruct));
+    equilStruct = molecule.backTransform(equilStruct);
+    auto normalized = normalizeForPolar(molecule, equilStruct);
+
+    auto startTime = chrono::system_clock::now();
+    findInitialPolarDirections(normalized, 0.1);
+    LOG_INFO("time passed: {}s", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
 
     return 0;
 }

@@ -13,44 +13,46 @@ public:
             : FunctionProducer(func.nDims - 1), mFunc(move(func)), mR(r)
     { }
 
-    virtual double operator()(vect const& phi) override
+    double operator()(vect const& phi) override
     {
         assert((size_t) phi.rows() == nDims);
 
         return mFunc(transform(phi));
     }
 
-    virtual vect grad(vect const& phi) override
+    vect grad(vect const& phi) override
     {
         assert((size_t) phi.rows() == nDims);
 
-        auto grad = mFunc.grad(transform(phi));
-        return grad.transpose() * calculateDerivatives(phi);
+        return obtainGrad(phi, mFunc.grad(transform(phi)));
     }
 
-    virtual matrix hess(vect const& phi) override
+    matrix hess(vect const& phi) override
     {
         assert((size_t) phi.rows() == nDims);
 
-        auto grad = mFunc.grad(transform(phi));
-        auto hess = mFunc.hess(transform(phi));
-
-        auto m = calculateDerivatives(phi);
-
-        matrix result(nDims, nDims);
-        result.setConstant(0.);
-
-        for (size_t i = 0; i < nDims; i++) {
-            for (size_t j = 0; j < nDims; j++) {
-                for (size_t k = 0; k < nDims + 1; k++) {
-                    result(i, j) += (hess.row(k) * m.col(j) * m(k, i))(0, 0);
-                    result(i, j) += grad(k) * calculateSecondDerivatives(phi, i)(k, j);
-                }
-            }
-        }
-
-        return result;
+        auto valueGradHess = mFunc.valueGradHess(transform(phi));
+        return obtainHess(phi, get<1>(valueGradHess), get<2>(valueGradHess));
     }
+
+    tuple<double, vect> valueGrad(vect const& phi) override
+    {
+        assert((size_t) phi.rows() == nDims);
+
+        auto valueGrad = mFunc.valueGrad(transform(phi));
+        return make_tuple(get<0>(valueGrad), obtainGrad(phi, get<1>(valueGrad)));
+    };
+
+    tuple<double, vect, matrix> valueGradHess(vect const& phi) override
+    {
+        assert((size_t) phi.rows() == nDims);
+
+        auto valueGradHess = mFunc.valueGradHess(transform(phi));
+        auto const& grad = get<1>(valueGradHess);
+        auto const& hess = get<2>(valueGradHess);
+
+        return make_tuple(get<0>(valueGradHess), obtainGrad(phi, grad), obtainHess(phi, grad, hess));
+    };
 
     vect transform(vect const &phi) const
     {
@@ -138,6 +140,29 @@ public:
 
         return m;
     };
+
+    vect obtainGrad(vect const& phi, vect const& grad)
+    {
+        return grad.transpose() * calculateDerivatives(phi);
+    }
+
+    //todo: pull calculateSecondDerivatives higher?
+    matrix obtainHess(vect const& phi, vect const& grad, matrix const& hess)
+    {
+        auto m = calculateDerivatives(phi);
+        auto result = makeConstantMatrix(nDims, nDims);
+
+        for (size_t i = 0; i < nDims; i++) {
+            for (size_t j = 0; j < nDims; j++) {
+                for (size_t k = 0; k < nDims + 1; k++) {
+                    result(i, j) += (hess.row(k) * m.col(j) * m(k, i))(0, 0);
+                    result(i, j) += grad(k) * calculateSecondDerivatives(phi, i)(k, j);
+                }
+            }
+        }
+
+        return result;
+    }
 
     FuncT mFunc;
     double mR;

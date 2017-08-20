@@ -14,8 +14,8 @@ public:
     virtual vect      grad(vect const& x) = 0;
     virtual matrix hess(vect const& x) = 0;
 
-    virtual tuple<double, vect> valueGrad(vect const& x);
-    virtual tuple<double, vect, matrix> valueGradHess(vect const& x);
+    virtual tuple<double, vect> valueGrad(vect const& x) = 0;
+    virtual tuple<double, vect, matrix> valueGradHess(vect const& x) = 0;
 
     const size_t nDims;
 };

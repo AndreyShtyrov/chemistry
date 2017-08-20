@@ -8,9 +8,6 @@ template<typename FuncT>
 class FixValues : public FunctionProducer
 {
 public:
-//    static constexpr int N_DIMS = FuncT::N;
-//    using FunctionProducer<N_DIMS - N_FIXED>::N;
-
     FixValues(FuncT func, vector<size_t> poss, vector<double> const& vals)
        : FunctionProducer(func.nDims - poss.size()), mFunc(move(func)), mPoss(move(poss)), mVals(move(vals))
     {
@@ -30,36 +27,30 @@ public:
     {
         assert((size_t) x.rows() == nDims);
 
-        auto grad = mFunc.grad(transform(x));
-        vect result(nDims);
-        for (size_t i = 0, j = 0, k = 0; i < mFunc.nDims; i++)
-            if (i == mPoss[j])
-                j++;
-            else
-                result(k++) = grad(i);
-        return result;
+        return transformGrad(mFunc.grad(transform(x)));
     }
 
     matrix hess(vect const& x) override
     {
         assert((size_t) x.rows() == nDims);
 
-        auto hess = mFunc.hess(transform(x));
-        matrix result(nDims, nDims);
-        for (size_t i1 = 0, j1 = 0, k1 = 0; i1 < mFunc.nDims; i1++)
-            if (i1 == mPoss[j1])
-                j1++;
-            else {
-                for (size_t i2 = 0, j2 = 0, k2 = 0; i2 < mFunc.nDims; i2++)
-                    if (i2 == mPoss[j2])
-                        j2++;
-                    else {
-                        result(k1, k2++) = hess(i1, i2);
-                    }
-                k1++;
-            }
+        return transformHess(mFunc.hess(transform(x)));
+    };
 
-        return result;
+    tuple<double, vect> valueGrad(vect const& x) override
+    {
+        assert((size_t) x.rows() == nDims);
+
+        auto result = mFunc.valueGrad(transform(x));
+        return make_tuple(get<0>(result), transformGrad(get<1>(result)));
+    };
+
+    tuple<double, vect, matrix> valueGradHess(vect const& x) override
+    {
+        assert((size_t) x.rows() == nDims);
+
+        auto result = mFunc.valueGradHess(transform(x));
+        return make_tuple(get<0>(result), transformGrad(get<1>(result)), transformHess(get<2>(result)));
     };
 
     vect transform(vect const& from) const
@@ -106,6 +97,35 @@ private:
     FuncT mFunc;
     vector<size_t> mPoss;
     vector<double> mVals;
+
+    vect transformGrad(vect const& grad)
+    {
+        vect transformed(nDims);
+        for (size_t i = 0, j = 0, k = 0; i < mFunc.nDims; i++)
+            if (i == mPoss[j])
+                j++;
+            else
+                transformed(k++) = grad(i);
+        return transformed;
+    }
+
+    matrix transformHess(matrix const& hess)
+    {
+        matrix transformed(nDims, nDims);
+        for (size_t i1 = 0, j1 = 0, k1 = 0; i1 < mFunc.nDims; i1++)
+            if (i1 == mPoss[j1])
+                j1++;
+            else {
+                for (size_t i2 = 0, j2 = 0, k2 = 0; i2 < mFunc.nDims; i2++)
+                    if (i2 == mPoss[j2])
+                        j2++;
+                    else {
+                        transformed(k1, k2++) = hess(i1, i2);
+                    }
+                k1++;
+            }
+        return transformed;
+    }
 };
 
 template<typename FuncT>

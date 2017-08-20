@@ -54,10 +54,31 @@ void testHessian(FuncT& func, vect lowerBound, vect upperBound, size_t iters, do
 };
 
 template<typename FuncT>
+void testCollected(FuncT func, vect lowerBound, vect upperBound, size_t iters, double eps)
+{
+    for (size_t i = 0; i < iters; i++) {
+        auto p = getRandomPoint(lowerBound, upperBound);
+
+        auto valueGradHess = func.valueGradHess(p);
+        auto valueGrad = func.valueGrad(p);
+        auto hess = func.hess(p);
+        auto grad = func.grad(p);
+        auto value = func(p);
+
+        ASSERT_LE(abs(value - get<0>(valueGrad)), eps);
+        ASSERT_LE(abs(value - get<0>(valueGradHess)), eps);
+        ASSERT_LE((grad - get<1>(valueGrad)).norm(), eps);
+        ASSERT_LE((grad - get<1>(valueGradHess)).norm(), eps);
+        ASSERT_LE((hess - get<2>(valueGradHess)).norm(), eps);
+    }
+}
+
+template<typename FuncT>
 void testProducer(FuncT func, vect lowerBound, vect upperBound, size_t iters, double delta = 1e-4, double eps = 1e-5)
 {
     testGradient(func, lowerBound, upperBound, iters, delta, eps);
     testHessian(func, lowerBound, upperBound, iters, delta, eps);
+    testCollected(func, lowerBound, upperBound, iters, eps);
 };
 
 
@@ -102,38 +123,6 @@ TEST(FunctionProducer, InPolar)
     testProducer(makePolar(FunctionType(), 1.313), lowerBound, upperBound, 100);
 }
 
-TEST(FunctionProducer, Desturbed)
-{
-    auto lowerBound = makeVect(0., 0.);
-    auto upperBound = makeVect(2 * M_PI, 2 * M_PI);
-
-    testProducer(Desturbed<ModelFunction>(ModelFunction()), lowerBound, upperBound, 1000);
-}
-
-TEST(FunctionProducer, ModelFunction3)
-{
-    auto lowerBound = makeVect(-1., -1.);
-    auto upperBound = makeVect(2., 2.);
-
-    testProducer(ModelFunction3(), lowerBound, upperBound, 1000);
-}
-
-TEST(FunctionProducer, Sum)
-{
-    auto lowerBound = makeVect(-2., -2.);
-    auto upperBound = makeVect(2., 2.);
-
-    testProducer(ModelFunction() + ModelFunction3(), lowerBound, upperBound, 1000);
-}
-
-TEST(FunctionProducer, LagrangeMultiplier)
-{
-    auto lowerBound = makeVect(-2., -2., -2.);
-    auto upperBound = makeVect(2., 2., 2.);
-
-    testProducer(make_lagrange(ModelFunction(), SqrNorm(3) + Constant(3, -1.)), lowerBound, upperBound, 1000);
-}
-
 TEST(FunctionProducer, GaussianProducer)
 {
     auto lowerBound = makeConstantVect(9, -1);
@@ -173,11 +162,13 @@ TEST(FunctionProducer, Stack)
     auto lowerBound = makeConstantVect(polar.nDims, 0);
     auto upperBound = makeConstantVect(polar.nDims, 2 * M_PI);
 
-    testProducer(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
+    testProducer(polar, lowerBound, upperBound, 1, 1e-3, 1e-3);
 }
 
 TEST(FunctionProducer, Stack2)
 {
+    initializeLogger();
+
     vector<size_t> charges = {6, 6, 1, 1, 1, 1};
     vect initState = makeVect(0.000000000, 0.000000000, -0.665079000, 0.035065274, 0.058977884, 0.684472749,
                               0.150810779, 0.964915143, -1.225651234, -0.177203028, -0.964988711, -1.253913402,
@@ -196,8 +187,8 @@ TEST(FunctionProducer, Stack2)
     auto lowerBound = makeConstantVect(polar.nDims, 0);
     auto upperBound = makeConstantVect(polar.nDims, 1);
 
-    testHessian(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
-    testProducer(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
+    testHessian(polar, lowerBound, upperBound, 1, 1e-3, 1e-3);
+    testProducer(polar, lowerBound, upperBound, 1, 1e-3, 1e-3);
 }
 
 TEST(FunctionProducer, Stack3)
@@ -218,21 +209,9 @@ TEST(FunctionProducer, Stack3)
     auto lowerBound = makeConstantVect(polar.nDims, M_PI / 2 - 1);
     auto upperBound = makeConstantVect(polar.nDims, M_PI / 2 + 1);
 
-//    testHessian(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
-    testProducer(polar, lowerBound, upperBound, 5, 1e-3, 1e-3);
+    testProducer(polar, lowerBound, upperBound, 1, 1e-3, 1e-3);
 }
 
-
-TEST(FunctionProducer, ModelMultidimensionalFunction)
-{
-//    using type = ModelMultidimensionalFunction<20>;
-    using type = ModelMultidimensionalZeroHessFunction<20>;
-
-    auto lowerBound = makeConstantVect(20, .5);
-    auto upperBound = makeConstantVect(20, 1.);
-
-    testProducer(type(), lowerBound, upperBound, 1000);
-}
 
 TEST(FixValues, rotateToFix)
 {

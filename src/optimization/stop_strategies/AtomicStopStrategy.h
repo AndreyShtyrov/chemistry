@@ -5,6 +5,8 @@
 
 namespace optimization
 {
+    //todo: remove all this
+
     template<typename T, typename... StackTs>
     struct StackExtractor
     {
@@ -43,6 +45,7 @@ namespace optimization
     };
 
 
+    //todo: remove or get rid of getLastGrad() method of GaussianProducer
     template<typename FuncT>
     class AtomicStopStrategy
     {
@@ -91,10 +94,11 @@ namespace optimization
             auto x0 = ExtractorType::applyTransformation(p, mFunc);
             auto x1 = ExtractorType::applyTransformation(p + delta, mFunc);
 
-            assert((x0 - mAtomicFunc.getLastPos()).norm() < 1e-7);
+//            assert((x0 - mAtomicFunc.getLastPos()).norm() < 1e-7);
 
+            //todo: was .getLastGrad() instead of grad. Fix if needed
             return check(x1 - x0, mMaxAtomDelta, mRmsAtomDelta, "delta") &&
-                   check(mAtomicFunc.getLastGrad(), mMaxForce, mRmsForce, "grad");
+                   check(grad, mMaxForce, mRmsForce, "grad");
         }
 
         bool operator()(size_t iter, vect const& p, double value, vect const& grad, matrix const& hess, vect const& delta)

@@ -43,7 +43,9 @@ SET(SOURCE_FILES
         src/linearAlgebraUtils.cpp
         src/testing/coordinateSystemChange.cpp
         src/producers/FixValues.cpp
-        src/producers/FunctionProducer.cpp)
+        src/producers/FunctionProducer.cpp
+        src/producers/GaussianProducer.cpp
+        )
 
 add_executable(chemistry ${SOURCE_DIR}/main.cpp ${SOURCE_FILES})
 target_link_libraries(chemistry ${Boost_LIBRARIES})

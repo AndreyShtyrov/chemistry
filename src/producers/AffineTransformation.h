@@ -14,26 +14,42 @@ public:
                                                                         mBasis(basis), mBasisT(basis.transpose())
     {}
 
-    virtual double operator()(vect const& x) override
+    double operator()(vect const& x) override
     {
         assert((size_t) x.rows() == nDims);
 
         return mFunc(transform(x));
     }
 
-    virtual vect grad(vect const& x) override
+    vect grad(vect const& x) override
     {
         assert((size_t) x.rows() == nDims);
 
-        return mBasisT * mFunc.grad(transform(x));
+        return transformGrad(mFunc.grad(transform(x)));
     }
 
-    virtual matrix hess(vect const& x) override
+    matrix hess(vect const& x) override
     {
         assert((size_t) x.rows() == nDims);
 
-        return mBasisT * mFunc.hess(transform(x)) * mBasis;
+        return transformHess(mFunc.hess(transform(x)));
     }
+
+    tuple<double, vect> valueGrad(vect const& x) override
+    {
+        assert((size_t) x.rows() == nDims);
+
+        auto result = mFunc.valueGrad(transform(x));
+        return make_tuple(get<0>(result), transformGrad(get<1>(result)));
+    };
+
+    tuple<double, vect, matrix> valueGradHess(vect const& x) override
+    {
+        assert((size_t) x.rows() == nDims);
+
+        auto result = mFunc.valueGradHess(transform(x));
+        return make_tuple(get<0>(result), transformGrad(get<1>(result)), transformHess(get<2>(result)));
+    };
 
     vect transform(vect const& x) const
     {
@@ -71,6 +87,16 @@ private:
     vect mDelta;
     matrix mBasis;
     matrix mBasisT;
+
+    vect transformGrad(vect const& grad)
+    {
+        return mBasisT * grad;
+    }
+
+    matrix transformHess(matrix const& hess)
+    {
+        return mBasisT * hess * mBasis;
+    }
 };
 
 template<typename FuncT>

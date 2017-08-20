@@ -52,6 +52,16 @@ public:
         return hess;
     }
 
+    tuple<double, vect> valueGrad(vect const& x) override
+    {
+        return make_tuple((*this)(x), grad(x));
+    }
+
+    tuple<double, vect, matrix> valueGradHess(vect const& x) override
+    {
+        return make_tuple((*this)(x), grad(x), hess(x));
+    }
+
 private:
     double mA, mB, mC;
 };
