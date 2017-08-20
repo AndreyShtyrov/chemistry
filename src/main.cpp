@@ -535,14 +535,17 @@ void benchmark(string const &method, size_t nProc, size_t mem, size_t iters)
             "\n";
 
     auto globalStartTime = chrono::system_clock::now();
+
+#pragma omp parallel for
     for (size_t i = 0; i < iters; i++) {
+        string filemask = boost::str(boost::format("./tmp/tmp%1%") % std::hash<std::thread::id>()(this_thread::get_id()));
         auto localStartTime = chrono::system_clock::now();
 
-        ofstream inputFile("./tmp/a.in");
+        ofstream inputFile(filemask + ".in");
         inputFile << boost::format(pattern) % nProc % mem % method;
         inputFile.close();
 
-        system("mg09D ./tmp/a.in ./tmp/a.out > /dev/null");
+        system(str(boost::format("mg09D %1%.in %1%.out > /dev/null") % filemask).c_str());
     }
     double duration = getTimeFromNow(globalStartTime);
     LOG_INFO("{}.{}.{} all iters : {}, {} per iteration", method, nProc, mem, duration, duration / iters);
