@@ -517,7 +517,7 @@ double getTimeFromNow(chrono::time_point<chrono::system_clock> const& timePoint)
     return chrono::duration<double>(chrono::system_clock::now() - timePoint).count();
 }
 
-void banchmark(string const& method, size_t nProc, size_t mem, size_t iters)
+void benchmark(string const &method, size_t nProc, size_t mem, size_t iters)
 {
     static string const pattern = "%%chk=chk\n"
             "%%nproc=%1%\n"
@@ -557,7 +557,7 @@ int main()
     for (string const& method : {"scf", "force", "freq"})
         for (size_t nProc : {1, 2, 3, 4})
             for (size_t mem : {250, 500, 750, 1000, 1250})
-                banchmark(method, nProc, mem, 100);
+                benchmark(method, nProc, mem, 100);
 
 //    ifstream input("./C2H4");
 //    auto charges = readCharges(input);
