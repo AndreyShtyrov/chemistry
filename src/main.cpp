@@ -512,16 +512,59 @@ void logFunctionInfo(string const& title, FuncT& func, vect const& p)
              title, p.transpose(), value, grad.norm(), grad.transpose(), singularValues(hess));
 }
 
+double getTimeFromNow(chrono::time_point<chrono::system_clock> const& timePoint)
+{
+    return chrono::duration<double>(chrono::system_clock::now() - timePoint).count();
+}
+
+void banchmark(string const& method, size_t nProc, size_t mem, size_t iters)
+{
+    static string const pattern = "%%chk=chk\n"
+            "%%nproc=%1%\n"
+            "%%mem=%2%mb\n"
+            "# B3lyp/3-21g nosym %3%\n"
+            "\n"
+            "\n"
+            "0 1\n"
+            "6\t0.000000000000000000000000000000\t0.000000000000000000000000000000\t0.000000000000000000000000000000\n"
+            "6\t1.329407574910000056078729357978\t0.000000000000000000000000000000\t0.000000000000000000000000000000\n"
+            "1\t-0.573933341279999953421508962492\t0.921778012560000026276441076334\t0.000000000000000000000000000000\n"
+            "1\t-0.573933775450000016604690245003\t-0.921778567219999955817399950320\t-0.000004707069999999999810257837\n"
+            "1\t1.903341015899999932869945951097\t0.921778658150000040905069909059\t0.000004367929999999999699671939\n"
+            "1\t1.903341021419999945507584016013\t-0.921778294680000054306390211423\t-0.000003291940000000000028635132\n"
+            "\n";
+
+    auto globalStartTime = chrono::system_clock::now();
+    for (size_t i = 0; i < iters; i++) {
+        auto localStartTime = chrono::system_clock::now();
+
+        ofstream inputFile("./tmp/a.in");
+        inputFile << boost::format(pattern) % nProc % mem % method;
+        inputFile.close();
+
+        system("mg09D ./tmp/a.in ./tmp/a.out > /dev/null");
+    }
+    double duration = getTimeFromNow(globalStartTime);
+    LOG_INFO("{}.{}.{} all iters : {}, {} per iteration", method, nProc, mem, duration, duration / iters);
+}
+
+
+
 int main()
 {
     initializeLogger();
 
-    ifstream input("./C2H4");
-    auto charges = readCharges(input);
-    auto equilStruct = readVect(input);
+    for (string const& method : {"scf", "force", "freq"})
+        for (size_t nProc : {1, 2, 3, 4})
+            for (size_t mem : {250, 500, 750, 1000, 1250})
+                banchmark(method, nProc, mem, 100);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges));
-    logFunctionInfo("", molecule, molecule.backTransform(equilStruct));
+//    ifstream input("./C2H4");
+//    auto charges = readCharges(input);
+//    auto equilStruct = readVect(input);
+//
+//    auto molecule = fixAtomSymmetry(GaussianProducer(charges));
+//    logFunctionInfo("", molecule, molecule.backTransform(equilStruct));
 //    equilStruct = molecule.backTransform(equilStruct);
 //    auto normalized = normalizeForPolar(molecule, equilStruct);
 //
