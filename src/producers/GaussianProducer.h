@@ -6,9 +6,9 @@
 #include "InputOutputUtils.h"
 
 string const GAUSSIAN_HEADER = "%%chk=%1%.chk\n"
-        "# B3lyp/3-21g nosym %2%\n"
         "%%nproc=%3%\n"
         "%%mem=%4%mb\n"
+        "# B3lyp/3-21g nosym %2%\n"
         "\n"
         "\n"
         "0 1";
@@ -16,31 +16,6 @@ string const GAUSSIAN_HEADER = "%%chk=%1%.chk\n"
 string const SCF_METHOD = "scf";
 string const FORCE_METHOD = "force";
 string const HESS_METHOD = "freq";
-//
-//string const GAUSSIAN_SCF_HEADER = "%nproc=3\n"
-//   "%chk=./tmp/chk\n"
-//   "%mem=1000mb\n"
-//   "# B3lyp/3-21g nosym scf\n"
-//   "\n"
-//   "\n"
-//   "0 1";
-//
-//
-//string const GAUSSIAN_FORCE_HEADER = "%nproc=3\n"
-//   "%chk=./tmp/chk\n"
-//   "%mem=1000mb\n"
-//   "# B3lyp/3-21g nosym force\n"
-//   "\n"
-//   "\n"
-//   "0 1";
-//
-//string const GAUSSIAN_HESS_HEADER = "%nproc=3\n"
-//   "%chk=%1%\n"
-//   "%mem=1000mb\n"
-//   "# B3lyp/3-21g nosym freq\n"
-//   "\n"
-//   "\n"
-//   "0 1";
 
 class GaussianException : public exception {
 };

@@ -521,12 +521,13 @@ int main()
     auto equilStruct = readVect(input);
 
     auto molecule = fixAtomSymmetry(GaussianProducer(charges));
-    equilStruct = molecule.backTransform(equilStruct);
-    auto normalized = normalizeForPolar(molecule, equilStruct);
-
-    auto startTime = chrono::system_clock::now();
-    findInitialPolarDirections(normalized, 0.1);
-    LOG_INFO("time passed: {}s", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
+    logFunctionInfo("", molecule, molecule.backTransform(equilStruct));
+//    equilStruct = molecule.backTransform(equilStruct);
+//    auto normalized = normalizeForPolar(molecule, equilStruct);
+//
+//    auto startTime = chrono::system_clock::now();
+//    findInitialPolarDirections(normalized, 0.1);
+//    LOG_INFO("time passed: {}s", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
 
     return 0;
 }

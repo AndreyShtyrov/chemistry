@@ -37,7 +37,13 @@ include_directories(${SOURCE_DIR})
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 #include_directories(${SRC)
-SET(SOURCE_FILES src/helper.cpp src/InputOutputUtils.cpp src/linearAlgebraUtils.cpp src/testing/coordinateSystemChange.cpp src/producers/FixValues.cpp)
+SET(SOURCE_FILES
+        src/helper.cpp
+        src/InputOutputUtils.cpp
+        src/linearAlgebraUtils.cpp
+        src/testing/coordinateSystemChange.cpp
+        src/producers/FixValues.cpp
+        src/producers/FunctionProducer.cpp)
 
 add_executable(chemistry ${SOURCE_DIR}/main.cpp ${SOURCE_FILES})
 target_link_libraries(chemistry ${Boost_LIBRARIES})
