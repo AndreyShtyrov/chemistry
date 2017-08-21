@@ -4,6 +4,7 @@
 
 #include "FunctionProducer.h"
 #include "linearAlgebraUtils.h"
+#include "AffineTransformation.h"
 
 template<typename FuncT>
 class InPolar : public FunctionProducer
@@ -169,9 +170,18 @@ public:
 };
 
 template<typename FuncT>
-InPolar<FuncT> makePolar(FuncT const& func, double r)
+auto makePolar(FuncT&& func, double r)
 {
-    return InPolar<FuncT>(func, r);
+    return InPolar<decay_t<FuncT>>(forward<FuncT>(func), r);
+}
+
+//todo: think about constraints on dir (e.g. ||dir|| == r
+template<typename FuncT>
+auto makePolarWithDirection(FuncT&& func, double r, vect const& dir)
+{
+    auto rotation = rotationMatrix(eye(func.nDims, func.nDims - 1), dir);
+    auto rotated = makeAffineTransfomation(func, rotation);
+    return makePolar(move(rotated), r);
 }
 
 inline vect polarVectLowerBound(int rows)

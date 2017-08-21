@@ -17,7 +17,7 @@ class GaussianProducer : public FunctionProducer {
 public:
     static constexpr double MAGIC_CONSTANT = 1.88972585931612435672;
 
-    explicit GaussianProducer(vector<size_t> charges, size_t nProc = 1, size_t mem = 1000);
+    explicit GaussianProducer(vector<size_t> charges, size_t nProc = 3, size_t mem = 1000);
 
     double operator()(vect const &x) override;
     vect grad(vect const &x) override;

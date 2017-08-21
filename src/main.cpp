@@ -174,15 +174,15 @@ vector<vect> optimizeOnSphere2(StopStrategy stopStrategy, FuncT& func, vect p, d
         vector<vect> path;
 
         vect momentum;
-        double gamma = 1;
-        double alpha = 1;
+        double const gamma = .9;
+        double const alpha = 1;
 
         for (size_t iter = 0; iter < preHessIters; iter++) {
             auto rotation = rotationMatrix(e, p);
             auto rotated = makeAffineTransfomation(func, rotation);
             auto polar = makePolar(rotated, r);
 
-            auto grad = polar.grad(theta);
+            vect grad = 0.1 * polar.grad(theta);
             auto value = polar(theta);
             matrix hess(func.nDims, func.nDims);
             hess.setZero();
@@ -190,10 +190,10 @@ vector<vect> optimizeOnSphere2(StopStrategy stopStrategy, FuncT& func, vect p, d
             if (iter)
                 momentum = gamma * momentum + alpha * grad;
             else
-                momentum = 2 * grad;
+                momentum = grad;
 
             auto lastP = p;
-            p = rotated.transform(polar.transform(theta - grad));
+            p = rotated.transform(polar.transform(theta - momentum));
             path.push_back(p);
 
             if (stopStrategy(iter, p, value, grad, hess, p - lastP))
@@ -205,7 +205,6 @@ vector<vect> optimizeOnSphere2(StopStrategy stopStrategy, FuncT& func, vect p, d
         throw exc;
     }
 }
-
 
 vector<vector<double>> calcPairwiseDists(vect v)
 {
@@ -458,14 +457,97 @@ void drawTrajectories()
     }
 }
 
+template<typename FuncT, typename StopStrategy>
+bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t globalIter)
+{
+    auto const theta = makeConstantVect(func.nDims - 1, M_PI / 2);
+    bool converged = false;
+
+    vector<vect> newPath;
+    try {
+        for (size_t i = 0; i < 5; i++) {
+            auto polar = makePolarWithDirection(func, r, p);
+
+            auto valueGradHess = polar.valueGradHess(theta);
+            auto value = get<0>(valueGradHess);
+            auto grad = get<1>(valueGradHess);
+            auto hess = get<2>(valueGradHess);
+
+            auto lastP = p;
+            p = polar.getInnerFunction().transform(polar.transform(theta - hess.inverse() * grad));
+            newPath.push_back(p);
+
+            if (stopStrategy(globalIter + i, p, value, grad, p - lastP)) {
+                converged = true;
+                break;
+            }
+        }
+    } catch (GaussianException const& exc) {
+        LOG_ERROR("Did not converged");
+    }
+
+    if (converged) {
+        path.insert(path.end(), newPath.begin(), newPath.end());
+        return true;
+    }
+
+    return false;
+};
+
+template<typename FuncT, typename StopStrategy>
+vector<vect> optimizeOnSphere3(StopStrategy stopStrategy, FuncT& func, vect p, double r, size_t preHessIters)
+{
+    try {
+        assert(abs(r - p.norm()) < 1e-7);
+
+        auto const theta = makeConstantVect(func.nDims - 1, M_PI / 2);
+
+        vector<vect> path;
+        vect momentum;
+
+        for (size_t iter = 0; ; iter++) {
+            if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, iter)) {
+                LOG_ERROR("breaked here");
+                break;
+            }
+
+            auto polar = makePolarWithDirection(func, r, p);
+
+            auto valueGrad = polar.valueGrad(theta);
+            auto value = get<0>(valueGrad);
+            auto grad = get<1>(valueGrad);
+
+            if (iter)
+                momentum = 0.5 * (1 + momentum.dot(grad) / (grad.norm() * momentum.norm())) * momentum + grad;
+            else
+                momentum = grad;
+
+            auto lastP = p;
+            p = polar.getInnerFunction().transform(polar.transform(theta - momentum));
+            path.push_back(p);
+
+            if (stopStrategy(iter, p, value, grad, p - lastP)) {
+                LOG_ERROR("breaked here");
+                break;
+            }
+        }
+
+        return path;
+    } catch (GaussianException const& exc) {
+        throw exc;
+    }
+}
+
 template<typename FuncT>
-void findInitialPolarDirections(FuncT& func, double r)
+vector<vect> findInitialPolarDirections(FuncT& func, double r)
 {
     auto axis = framework.newPlot();
     RandomProjection projection(func.getFullInnerFunction().nDims);
 
+    vector<vect> result;
+
 #pragma omp parallel for
-    for (size_t i = 0; i < 10; i++) {
+    for (size_t i = 0; i < 4; i++) {
         try {
             vector<double> xs, ys;
 
@@ -474,7 +556,7 @@ void findInitialPolarDirections(FuncT& func, double r)
             LOG_INFO("\n{}\n{}\n{}", pos.transpose(), func.fullTransform(pos).transpose(),
                      toChemcraftCoords({6, 6, 1, 1, 1, 1}, func.fullTransform(pos).transpose()));
 
-            auto path = optimizeOnSphere(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 1000);
+            auto path = optimizeOnSphere3(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 50);
             if (path.empty())
                 continue;
 
@@ -496,13 +578,16 @@ void findInitialPolarDirections(FuncT& func, double r)
             vect dir = p / p.norm();
             vect first = dir * grad.dot(dir);
             vect second = grad - first;
-            LOG_INFO("read grad norm is {}\nfirst norm = {}\nsecond norm = {}", grad.norm(), first.norm(),
-                     second.norm());
+            LOG_INFO("read grad norm is {}\nfirst norm = {}\nsecond norm = {}", grad.norm(), first.norm(), second.norm());
+
+            result.push_back(path.back());
         } catch (GaussianException const& exc) {
             throw exc;
 //            LOG_ERROR("exception: {}", exc.what());
         }
     }
+
+    return result;
 }
 
 template<typename FuncT>
@@ -579,8 +664,18 @@ int main()
     auto normalized = normalizeForPolar(molecule, equilStruct);
 
     auto startTime = chrono::system_clock::now();
-    findInitialPolarDirections(normalized, 0.1);
+    auto result = findInitialPolarDirections(normalized, 0.1);
     LOG_INFO("time passed: {}s", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
+
+    ofstream output("./mins_on_sphere");
+    for (auto& v : result)
+        output << v.rows() << endl << v.transpose() << endl;
+
+    ofstream output2("./mins_on_sphere2");
+    for (auto v : result) {
+        v = normalized.fullTransform(v);
+        output2 << v.rows() << endl << v.transpose() << endl;
+    }
 
     return 0;
 }
