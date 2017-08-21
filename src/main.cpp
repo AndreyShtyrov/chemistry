@@ -547,7 +547,7 @@ vector<vect> findInitialPolarDirections(FuncT& func, double r)
     vector<vect> result;
 
 #pragma omp parallel for
-    for (size_t i = 0; i < 4; i++) {
+    for (size_t i = 0; i < 32; i++) {
         try {
             vector<double> xs, ys;
 

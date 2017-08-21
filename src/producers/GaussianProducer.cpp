@@ -64,9 +64,12 @@ ifstream GaussianProducer::runGaussian(vect const& x, string const& method)
 {
     auto fileMask = createInputFile(x, method);
 
-    if (system(boost::str(boost::format("mg09D %1%.in %1%.out > /dev/null") % fileMask).c_str())
-        || system(boost::str(boost::format("formchk %1%.chk > /dev/null") % fileMask).c_str())) {
-        throw GaussianException();
+    if (system(boost::str(boost::format("mg09D %1%.in %1%.out > /dev/null") % fileMask).c_str())) {
+        throw GaussianException(this_thread::get_id());
+    }
+
+    if (system(boost::str(boost::format("formchk %1%.chk > /dev/null") % fileMask).c_str())) {
+        throw GaussianException(this_thread::get_id());
     }
 
     return ifstream(fileMask + ".fchk");
@@ -94,11 +97,11 @@ GaussianProducer const& GaussianProducer::getFullInnerFunction() const
 
 string GaussianProducer::createInputFile(vect const &x, string const& method)
 {
-    string filemask = boost::str(boost::format("./tmp/tmp%1%") % std::hash<std::thread::id>()(this_thread::get_id()));
+    string fileMask = boost::str(boost::format("./tmp/tmp%1%") % std::hash<std::thread::id>()(this_thread::get_id()));
 
-    ofstream f(filemask + ".in");
+    ofstream f(fileMask + ".in");
     f.precision(30);
-    f << boost::format(GAUSSIAN_HEADER) % filemask % method % mNProc % mMem << endl;
+    f << boost::format(GAUSSIAN_HEADER) % fileMask % method % mNProc % mMem << endl;
 
     for (size_t i = 0; i < mCharges.size(); i++) {
         f << mCharges[i];
@@ -108,7 +111,7 @@ string GaussianProducer::createInputFile(vect const &x, string const& method)
     }
     f << endl;
 
-    return filemask;
+    return fileMask;
 }
 
 double GaussianProducer::parseValue(ifstream &input)
