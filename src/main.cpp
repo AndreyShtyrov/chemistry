@@ -547,7 +547,7 @@ vector<vect> findInitialPolarDirections(FuncT& func, double r)
     vector<vect> result;
 
 #pragma omp parallel for
-    for (size_t i = 0; i < 32; i++) {
+    for (size_t i = 0; i < 128; i++) {
         try {
             vector<double> xs, ys;
 
@@ -668,13 +668,15 @@ int main()
     LOG_INFO("time passed: {}s", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
 
     ofstream output("./mins_on_sphere");
+    output.precision(30);
     for (auto& v : result)
-        output << v.rows() << endl << v.transpose() << endl;
+        output << v.rows() << endl << fixed << v.transpose() << endl;
 
     ofstream output2("./mins_on_sphere2");
+    output2.precision(30);
     for (auto v : result) {
         v = normalized.fullTransform(v);
-        output2 << v.rows() << endl << v.transpose() << endl;
+        output2 << v.rows() << endl << fixed << v.transpose() << endl;
     }
 
     return 0;
