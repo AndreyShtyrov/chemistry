@@ -62,17 +62,16 @@ matrix isqrt(matrix m)
     return m;
 };
 
+//m - symmetric matrix
 matrix linearization(matrix m)
 {
-    Eigen::JacobiSVD<matrix> d(m, Eigen::ComputeFullU | Eigen::ComputeFullV);
-    LOG_INFO("singular values: {}", d.singularValues().transpose());
-
-    return d.matrixU();
+    return Eigen::JacobiSVD<matrix>(m, Eigen::ComputeFullU).matrixU();
 }
 
+//m - symmetric matrix
 matrix linearizationNormalization(matrix m)
 {
-    Eigen::JacobiSVD<matrix> d(m, Eigen::ComputeFullU | Eigen::ComputeFullV);
+    Eigen::JacobiSVD<matrix> d(m, Eigen::ComputeFullU);
     return d.matrixU() * isqrt(matrix(d.singularValues().asDiagonal()));
 };
 
@@ -110,7 +109,8 @@ vect projection(vect wich, vect to)
 
 matrix singularValues(matrix m)
 {
-    return Eigen::JacobiSVD<matrix>(m).singularValues().transpose();
+    auto A = linearization(m);
+    return (A.transpose() * m * A).diagonal().transpose();
 }
 
 vect toDistanceSpace(vect v, bool sorted)

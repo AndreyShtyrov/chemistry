@@ -42,8 +42,8 @@ public:
 
     void plot(string const& axis, vector<double> const& xs, vector<double> const& ys)
     {
-        auto vxs = create_array(xs);
-        auto vys = create_array(ys);
+        auto vxs = createArray(xs);
+        auto vys = createArray(ys);
         mOutput << axis << ".plot(" << vxs << ", " << vys << ")" << endl;
     }
 
@@ -68,16 +68,16 @@ public:
 
     void scatter(string const& axis, vector<double> const& xs, vector<double> const& ys, vector<double> const& zs)
     {
-        auto vxs = create_array(xs);
-        auto vys = create_array(ys);
-        auto vzs = create_array(zs);
+        auto vxs = createArray(xs);
+        auto vys = createArray(ys);
+        auto vzs = createArray(zs);
 
         mOutput << axis << ".scatter(" << vxs << ", " << vys << ", " << vzs << ", color='r')" << endl;
     }
     void scatter(string const& axis, vector<double> const& xs, vector<double> const& ys)
     {
-        auto vxs = create_array(xs);
-        auto vys = create_array(ys);
+        auto vxs = createArray(xs);
+        auto vys = createArray(ys);
 
         mOutput << axis << ".scatter(" << vxs << ", " << vys << ", color='r')" << endl;
     }
@@ -89,7 +89,7 @@ public:
 //        mOutput << "plt.plot(" << vxs << ", " << vys << ")" << endl;
 //    }
 
-    string create_array(vector<double> const& xs)
+    string createArray(vector<double> const& xs)
     {
         string var = "_" + to_string(next_counter());
         mOutput << var << " = [";

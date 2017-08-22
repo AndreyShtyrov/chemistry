@@ -556,7 +556,7 @@ vector<vect> findInitialPolarDirections(FuncT& func, double r)
             LOG_INFO("\n{}\n{}\n{}", pos.transpose(), func.fullTransform(pos).transpose(),
                      toChemcraftCoords({6, 6, 1, 1, 1, 1}, func.fullTransform(pos).transpose()));
 
-            auto path = optimizeOnSphere3(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 50);
+            auto path = optimizeOnSphere3(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 50000000);
             if (path.empty())
                 continue;
 
@@ -643,11 +643,25 @@ void benchmark(string const &method, size_t nProc, size_t mem, size_t iters)
 void runBenchmarks()
 {
     for (string const& method : {"scf", "force", "freq"})
-        for (size_t nProc : {1, 2, 3, 4})
-            for (size_t mem : {250, 500, 750, 1000, 1250})
+        for (size_t nProc : {1ul, 2ul, 3ul, 4ul})
+            for (size_t mem : {250ul, 500ul, 750ul, 1000ul, 1250ul})
                 benchmark(method, nProc, mem, 100);
 }
 
+vector<vect> filterByDistance(vector<vect> const& vs, double r)
+{
+    vector<vect> result;
+
+    for (size_t i = 0; i < vs.size(); i++) {
+        bool flag = true;
+        for (size_t j = 0; j < i; j++)
+            if ((vs[i] - vs[j]).norm() < r)
+                flag = false;
+        if (flag)
+            result.push_back(vs[i]);
+    }
+    return result;
+}
 
 
 int main()
@@ -659,25 +673,73 @@ int main()
     auto equilStruct = readVect(input);
 
     auto molecule = fixAtomSymmetry(GaussianProducer(charges));
-    logFunctionInfo("", molecule, molecule.backTransform(equilStruct));
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
 
-    auto startTime = chrono::system_clock::now();
-    auto result = findInitialPolarDirections(normalized, 0.1);
-    LOG_INFO("time passed: {}s", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
+    ifstream mins("./mins_on_sphere");
 
-    ofstream output("./mins_on_sphere");
-    output.precision(30);
-    for (auto& v : result)
-        output << v.rows() << endl << fixed << v.transpose() << endl;
+    RandomProjection proj(normalized.nDims);
+    vector<double> xs;
+    vector<double> ys;
 
-    ofstream output2("./mins_on_sphere2");
-    output2.precision(30);
-    for (auto v : result) {
-        v = normalized.fullTransform(v);
-        output2 << v.rows() << endl << fixed << v.transpose() << endl;
+    vector<vect> vs;
+    for (size_t i = 0; i < 128; i++) {
+        auto v = readVect(mins);
+        vs.push_back(v);
+
+        auto projected = proj(v);
+        xs.push_back(projected(0));
+        ys.push_back(projected(1));
     }
+    framework.scatter(framework.newPlot(), xs, ys);
+
+    LOG_INFO("remaining points: {}", filterByDistance(vs, .01).size());
+
+    for (size_t i = 0; i < 128; i++) {
+        auto v = readVect(mins);
+
+        for (size_t iter = 0; iter < 5; iter++) {
+            auto polar = makePolarWithDirection(normalized, .1, v);
+
+            auto valueGradHess = polar.valueGradHess(makeConstantVect(polar.nDims, M_PI / 2));
+            auto value = get<0>(valueGradHess);
+            auto grad = get<1>(valueGradHess);
+            auto hess = get<2>(valueGradHess);
+
+            auto lastV = v;
+            v = polar.getInnerFunction().transform(polar.transform(makeConstantVect(polar.nDims, M_PI / 2) - hess.inverse() * grad));
+        }
+        vs[i] = v;
+
+        auto projected = proj(v);
+        xs.push_back(projected(0));
+        ys.push_back(projected(1));
+    }
+    framework.scatter(framework.newPlot(), xs, ys);
+
+    vs = filterByDistance(vs, .01);
+    LOG_INFO("remaining points: {}", filterByDistance(vs, .01).size());
+
+    for (auto const& v : vs) {
+        auto polar = makePolarWithDirection(normalized, 0.1, v);
+        logFunctionInfo("", polar, makeConstantVect(polar.nDims, 0.5 * M_PI));
+    }
+
+//    auto startTime = chrono::system_clock::now();
+//    auto result = findInitialPolarDirections(normalized, 0.1);
+//    LOG_INFO("time passed: {}s", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
+//
+//    ofstream output("./mins_on_sphere");
+//    output.precision(30);
+//    for (auto& v : result)
+//        output << v.rows() << endl << fixed << v.transpose() << endl;
+//
+//    ofstream output2("./mins_on_sphere2");
+//    output2.precision(30);
+//    for (auto v : result) {
+//        v = normalized.fullTransform(v);
+//        output2 << v.rows() << endl << fixed << v.transpose() << endl;
+//    }
 
     return 0;
 }
