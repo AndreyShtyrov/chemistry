@@ -473,6 +473,11 @@ bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vec
             auto grad = get<1>(valueGradHess);
             auto hess = get<2>(valueGradHess);
 
+            auto sValues = singularValues(hess);
+            for (size_t i = 0; i < sValues.size(); i++)
+                if (sValues(i) < 0)
+                    return false;
+
             auto lastP = p;
             p = polar.getInnerFunction().transform(polar.transform(theta - hess.inverse() * grad));
             newPath.push_back(p);
@@ -663,6 +668,26 @@ vector<vect> filterByDistance(vector<vect> const& vs, double r)
     return result;
 }
 
+template<typename FuncT>
+vector<vect> filterBySingularValues(vector<vect> const& vs, FuncT& func)
+{
+    vector<vect> result;
+
+    for (auto const& v : vs) {
+        auto polar = makePolarWithDirection(func, 0.1, v);
+        auto sValues = singularValues(polar.hess(makeConstantVect(polar.nDims, M_PI / 2)));
+
+        bool flag = true;
+        for (size_t i = 0; flag && i < sValues.size(); i++)
+            if (sValues(i) < 0)
+                flag = false;
+
+        if (flag)
+            result.push_back(v);
+    }
+
+    return result;
+}
 
 int main()
 {
@@ -672,57 +697,34 @@ int main()
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges));
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
 
     ifstream mins("./mins_on_sphere");
-
-    RandomProjection proj(normalized.nDims);
-    vector<double> xs;
-    vector<double> ys;
-
     vector<vect> vs;
-    for (size_t i = 0; i < 128; i++) {
-        auto v = readVect(mins);
-        vs.push_back(v);
 
-        auto projected = proj(v);
-        xs.push_back(projected(0));
-        ys.push_back(projected(1));
+    size_t cnt;
+    mins >> cnt;
+    for (size_t i = 0; i < cnt; i++) {
+        vs.push_back(readVect(mins));
     }
-    framework.scatter(framework.newPlot(), xs, ys);
-
-    LOG_INFO("remaining points: {}", filterByDistance(vs, .01).size());
-
-    for (size_t i = 0; i < 128; i++) {
-        auto v = readVect(mins);
-
-        for (size_t iter = 0; iter < 5; iter++) {
-            auto polar = makePolarWithDirection(normalized, .1, v);
-
-            auto valueGradHess = polar.valueGradHess(makeConstantVect(polar.nDims, M_PI / 2));
-            auto value = get<0>(valueGradHess);
-            auto grad = get<1>(valueGradHess);
-            auto hess = get<2>(valueGradHess);
-
-            auto lastV = v;
-            v = polar.getInnerFunction().transform(polar.transform(makeConstantVect(polar.nDims, M_PI / 2) - hess.inverse() * grad));
-        }
-        vs[i] = v;
-
-        auto projected = proj(v);
-        xs.push_back(projected(0));
-        ys.push_back(projected(1));
-    }
-    framework.scatter(framework.newPlot(), xs, ys);
+    mins.close();
 
     vs = filterByDistance(vs, .01);
-    LOG_INFO("remaining points: {}", filterByDistance(vs, .01).size());
+    vs = filterBySingularValues(vs, normalized);
+
+    LOG_INFO("remaines {} starting points", vs.size());
+
+    ofstream minsOut("./mins_on_sphere");
+    minsOut.precision(30);
+    minsOut << vs.size() << endl;
+    for (auto const& v : vs)
+        minsOut << v.rows() << endl << fixed << v << endl;
 
     for (auto const& v : vs) {
         auto polar = makePolarWithDirection(normalized, 0.1, v);
-        logFunctionInfo("", polar, makeConstantVect(polar.nDims, 0.5 * M_PI));
+        logFunctionInfo("", polar, makeConstantVect(polar.nDims, M_PI / 2));
     }
 
 //    auto startTime = chrono::system_clock::now();
