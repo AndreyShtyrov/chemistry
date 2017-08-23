@@ -699,9 +699,8 @@ void shs()
     }
 }
 
-int main()
+void analizeMinsOnSphere()
 {
-    initializeLogger();
 
     ifstream input("./C2H4");
     auto charges = readCharges(input);
@@ -713,8 +712,42 @@ int main()
 
     logFunctionInfo("normalized energy for equil structure", normalized, makeConstantVect(normalized.nDims, 0));
 
-    findInitialPolarDirections(normalized, .1);
+    ifstream mins("./mins_on_sphere");
+    size_t cnt;
+    mins >> cnt;
+    vector<vect> vs;
+    for (size_t i = 0; i < cnt; i++)
+        vs.push_back(readVect(mins));
 
+    vs = filterByDistance(vs, .0001);
+    LOG_INFO("{} remained after filtering", vs.size());
+
+    RandomProjection proj((size_t) vs.back().size());
+    vector<double> xs, ys;
+    for (auto const& v : vs) {
+        auto projection = proj(v);
+        xs.push_back(projection(0));
+        ys.push_back(projection(1));
+    }
+    framework.scatter(framework.newPlot(), xs, ys);
+
+    ofstream mins2("./mins_on_sphere_filtered");
+    mins2.precision(30);
+    mins2 << vs.size() << endl;
+    for (auto const& v : vs)
+        mins2 << v.size() << endl << fixed << v.transpose() << endl;
+
+    for (auto const& v : vs) {
+        auto polar = makePolarWithDirection(normalized, .1, v);
+        logFunctionInfo("", polar, makeConstantVect(polar.nDims, M_PI / 2));
+    }
+}
+
+int main()
+{
+    initializeLogger();
+
+    analizeMinsOnSphere();
 
 //    auto startTime = chrono::system_clock::now();
 //    auto result = findInitialPolarDirections(normalized, 0.1);
