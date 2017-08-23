@@ -787,7 +787,8 @@ int main()
 {
     initializeLogger();
 
-    shs();
+//    shs();
+    benchmarkOptimizators();
 
 //    auto startTime = chrono::system_clock::now();
 //    auto result = findInitialPolarDirections(normalized, 0.1);
