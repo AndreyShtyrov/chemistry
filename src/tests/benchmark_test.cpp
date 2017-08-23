@@ -4,7 +4,7 @@
 
 #include "producers/GaussianProducer.h"
 
-string const PATTERN = "%%chk=chk\n"
+string const PATTERN = "%%chk=%4%.chk\n"
    "%%nproc=%1%\n"
    "%%mem=%2%mb\n"
    "# B3lyp/3-21g nosym %3%\n"
@@ -36,7 +36,7 @@ void parallelBenchmark(string const &method, size_t nProc, size_t mem, size_t it
         auto localStartTime = chrono::system_clock::now();
 
         ofstream inputFile(filemask + ".in");
-        inputFile << boost::format(PATTERN) % nProc % mem % method;
+        inputFile << boost::format(PATTERN) % nProc % mem % method % filemask;
         inputFile.close();
 
         system(str(boost::format("mg09D %1%.in %1%.out > /dev/null") % filemask).c_str());
@@ -93,6 +93,6 @@ TEST(Benchmark, ScfParallel)
 TEST(Benchmark, ScfNonParallel)
 {
     initializeLogger();
-    parallelBenchmark("scf", 1, 1000, 100);
+    nonparallelBenchmark("scf", 1, 1000, 100);
 }
 
