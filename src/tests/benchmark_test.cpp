@@ -25,43 +25,32 @@ double getTimeFromNow(chrono::time_point<chrono::system_clock> const& timePoint)
     return chrono::duration<double>(chrono::system_clock::now() - timePoint).count();
 }
 
-void parallelBenchmark(string const &method, size_t nProc, size_t mem, size_t iters)
+void createInputAndExecute(string const &method, size_t nProc, size_t mem)
 {
+    string filemask = boost::str(boost::format("./tmp/tmp%1%") % std::hash<std::thread::id>()(this_thread::get_id()));
+    auto localStartTime = chrono::system_clock::now();
 
-    auto globalStartTime = chrono::system_clock::now();
+    ofstream inputFile(filemask + ".in");
+    inputFile << boost::format(PATTERN) % nProc % mem % method % filemask;
+    inputFile.close();
 
-#pragma omp parallel for
-    for (size_t i = 0; i < iters; i++) {
-        string filemask = boost::str(boost::format("./tmp/tmp%1%") % std::hash<std::thread::id>()(this_thread::get_id()));
-        auto localStartTime = chrono::system_clock::now();
-
-        ofstream inputFile(filemask + ".in");
-        inputFile << boost::format(PATTERN) % nProc % mem % method % filemask;
-        inputFile.close();
-
-        system(str(boost::format("mg09D %1%.in %1%.out > /dev/null") % filemask).c_str());
-    }
-    double duration = getTimeFromNow(globalStartTime);
-    LOG_INFO("{}.{}.{} all iters : {}, {} per iteration", method, nProc, mem, duration, duration / iters);
+    system(str(boost::format("mg09D %1%.in %1%.out > /dev/null") % filemask).c_str());
 }
 
-void nonparallelBenchmark(string const &method, size_t nProc, size_t mem, size_t iters)
+void runBenchmark(string const &method, size_t nProc, size_t mem, size_t iters, bool parallel)
 {
+    auto startTime = chrono::system_clock::now();
 
-    auto globalStartTime = chrono::system_clock::now();
+    if (parallel)
+        #pragma omp parallel for
+        for (size_t i = 0; i < iters; i++)
+            createInputAndExecute(method, nProc, mem);
+    else
+        for (size_t i = 0; i < iters; i++)
+            createInputAndExecute(method, nProc, mem);
 
-    for (size_t i = 0; i < iters; i++) {
-        string filemask = boost::str(boost::format("./tmp/tmp%1%") % std::hash<std::thread::id>()(this_thread::get_id()));
-        auto localStartTime = chrono::system_clock::now();
-
-        ofstream inputFile(filemask + ".in");
-        inputFile << boost::format(PATTERN) % nProc % mem % method;
-        inputFile.close();
-
-        system(str(boost::format("mg09D %1%.in %1%.out > /dev/null") % filemask).c_str());
-    }
-    double duration = getTimeFromNow(globalStartTime);
-    LOG_INFO("{}.{}.{} all iters : {}, {} per iteration", method, nProc, mem, duration, duration / iters);
+    double duration = getTimeFromNow(startTime);
+    LOG_INFO("{}.{}.{} {} per iter ({} total for {} iters", method, nProc, mem, duration / iters, duration, iters);
 }
 
 TEST(Benchmark, NonParallel)
@@ -71,7 +60,7 @@ TEST(Benchmark, NonParallel)
     for (string const& method : {"scf", "force", "freq"})
         for (size_t nProc : {1ul, 2ul, 4ul})
             for (size_t mem : {250ul, 1000ul})
-                nonparallelBenchmark(method, nProc, mem, 100);
+                runBenchmark(method, nProc, mem, 100, false);
 }
 
 TEST(Benchmark, Parallel)
@@ -81,18 +70,18 @@ TEST(Benchmark, Parallel)
     for (string const& method : {"scf", "force", "freq"})
         for (size_t nProc : {1ul, 2ul, 4ul})
             for (size_t mem : {250ul, 1000ul})
-                parallelBenchmark(method, nProc, mem, 100);
+                runBenchmark(method, nProc, mem, 100, true);
 }
 
 TEST(Benchmark, ScfParallel)
 {
     initializeLogger();
-    parallelBenchmark("scf", 1, 1000, 100);
+    runBenchmark("scf", 1, 1000, 100, true);
 }
 
 TEST(Benchmark, ScfNonParallel)
 {
     initializeLogger();
-    nonparallelBenchmark("scf", 1, 1000, 100);
+    runBenchmark("scf", 1, 1000, 100, false);
 }
 
