@@ -37,15 +37,14 @@ vect toDistanceSpace(vect v, bool sorted=true);
 class RandomProjection
 {
 public:
-    explicit RandomProjection(size_t n, size_t m=2) : mA(m, n) {
-        mA.setRandom();
-    }
+    explicit RandomProjection(size_t n, size_t m=2) : mA(makeRandomMatrix(m, n))
+    { }
 
-    vect operator()(vect v) {
+    vect operator()(vect v) const {
         assert(v.rows() == mA.cols());
         return mA * v;
     }
 
 private:
-    matrix mA;
+    matrix const mA;
 };

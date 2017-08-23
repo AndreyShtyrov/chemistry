@@ -162,50 +162,6 @@ vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, do
     }
 }
 
-template<typename FuncT, typename StopStrategy>
-vector<vect> optimizeOnSphere2(StopStrategy stopStrategy, FuncT& func, vect p, double r, size_t preHessIters)
-{
-    try {
-        assert(abs(r - p.norm()) < 1e-7);
-
-        auto e = eye(func.nDims, func.nDims - 1);
-        auto theta = makeConstantVect(func.nDims - 1, M_PI / 2);
-
-        vector<vect> path;
-
-        vect momentum;
-        double const gamma = .9;
-        double const alpha = 1;
-
-        for (size_t iter = 0; iter < preHessIters; iter++) {
-            auto rotation = rotationMatrix(e, p);
-            auto rotated = makeAffineTransfomation(func, rotation);
-            auto polar = makePolar(rotated, r);
-
-            vect grad = 0.1 * polar.grad(theta);
-            auto value = polar(theta);
-            matrix hess(func.nDims, func.nDims);
-            hess.setZero();
-
-            if (iter)
-                momentum = gamma * momentum + alpha * grad;
-            else
-                momentum = grad;
-
-            auto lastP = p;
-            p = rotated.transform(polar.transform(theta - momentum));
-            path.push_back(p);
-
-            if (stopStrategy(iter, p, value, grad, hess, p - lastP))
-                break;
-        }
-
-        return path;
-    } catch (GaussianException const& exc) {
-        throw exc;
-    }
-}
-
 vector<vector<double>> calcPairwiseDists(vect v)
 {
     assert(v.rows() % 3 == 0);
@@ -433,10 +389,6 @@ void analizeFolder()
     }
 }
 
-
-
-#include "testing/tests.h"
-
 void drawTrajectories()
 {
     RandomProjection proj(15);
@@ -458,7 +410,7 @@ void drawTrajectories()
 }
 
 template<typename FuncT, typename StopStrategy>
-bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t globalIter)
+bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t globalIter=0)
 {
     auto const theta = makeConstantVect(func.nDims - 1, M_PI / 2);
     bool converged = false;
@@ -475,8 +427,9 @@ bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vec
 
             auto sValues = singularValues(hess);
             for (size_t i = 0; i < sValues.size(); i++)
-                if (sValues(i) < 0)
+                if (sValues(i) < 0) {
                     return false;
+                }
 
             auto lastP = p;
             p = polar.getInnerFunction().transform(polar.transform(theta - hess.inverse() * grad));
@@ -544,55 +497,47 @@ vector<vect> optimizeOnSphere3(StopStrategy stopStrategy, FuncT& func, vect p, d
 }
 
 template<typename FuncT>
-vector<vect> findInitialPolarDirections(FuncT& func, double r)
+void findInitialPolarDirections(FuncT& func, double r)
 {
     auto axis = framework.newPlot();
-    RandomProjection projection(func.getFullInnerFunction().nDims);
+    RandomProjection const projection(func.getFullInnerFunction().nDims);
+    StopStrategy const stopStrategy(1e-4, 1e-4);
 
-    vector<vect> result;
+    ofstream output("./mins_on_sphere");
+    output.precision(30);
 
-#pragma omp parallel for
-    for (size_t i = 0; i < 128; i++) {
+    #pragma omp parallel
+    while (true) {
         try {
-            vector<double> xs, ys;
-
             vect pos = randomVectOnSphere(func.nDims, r);
 
-            LOG_INFO("\n{}\n{}\n{}", pos.transpose(), func.fullTransform(pos).transpose(),
-                     toChemcraftCoords({6, 6, 1, 1, 1, 1}, func.fullTransform(pos).transpose()));
-
-            auto path = optimizeOnSphere3(makeHistoryStrategy(StopStrategy(1e-4, 1e-4)), func, pos, r, 50000000);
+            auto path = optimizeOnSphere3(stopStrategy, func, pos, r, 50);
             if (path.empty())
                 continue;
 
-            for (auto const& p : path) {
-                vect t = func.fullTransform(p);
-                vect proj = projection(t);
-                xs.push_back(proj(0));
-                ys.push_back(proj(1));
+            #pragma omp critical
+            {
+                vect p = path.back();
+                output << p.size() << endl << fixed << p << endl;
+
+                vector<double> xs, ys;
+                for (auto const& p : path) {
+                    vect t = func.fullTransform(p);
+                    vect proj = projection(t);
+                    xs.push_back(proj(0));
+                    ys.push_back(proj(1));
+                }
+
+                framework.plot(axis, xs, ys);
+                framework.scatter(axis, xs, ys);
+
+                LOG_INFO("initial polar Direction: {}", path.back().transpose());
             }
-
-
-            framework.plot(axis, xs, ys);
-            framework.scatter(axis, xs, ys);
-
-            LOG_INFO("initial polar Direction: {}", path.back().transpose());
-
-            vect p = path.back();
-            vect grad = func.grad(p);
-            vect dir = p / p.norm();
-            vect first = dir * grad.dot(dir);
-            vect second = grad - first;
-            LOG_INFO("read grad norm is {}\nfirst norm = {}\nsecond norm = {}", grad.norm(), first.norm(), second.norm());
-
-            result.push_back(path.back());
         } catch (GaussianException const& exc) {
-            throw exc;
-//            LOG_ERROR("exception: {}", exc.what());
+//            throw exc;
+            LOG_ERROR("exception: {}", exc.what());
         }
     }
-
-    return result;
 }
 
 template<typename FuncT>
@@ -689,6 +634,71 @@ vector<vect> filterBySingularValues(vector<vect> const& vs, FuncT& func)
     return result;
 }
 
+void shs()
+{
+    ifstream input("./C2H4");
+    auto charges = readCharges(input);
+    auto equilStruct = readVect(input);
+
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
+    equilStruct = molecule.backTransform(equilStruct);
+    auto normalized = normalizeForPolar(molecule, equilStruct);
+
+    logFunctionInfo("normalized energy for equil structure", normalized, makeConstantVect(normalized.nDims, 0));
+
+    ifstream minsOnSphere("./mins_on_sphere");
+    size_t cnt;
+    minsOnSphere >> cnt;
+    vector<vect> vs;
+    for (size_t i = 0; i < cnt; i++)
+        vs.push_back(readVect(minsOnSphere));
+
+    double const firstR = 0.1;
+    double const deltaR = 0.01;
+
+    auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-4, 5e-4));
+
+#pragma omp parallel for
+    for (size_t i = 0; i < cnt; i++) {
+        auto direction = vs[i];
+        LOG_INFO("Path #{}. Initial direction: {}", i, direction.transpose());
+
+        system(str(boost::format("mkdir %1%") % i).c_str());
+        double value = normalized(direction);
+
+        for (size_t j = 0; j < 600; j++) {
+            double r = firstR + deltaR * j;
+
+            vect prev = direction;
+            direction = direction / direction.norm() * r;
+            try {
+                vector<vect> path;
+                if (!tryToConverge(stopStrategy, normalized, direction, r, path)) {
+                    break;
+                }
+                direction = path.back();
+
+                double newValue = normalized(direction);
+                LOG_INFO("New {} point in path {}:\n\tvalue = {:.13f}\n\tdelta norm = {:.13f}\n\t{}\nchemcraft coords:\n{}", j, i,
+                         newValue, (direction / direction.norm() - prev / prev.norm()).norm(), direction.transpose(),
+                         toChemcraftCoords(charges, normalized.fullTransform(direction)));
+
+                ofstream output(str(boost::format("./%1%/%2%.xyz") % i % j));
+                output << toChemcraftCoords(charges, normalized.fullTransform(direction)) << endl;
+
+                if (newValue < value) {
+                    LOG_ERROR("newValue < value [{:.13f} < {:.13f}]. Stopping", newValue, value);
+                    //break;
+                }
+
+                value = newValue;
+            } catch (GaussianException const &exc) {
+                break;
+            }
+        }
+    }
+}
+
 int main()
 {
     initializeLogger();
@@ -697,35 +707,14 @@ int main()
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
 
-    ifstream mins("./mins_on_sphere");
-    vector<vect> vs;
+    logFunctionInfo("normalized energy for equil structure", normalized, makeConstantVect(normalized.nDims, 0));
 
-    size_t cnt;
-    mins >> cnt;
-    for (size_t i = 0; i < cnt; i++) {
-        vs.push_back(readVect(mins));
-    }
-    mins.close();
+    findInitialPolarDirections(normalized, .1);
 
-    vs = filterByDistance(vs, .01);
-    vs = filterBySingularValues(vs, normalized);
-
-    LOG_INFO("remaines {} starting points", vs.size());
-
-    ofstream minsOut("./mins_on_sphere");
-    minsOut.precision(30);
-    minsOut << vs.size() << endl;
-    for (auto const& v : vs)
-        minsOut << v.rows() << endl << fixed << v << endl;
-
-    for (auto const& v : vs) {
-        auto polar = makePolarWithDirection(normalized, 0.1, v);
-        logFunctionInfo("", polar, makeConstantVect(polar.nDims, M_PI / 2));
-    }
 
 //    auto startTime = chrono::system_clock::now();
 //    auto result = findInitialPolarDirections(normalized, 0.1);
