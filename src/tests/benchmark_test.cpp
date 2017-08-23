@@ -50,7 +50,6 @@ void nonparallelBenchmark(string const &method, size_t nProc, size_t mem, size_t
 
     auto globalStartTime = chrono::system_clock::now();
 
-#pragma omp parallel for
     for (size_t i = 0; i < iters; i++) {
         string filemask = boost::str(boost::format("./tmp/tmp%1%") % std::hash<std::thread::id>()(this_thread::get_id()));
         auto localStartTime = chrono::system_clock::now();
@@ -70,8 +69,8 @@ TEST(Benchmark, NonParallel)
     initializeLogger();
 
     for (string const& method : {"scf", "force", "freq"})
-        for (size_t nProc : {1ul, 2ul, 3ul, 4ul})
-            for (size_t mem : {250ul, 500ul, 1000ul})
+        for (size_t nProc : {1ul, 2ul, 4ul})
+            for (size_t mem : {250ul, 1000ul})
                 nonparallelBenchmark(method, nProc, mem, 100);
 }
 
@@ -80,7 +79,7 @@ TEST(Benchmark, Parallel)
     initializeLogger();
 
     for (string const& method : {"scf", "force", "freq"})
-        for (size_t nProc : {1ul, 2ul, 3ul, 4ul})
+        for (size_t nProc : {1ul, 2ul, 4ul})
             for (size_t mem : {250ul, 1000ul})
                 parallelBenchmark(method, nProc, mem, 100);
 }

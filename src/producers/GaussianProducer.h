@@ -18,8 +18,8 @@ public:
     { }
 
 private:
-    std::thread::id mThreadId;
-    size_t mThreadHash;
+    std::thread::id const mThreadId;
+    size_t const mThreadHash;
 };
 
 class GaussianProducer : public FunctionProducer {

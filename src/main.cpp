@@ -422,8 +422,8 @@ bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vec
             auto hess = get<2>(valueGradHess);
 
             auto sValues = singularValues(hess);
-            for (size_t i = 0; i < sValues.size(); i++)
-                if (sValues(i) < 0) {
+            for (size_t j = 0; j < sValues.size(); j++)
+                if (sValues(j) < 0) {
                     return false;
                 }
 
@@ -431,7 +431,7 @@ bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vec
             p = polar.getInnerFunction().transform(polar.transform(theta - hess.inverse() * grad));
             newPath.push_back(p);
 
-            if (stopStrategy(globalIter + i, p, value, grad, p - lastP)) {
+            if (stopStrategy(globalIter + i, p, value, grad, hess, p - lastP)) {
                 converged = true;
                 break;
             }
@@ -619,70 +619,6 @@ vector<vect> filterBySingularValues(vector<vect> const& vs, FuncT& func)
     return result;
 }
 
-void shs()
-{
-    ifstream input("./C2H4");
-    auto charges = readCharges(input);
-    auto equilStruct = readVect(input);
-
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
-    equilStruct = molecule.backTransform(equilStruct);
-    auto normalized = normalizeForPolar(molecule, equilStruct);
-
-    logFunctionInfo("normalized energy for equil structure", normalized, makeConstantVect(normalized.nDims, 0));
-
-    ifstream minsOnSphere("./mins_on_sphere");
-    size_t cnt;
-    minsOnSphere >> cnt;
-    vector<vect> vs;
-    for (size_t i = 0; i < cnt; i++)
-        vs.push_back(readVect(minsOnSphere));
-
-    double const firstR = 0.1;
-    double const deltaR = 0.01;
-
-    auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-4, 5e-4));
-
-#pragma omp parallel for
-    for (size_t i = 0; i < cnt; i++) {
-        auto direction = vs[i];
-        LOG_INFO("Path #{}. Initial direction: {}", i, direction.transpose());
-
-        system(str(boost::format("mkdir %1%") % i).c_str());
-        double value = normalized(direction);
-
-        for (size_t j = 0; j < 600; j++) {
-            double r = firstR + deltaR * j;
-
-            vect prev = direction;
-            direction = direction / direction.norm() * r;
-            try {
-                vector<vect> path;
-                if (!tryToConverge(stopStrategy, normalized, direction, r, path)) {
-                    break;
-                }
-                direction = path.back();
-
-                double newValue = normalized(direction);
-                LOG_INFO("New {} point in path {}:\n\tvalue = {:.13f}\n\tdelta norm = {:.13f}\n\t{}\nchemcraft coords:\n{}", j, i,
-                         newValue, (direction / direction.norm() - prev / prev.norm()).norm(), direction.transpose(),
-                         toChemcraftCoords(charges, normalized.fullTransform(direction)));
-
-                ofstream output(str(boost::format("./%1%/%2%.xyz") % i % j));
-                output << toChemcraftCoords(charges, normalized.fullTransform(direction)) << endl;
-
-                if (newValue < value) {
-                    LOG_ERROR("newValue < value [{:.13f} < {:.13f}]. Stopping", newValue, value);
-                    //break;
-                }
-
-                value = newValue;
-            } catch (GaussianException const &exc) {
-                break;
-            }
-        }
-    }
-}
 
 void analizeMinsOnSphere()
 {
@@ -728,11 +664,8 @@ void analizeMinsOnSphere()
     }
 }
 
-int main()
+void benchmarkOptimizators()
 {
-    initializeLogger();
-
-
     ifstream input("./C2H4");
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
@@ -746,7 +679,7 @@ int main()
 
     double const r = .1;
 
-    #pragma omp parallel
+#pragma omp parallel
     while (true) {
         vect pos = randomVectOnSphere(normalized.nDims, r);
 
@@ -765,7 +698,7 @@ int main()
             framework.plot(axis, xs, ys);
         };
 
-        #pragma omp critical
+#pragma omp critical
         {
             drawPath(path1);
             drawPath(path2);
@@ -773,6 +706,88 @@ int main()
             LOG_INFO("path lengths: {} vs {} vs {}", path1.size(), path2.size(), path3.size());
         }
     }
+
+}
+
+void shs()
+{
+    ifstream input("./C2H4");
+    auto charges = readCharges(input);
+    auto equilStruct = readVect(input);
+
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
+    equilStruct = molecule.backTransform(equilStruct);
+    auto normalized = normalizeForPolar(molecule, equilStruct);
+
+    logFunctionInfo("normalized energy for equil structure", normalized, makeConstantVect(normalized.nDims, 0));
+
+    ifstream minsOnSphere("./mins_on_sphere_filtered");
+    size_t cnt;
+    minsOnSphere >> cnt;
+    vector<vect> vs;
+    for (size_t i = 0; i < cnt; i++)
+        vs.push_back(readVect(minsOnSphere));
+
+    double const firstR = 0.1;
+    double const deltaR = 0.01;
+
+    auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-4, 5e-4));
+
+#pragma omp parallel for
+    for (size_t i = 0; i < cnt; i++) {
+        auto direction = vs[i];
+        LOG_INFO("Path #{}. Initial direction: {}", i, direction.transpose());
+
+        system(str(boost::format("mkdir %1%") % i).c_str());
+        double value = normalized(direction);
+
+        size_t j = 0;
+        for (j = 0; j < 600; j++) {
+            if (!j) {
+                auto polar = makePolarWithDirection(normalized, .1, direction);
+                logFunctionInfo(str(boost::format("Paht %1% initial direction info") % i), polar, makeConstantVect(polar.nDims, M_PI / 2));
+            }
+
+            double r = firstR + deltaR * j;
+
+            vect prev = direction;
+            direction = direction / direction.norm() * r;
+            try {
+                vector<vect> path;
+                if (!tryToConverge(stopStrategy, normalized, direction, r, path)) {
+                    LOG_INFO("Path #{}. did not conveged", i);
+                    break;
+                }
+                direction = path.back();
+
+                double newValue = normalized(direction);
+                LOG_INFO("New {} point in path {}:\n\tvalue = {:.13f}\n\tdelta norm = {:.13f}\n\t{}\nchemcraft coords:\n{}", j, i,
+                         newValue, (direction / direction.norm() - prev / prev.norm()).norm(), direction.transpose(),
+                         toChemcraftCoords(charges, normalized.fullTransform(direction)));
+
+                ofstream output(str(boost::format("./%1%/%2%.xyz") % i % j));
+                output << toChemcraftCoords(charges, normalized.fullTransform(direction)) << endl;
+
+                if (newValue < value) {
+                    LOG_ERROR("newValue < value [{:.13f} < {:.13f}]. Stopping", newValue, value);
+                    //break;
+                }
+
+                value = newValue;
+            } catch (GaussianException const &exc) {
+                break;
+            }
+        }
+
+        LOG_INFO("Path #{} finished with {} iterations", i, j);
+    }
+}
+
+int main()
+{
+    initializeLogger();
+
+    shs();
 
 //    auto startTime = chrono::system_clock::now();
 //    auto result = findInitialPolarDirections(normalized, 0.1);
