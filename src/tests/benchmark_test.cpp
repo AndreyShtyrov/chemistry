@@ -84,3 +84,15 @@ TEST(Benchmark, Parallel)
                 parallelBenchmark(method, nProc, mem, 100);
 }
 
+TEST(Benchmark, ScfParallel)
+{
+    initializeLogger();
+    parallelBenchmark("scf", 1, 1000, 100);
+}
+
+TEST(Benchmark, ScfNonParallel)
+{
+    initializeLogger();
+    parallelBenchmark("scf", 1, 1000, 100);
+}
+
