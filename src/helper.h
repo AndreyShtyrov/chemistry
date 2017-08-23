@@ -29,7 +29,7 @@ using namespace std;
 extern shared_ptr<spdlog::logger> logger;
 void initializeLogger();
 
-extern mt19937 randomGen;
+extern thread_local mt19937 randomGen;
 
 using matrix = Eigen::MatrixXd;
 

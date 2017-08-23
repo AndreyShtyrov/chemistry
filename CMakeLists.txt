@@ -35,6 +35,7 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdparty/spdlog/include)
 
 include_directories(${SOURCE_DIR})
 include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(${CMAKE_BINARY_DIR}/googletest-src/googletest/include)
 
 #include_directories(${SRC)
 SET(SOURCE_FILES
@@ -47,8 +48,13 @@ SET(SOURCE_FILES
         src/producers/GaussianProducer.cpp
         )
 
+SET(TEST_SOURCE_FILES
+        src/tests/tests.cpp
+        src/tests/benchmark_test.cpp
+        )
+
 add_executable(chemistry ${SOURCE_DIR}/main.cpp ${SOURCE_FILES})
 target_link_libraries(chemistry ${Boost_LIBRARIES})
 
-add_executable(run_tests ${SOURCE_DIR}/tests.cpp ${SOURCE_FILES})
+add_executable(run_tests ${TEST_SOURCE_FILES} ${SOURCE_FILES})
 target_link_libraries(run_tests gtest_main )

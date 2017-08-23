@@ -215,6 +215,8 @@ TEST(FunctionProducer, Stack3)
 
 TEST(FixValues, rotateToFix)
 {
+    initializeLogger();
+
     for (size_t i = 0; i < 100; i++) {
         vect v(9);
         for (size_t i = 0; i < (size_t) v.rows(); i++)
@@ -226,4 +228,3 @@ TEST(FixValues, rotateToFix)
                 ASSERT_LE(abs(v(0)), 1e-7) << "vector components error";
     }
 }
-
