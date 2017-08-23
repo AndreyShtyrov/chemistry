@@ -76,12 +76,12 @@ TEST(Benchmark, Parallel)
 TEST(Benchmark, ScfParallel)
 {
     initializeLogger();
-    runBenchmark("scf", 1, 1000, 100, true);
+    runBenchmark("scf", 1, 1000, 1000, true);
 }
 
 TEST(Benchmark, ScfNonParallel)
 {
     initializeLogger();
-    runBenchmark("scf", 1, 1000, 100, false);
+    runBenchmark("scf", 1, 1000, 1000, false);
 }
 
