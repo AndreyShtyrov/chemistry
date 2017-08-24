@@ -16,9 +16,10 @@ using namespace optimization;
 template<typename FuncT>
 void logFunctionInfo(string const& title, FuncT& func, vect const& p)
 {
-    auto hess = func.hess(p);
-    auto grad = func.grad(p);
-    auto value = func(p);
+    auto valueGradHess = func.valueGradHess(p);
+    auto value = get<0>(valueGradHess);
+    auto grad = get<1>(valueGradHess);
+    auto hess = get<2>(valueGradHess);
 
     LOG_INFO("{}\n\tposition: {}\n\tenergy: {}\n\tgradient: {} [{}]\n\thessian: {}\n\n",
              title, p.transpose(), value, grad.norm(), grad.transpose(), singularValues(hess));
@@ -34,7 +35,7 @@ void findInitialPolarDirections(FuncT& func, double r)
     ofstream output("./mins_on_sphere");
     output.precision(30);
 
-    #pragma omp parallel
+//    #pragma omp parallel
     while (true) {
         vect pos = randomVectOnSphere(func.nDims, r);
 
@@ -42,7 +43,7 @@ void findInitialPolarDirections(FuncT& func, double r)
         if (path.empty())
             continue;
 
-        #pragma omp critical
+//        #pragma omp critical
         {
             vect p = path.back();
             output << p.size() << endl << fixed << p << endl;
@@ -69,7 +70,7 @@ TEST(EntryPoint, InitialPolarDirectionsSearch)
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
 

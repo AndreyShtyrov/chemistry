@@ -360,52 +360,6 @@ void drawTrajectories()
     }
 }
 
-
-
-template<typename FuncT>
-void findInitialPolarDirections(FuncT& func, double r)
-{
-    auto axis = framework.newPlot();
-    RandomProjection const projection(func.getFullInnerFunction().nDims);
-    StopStrategy const stopStrategy(1e-4, 1e-4);
-
-    ofstream output("./mins_on_sphere");
-    output.precision(30);
-
-    #pragma omp parallel
-    while (true) {
-        try {
-            vect pos = randomVectOnSphere(func.nDims, r);
-
-            auto path = optimizeOnSphere3(stopStrategy, func, pos, r, 50);
-            if (path.empty())
-                continue;
-
-            #pragma omp critical
-            {
-                vect p = path.back();
-                output << p.size() << endl << fixed << p << endl;
-
-                vector<double> xs, ys;
-                for (auto const& p : path) {
-                    vect t = func.fullTransform(p);
-                    vect proj = projection(t);
-                    xs.push_back(proj(0));
-                    ys.push_back(proj(1));
-                }
-
-                framework.plot(axis, xs, ys);
-                framework.scatter(axis, xs, ys);
-
-                LOG_INFO("initial polar Direction: {}", path.back().transpose());
-            }
-        } catch (GaussianException const& exc) {
-//            throw exc;
-            LOG_ERROR("exception: {}", exc.what());
-        }
-    }
-}
-
 template<typename FuncT>
 void logFunctionInfo(string const& title, FuncT& func, vect const& p)
 {
@@ -573,6 +527,46 @@ void shs()
     }
 }
 
+
+template<typename FuncT>
+void findInitialPolarDirections(FuncT& func, double r)
+{
+    auto const axis = framework.newPlot();
+    RandomProjection const projection(func.nDims);
+    StopStrategy const stopStrategy(1e-7, 1e-7);
+
+    ofstream output("./mins_on_sphere");
+    output.precision(30);
+
+//    #pragma omp parallel
+    while (true) {
+        vect pos = randomVectOnSphere(func.nDims, r);
+
+        auto path = optimizeOnSphere(stopStrategy, func, pos, r, 50);
+        if (path.empty())
+            continue;
+
+//        #pragma omp critical
+        {
+            vect p = path.back();
+            output << p.size() << endl << fixed << p << endl;
+
+            vector<double> xs, ys;
+            for (auto const& p : path) {
+                vect proj = projection(p);
+                xs.push_back(proj(0));
+                ys.push_back(proj(1));
+            }
+
+            framework.plot(axis, xs, ys);
+            framework.scatter(axis, xs, ys);
+
+            auto polar = makePolarWithDirection(func, r, path.back());
+            logFunctionInfo("new initial polar direction", polar, makeConstantVect(polar.nDims, M_PI / 2));
+        }
+    }
+}
+
 int main()
 {
     initializeLogger();
@@ -581,49 +575,59 @@ int main()
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
 
-    ifstream mins("./mins_on_sphere_filtered");
-    size_t cnt;
-    mins >> cnt;
-    vector<vect> vs;
-    for (size_t i = 0; i < cnt; i++)
-        vs.push_back(readVect(mins));
+    findInitialPolarDirections(normalized, .1);
 
-    auto p = vs[8];
-
-    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4, 1e-4));
-    double const r = .1;
-    auto const theta = makeConstantVect(normalized.nDims - 1, M_PI / 2);
-
-    vect momentum;
-    vector<vect> path;
-
-    for (size_t iter = 0; ; iter++) {
-        if (iter % 50 == 0 && tryToConverge(stopStrategy, normalized, p, r, path, iter)) {
-            LOG_ERROR("breaked here");
-            break;
-        }
-
-        auto polar = makePolarWithDirection(normalized, r, p);
-
-        auto valueGrad = polar.valueGrad(theta);
-        auto value = get<0>(valueGrad);
-        auto grad = get<1>(valueGrad);
-
-        if (iter)
-            momentum = max(0., momentum.dot(grad) / (grad.norm() * momentum.norm())) * momentum + grad;
-        else
-            momentum = grad;
-
-        auto lastP = p;
-        p = polar.getInnerFunction().transform(polar.transform(theta - momentum));
-        path.push_back(p);
-
-        stopStrategy(iter, p, value, grad, momentum);
-    }
+//    ifstream input("./C2H4");
+//    auto charges = readCharges(input);
+//    auto equilStruct = readVect(input);
+//
+//    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
+//    equilStruct = molecule.backTransform(equilStruct);
+//    auto normalized = normalizeForPolar(molecule, equilStruct);
+//
+//    ifstream mins("./mins_on_sphere_filtered");
+//    size_t cnt;
+//    mins >> cnt;
+//    vector<vect> vs;
+//    for (size_t i = 0; i < cnt; i++)
+//        vs.push_back(readVect(mins));
+//
+//    auto p = vs[8];
+//
+//    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4, 1e-4));
+//    double const r = .1;
+//    auto const theta = makeConstantVect(normalized.nDims - 1, M_PI / 2);
+//
+//    vect momentum;
+//    vector<vect> path;
+//
+//    for (size_t iter = 0; ; iter++) {
+//        if (iter % 50 == 0 && tryToConverge(stopStrategy, normalized, p, r, path, iter)) {
+//            LOG_ERROR("breaked here");
+//            break;
+//        }
+//
+//        auto polar = makePolarWithDirection(normalized, r, p);
+//
+//        auto valueGrad = polar.valueGrad(theta);
+//        auto value = get<0>(valueGrad);
+//        auto grad = get<1>(valueGrad);
+//
+//        if (iter)
+//            momentum = max(0., momentum.dot(grad) / (grad.norm() * momentum.norm())) * momentum + grad;
+//        else
+//            momentum = grad;
+//
+//        auto lastP = p;
+//        p = polar.getInnerFunction().transform(polar.transform(theta - momentum));
+//        path.push_back(p);
+//
+//        stopStrategy(iter, p, value, grad, momentum);
+//    }
 
 //    shs();
 
