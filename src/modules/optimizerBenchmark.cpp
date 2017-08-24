@@ -19,7 +19,7 @@ TEST(Benchmark, OptimizatorsOnSphere)
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 4));
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
 
@@ -28,7 +28,7 @@ TEST(Benchmark, OptimizatorsOnSphere)
 
     double const r = .1;
 
-#pragma omp parallel
+//#pragma omp parallel
     while (true) {
         vect pos = randomVectOnSphere(normalized.nDims, r);
 
