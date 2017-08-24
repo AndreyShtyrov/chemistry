@@ -28,7 +28,7 @@ TEST(Benchmark, OptimizatorsOnSphere)
 
     double const r = .1;
 
-//#pragma omp parallel
+#pragma omp parallel
     while (true) {
         vect pos = randomVectOnSphere(normalized.nDims, r);
 

@@ -1,8 +1,11 @@
 #include "GaussianProducer.h"
 
-string const GAUSSIAN_HEADER =
-   "%%chk=%1%.chk\n"
-   "%%RWF=%1%\n"
+string const GAUSSIAN_HEADER = "%%RWF=%1%rwf\n"
+   "%%Int=%1%int\n"
+   "%%D2E=%1%d2e\n"
+   "%%Scr=%1%skr\n"
+   "%%NoSave\n"
+   "%%chk=%1%chk\n"
    "%%nproc=%3%\n"
    "%%mem=%4%mb\n"
    "# B3lyp/3-21g nosym %2%\n"
@@ -66,15 +69,15 @@ ifstream GaussianProducer::runGaussian(vect const& x, string const& method)
 {
     auto fileMask = createInputFile(x, method);
 
-    if (system(boost::str(boost::format("mg09D %1%.in %1%.out > /dev/null") % fileMask).c_str())) {
+    if (system(boost::str(boost::format("GAUSS_SCRDIR=%1% mg09D %1%input %1%output > /dev/null") % fileMask).c_str())) {
         throw GaussianException(this_thread::get_id());
     }
 
-    if (system(boost::str(boost::format("formchk %1%.chk > /dev/null") % fileMask).c_str())) {
+    if (system(boost::str(boost::format("formchk %1%chk.chk > /dev/null") % fileMask).c_str())) {
         throw GaussianException(this_thread::get_id());
     }
 
-    return ifstream(fileMask + ".fchk");
+    return ifstream(fileMask + "chk.fchk");
 }
 
 vector<size_t> const& GaussianProducer::getCharges() const
@@ -99,9 +102,11 @@ GaussianProducer const& GaussianProducer::getFullInnerFunction() const
 
 string GaussianProducer::createInputFile(vect const& x, string const& method)
 {
-    string fileMask = boost::str(boost::format("./tmp/tmp%1%") % std::hash<std::thread::id>()(this_thread::get_id()));
+    string fileMask = boost::str(boost::format("./tmp/%1%/") % std::hash<std::thread::id>()(this_thread::get_id()));
 
-    ofstream f(fileMask + ".in");
+    system(("mkdir -p " + fileMask).c_str());
+
+    ofstream f(fileMask + "input");
     f.precision(30);
     f << boost::format(GAUSSIAN_HEADER) % fileMask % method % mNProc % mMem << endl;
 
