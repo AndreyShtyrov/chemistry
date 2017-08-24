@@ -35,7 +35,7 @@ void findInitialPolarDirections(FuncT& func, double r)
     ofstream output("./mins_on_sphere");
     output.precision(30);
 
-//    #pragma omp parallel
+    #pragma omp parallel
     while (true) {
         vect pos = randomVectOnSphere(func.nDims, r);
 
@@ -43,7 +43,7 @@ void findInitialPolarDirections(FuncT& func, double r)
         if (path.empty())
             continue;
 
-//        #pragma omp critical
+        #pragma omp critical
         {
             vect p = path.back();
             output << p.size() << endl << fixed << p << endl;
@@ -70,7 +70,7 @@ TEST(EntryPoint, InitialPolarDirectionsSearch)
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
 
