@@ -79,3 +79,5 @@ TEST(EntryPoint, InitialPolarDirectionsSearch)
     findInitialPolarDirections(normalized, .1);
 }
 
+
+
