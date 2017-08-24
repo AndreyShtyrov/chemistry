@@ -66,6 +66,8 @@ void findInitialPolarDirections(FuncT& func, double r)
 
 TEST(EntryPoint, InitialPolarDirectionsSearch)
 {
+    initializeLogger();
+
     ifstream input("./C2H4");
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
