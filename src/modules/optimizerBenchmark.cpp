@@ -19,7 +19,7 @@ TEST(Benchmark, OptimizatorsOnSphere)
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 4));
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
 
