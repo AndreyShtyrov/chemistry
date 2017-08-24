@@ -58,7 +58,7 @@ void findInitialPolarDirections(FuncT& func, double r)
             framework.scatter(axis, xs, ys);
 
             auto polar = makePolarWithDirection(func, r, path.back());
-            logFunctionInfo("new initial polar direction", polar, path.back());
+            logFunctionInfo("new initial polar direction", polar, makeConstantVect(polar.nDims, M_PI / 2));
         }
     }
 }
