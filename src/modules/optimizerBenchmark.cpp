@@ -13,6 +13,8 @@
 
 TEST(Benchmark, OptimizatorsOnSphere)
 {
+    initializeLogger();
+
     ifstream input("./C2H4");
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
