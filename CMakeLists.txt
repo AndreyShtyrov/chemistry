@@ -50,11 +50,11 @@ SET(SOURCE_FILES
 
 SET(TEST_SOURCE_FILES
         src/tests/tests.cpp
-        src/tests/benchmark_test.cpp
         )
 
 SET(MODULES_SOURCE_FILES
-        src/moodules/optimizerBenchmark.cpp
+        src/modules/optimizerBenchmark.cpp
+        src/modules/benchmarkTest.cpp
         )
 
 

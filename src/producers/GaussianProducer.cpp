@@ -1,23 +1,25 @@
 #include "GaussianProducer.h"
 
-string const GAUSSIAN_HEADER = "%%chk=%1%.chk\n"
-        "%%nproc=%3%\n"
-        "%%mem=%4%mb\n"
-        "# B3lyp/3-21g nosym %2%\n"
-        "\n"
-        "\n"
-        "0 1";
+string const GAUSSIAN_HEADER =
+   "%%chk=%1%.chk\n"
+   "%%RWF=%1%\n"
+   "%%nproc=%3%\n"
+   "%%mem=%4%mb\n"
+   "# B3lyp/3-21g nosym %2%\n"
+   "\n"
+   "\n"
+   "0 1";
 
 string const SCF_METHOD = "scf";
 string const FORCE_METHOD = "force";
 string const HESS_METHOD = "freq";
 
 
-GaussianProducer::GaussianProducer(vector<size_t> charges, size_t nProc, size_t mem) :
-    FunctionProducer(charges.size() * 3), mCharges(move(charges)), mNProc(nProc), mMem(mem)
-{ }
+GaussianProducer::GaussianProducer(vector<size_t> charges, size_t nProc, size_t mem) : FunctionProducer(
+   charges.size() * 3), mCharges(move(charges)), mNProc(nProc), mMem(mem)
+{}
 
-double GaussianProducer::operator()(vect const &x)
+double GaussianProducer::operator()(vect const& x)
 {
     assert((size_t) x.rows() == nDims);
 
@@ -25,7 +27,7 @@ double GaussianProducer::operator()(vect const &x)
     return parseValue(result);
 }
 
-tuple<double, vect> GaussianProducer::valueGrad(vect const &x)
+tuple<double, vect> GaussianProducer::valueGrad(vect const& x)
 {
     assert((size_t) x.rows() == nDims);
 
@@ -50,12 +52,12 @@ tuple<double, vect, matrix> GaussianProducer::valueGradHess(vect const& x)
     return make_tuple(value, grad, hess);
 }
 
-vect GaussianProducer::grad(vect const &x)
+vect GaussianProducer::grad(vect const& x)
 {
     return get<1>(valueGrad(x));
 }
 
-matrix GaussianProducer::hess(vect const &x)
+matrix GaussianProducer::hess(vect const& x)
 {
     return get<2>(valueGradHess(x));
 };
@@ -95,7 +97,7 @@ GaussianProducer const& GaussianProducer::getFullInnerFunction() const
     return *this;
 }
 
-string GaussianProducer::createInputFile(vect const &x, string const& method)
+string GaussianProducer::createInputFile(vect const& x, string const& method)
 {
     string fileMask = boost::str(boost::format("./tmp/tmp%1%") % std::hash<std::thread::id>()(this_thread::get_id()));
 
@@ -114,7 +116,7 @@ string GaussianProducer::createInputFile(vect const &x, string const& method)
     return fileMask;
 }
 
-double GaussianProducer::parseValue(ifstream &input)
+double GaussianProducer::parseValue(ifstream& input)
 {
     string s;
     while (!boost::starts_with(s, "Total Energy"))
@@ -128,7 +130,7 @@ double GaussianProducer::parseValue(ifstream &input)
     return value;
 }
 
-vect GaussianProducer::parseGrad(ifstream &input)
+vect GaussianProducer::parseGrad(ifstream& input)
 {
     string s;
     while (!boost::starts_with(s, "Cartesian Gradient"))
@@ -143,7 +145,7 @@ vect GaussianProducer::parseGrad(ifstream &input)
     return grad;
 }
 
-matrix GaussianProducer::parseHess(ifstream &input)
+matrix GaussianProducer::parseHess(ifstream& input)
 {
     string s;
     while (!boost::starts_with(s, "Cartesian Force Constants"))
