@@ -53,8 +53,17 @@ SET(TEST_SOURCE_FILES
         src/tests/benchmark_test.cpp
         )
 
+SET(MODULES_SOURCE_FILES
+        src/moodules/optimizerBenchmark.cpp
+        )
+
+
+
 add_executable(chemistry ${SOURCE_DIR}/main.cpp ${SOURCE_FILES})
 target_link_libraries(chemistry ${Boost_LIBRARIES})
 
 add_executable(run_tests ${TEST_SOURCE_FILES} ${SOURCE_FILES})
 target_link_libraries(run_tests gtest_main )
+
+add_executable(modules ${MODULES_SOURCE_FILES} ${SOURCE_FILES})
+target_link_libraries(modules gtest_main)
