@@ -32,9 +32,9 @@ TEST(Benchmark, OptimizatorsOnSphere)
     while (true) {
         vect pos = randomVectOnSphere(normalized.nDims, r);
 
-        auto path1 = optimizeOnSphere3(stopStrategy, normalized, pos, r, 50000000);
-        auto path2 = optimizeOnSphere4(stopStrategy, normalized, pos, r, 50000000);
-        auto path3 = optimizeOnSphere(stopStrategy, normalized, pos, r, 500000000);
+        auto path1 = optimizeOnSphere(stopStrategy, normalized, pos, r, 50000000);
+        auto path2 = optimizeOnSphere2(stopStrategy, normalized, pos, r, 50000000);
+        auto path3 = optimizeOnSphere_old(stopStrategy, normalized, pos, r, 500000000);
 
         auto axis = framework.newPlot();
         auto drawPath = [&](vector<vect> const& path) {

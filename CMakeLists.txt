@@ -55,6 +55,7 @@ SET(TEST_SOURCE_FILES
 SET(MODULES_SOURCE_FILES
         src/modules/optimizerBenchmark.cpp
         src/modules/benchmarkTest.cpp
+        src/modules/findInitialPolarDirections.cpp
         )
 
 

@@ -577,8 +577,55 @@ int main()
 {
     initializeLogger();
 
+    ifstream input("./C2H4");
+    auto charges = readCharges(input);
+    auto equilStruct = readVect(input);
+
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
+    equilStruct = molecule.backTransform(equilStruct);
+    auto normalized = normalizeForPolar(molecule, equilStruct);
+
+    ifstream mins("./mins_on_sphere_filtered");
+    size_t cnt;
+    mins >> cnt;
+    vector<vect> vs;
+    for (size_t i = 0; i < cnt; i++)
+        vs.push_back(readVect(mins));
+
+    auto p = vs[8];
+
+    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4, 1e-4));
+    double const r = .1;
+    auto const theta = makeConstantVect(normalized.nDims - 1, M_PI / 2);
+
+    vect momentum;
+    vector<vect> path;
+
+    for (size_t iter = 0; ; iter++) {
+        if (iter % 50 == 0 && tryToConverge(stopStrategy, normalized, p, r, path, iter)) {
+            LOG_ERROR("breaked here");
+            break;
+        }
+
+        auto polar = makePolarWithDirection(normalized, r, p);
+
+        auto valueGrad = polar.valueGrad(theta);
+        auto value = get<0>(valueGrad);
+        auto grad = get<1>(valueGrad);
+
+        if (iter)
+            momentum = max(0., momentum.dot(grad) / (grad.norm() * momentum.norm())) * momentum + grad;
+        else
+            momentum = grad;
+
+        auto lastP = p;
+        p = polar.getInnerFunction().transform(polar.transform(theta - momentum));
+        path.push_back(p);
+
+        stopStrategy(iter, p, value, grad, momentum);
+    }
+
 //    shs();
-    benchmarkOptimizators();
 
 //    auto startTime = chrono::system_clock::now();
 //    auto result = findInitialPolarDirections(normalized, 0.1);
