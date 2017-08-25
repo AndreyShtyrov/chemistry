@@ -59,8 +59,7 @@ SET(MODULES_SOURCE_FILES
         )
 
 
-
-add_executable(chemistry ${SOURCE_DIR}/main.cpp ${SOURCE_FILES})
+add_executable(chemistry src/main.cpp ${SOURCE_FILES})
 target_link_libraries(chemistry ${Boost_LIBRARIES})
 
 add_executable(run_tests ${TEST_SOURCE_FILES} ${SOURCE_FILES})

@@ -36,9 +36,7 @@ namespace optimization {
         }
 
         QuasiNewtonDeltaStrategy(matrix hess) : mB(move(hess))
-        {
-            out.precision(15);
-        }
+        { }
 
         matrix makeGood(matrix const& m)
         {

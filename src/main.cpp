@@ -1,7 +1,5 @@
 #include "helper.h"
 
-ofstream out;
-
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <Eigen/LU>
@@ -574,16 +572,6 @@ int main()
 {
     initializeLogger();
 
-    ifstream input("./C2H4");
-    auto charges = readCharges(input);
-    auto equilStruct = readVect(input);
-
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
-    equilStruct = molecule.backTransform(equilStruct);
-    auto normalized = normalizeForPolar(molecule, equilStruct);
-
-    findInitialPolarDirections(normalized, .1);
-
 //    ifstream input("./C2H4");
 //    auto charges = readCharges(input);
 //    auto equilStruct = readVect(input);
@@ -591,14 +579,30 @@ int main()
 //    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
 //    equilStruct = molecule.backTransform(equilStruct);
 //    auto normalized = normalizeForPolar(molecule, equilStruct);
+
+    ifstream mins("./mins_on_sphere");
+    size_t cnt;
+    mins >> cnt;
+    vector<vect> vs;
+    for (size_t i = 0; i < cnt; i++)
+        vs.push_back(readVect(mins));
+
+    LOG_INFO("{}", vs.size());
+    LOG_INFO("{}", filterByDistance(vs, 1e-9).size());
+
+//    StopStrategy const stopStrategy(1e-7, 1e-7);
+//    #pragma omp parallel for
+//    for (size_t i = 0; i < vs.size(); i++) {
+//        vector<vect> path;
+//        assert(tryToConverge(stopStrategy, normalized, vs[i], .1, path));
+//        vs[i] = path.back();
+//        LOG_INFO("{}: {} iters to converge");
+//    }
 //
-//    ifstream mins("./mins_on_sphere_filtered");
-//    size_t cnt;
-//    mins >> cnt;
-//    vector<vect> vs;
-//    for (size_t i = 0; i < cnt; i++)
-//        vs.push_back(readVect(mins));
-//
+//    vs = filterBySingularValues(vs, normalized);
+//    LOG_INFO("{}", vs.size());
+
+
 //    auto p = vs[8];
 //
 //    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4, 1e-4));
