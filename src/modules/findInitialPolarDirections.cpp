@@ -76,7 +76,7 @@ TEST(EntryPoint, InitialPolarDirectionsSearch)
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
 
-    findInitialPolarDirections(normalized, .1);
+    findInitialPolarDirections(normalized, .3);
 }
 
 

@@ -545,8 +545,6 @@ void findInitialPolarDirections(FuncT& func, double r)
         if (i % 2)
             pos *= -1;
 
-        LOG_INFO("trying direction {} [{}]", pos.transpose(), pos.norm());
-
         auto path = optimizeOnSphere(stopStrategy, func, pos, r, 50);
         if (path.empty())
             continue;
@@ -567,7 +565,7 @@ void findInitialPolarDirections(FuncT& func, double r)
             framework.scatter(axis, xs, ys);
 
             auto polar = makePolarWithDirection(func, r, path.back());
-            logFunctionInfo(str(format("new direction ({})") % path.back().transpose()), polar, makeConstantVect(polar.nDims, M_PI / 2));
+            logFunctionInfo(str(format("new direction (%1%)") % path.back().transpose()), polar, makeConstantVect(polar.nDims, M_PI / 2));
         }
     }
 }
