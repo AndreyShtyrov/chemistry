@@ -2,6 +2,8 @@
 
 #include "FunctionProducer.h"
 
+#include "Sum.h"
+
 #include "InPolar.h"
 #include "LagrangeMultiplier.h"
 #include "AffineTransformation.h"

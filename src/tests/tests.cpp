@@ -234,8 +234,29 @@ TEST(FunctionProducer, OnSphereCosineSupplement)
     size_t const nDims = 2;
 
     vect direction = makeRandomVect(nDims);
-    OnSphereCosineSupplement func(nDims, direction, 1.);
+    OnSphereCosineSupplement func(direction, 1.);
 
-    testGradient(func, makeConstantVect(nDims, 1), makeConstantVect(nDims, -1), 1000);
-    testHessian(func, makeConstantVect(nDims, 1), makeConstantVect(nDims, -1), 1000);
+    testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
+}
+
+TEST(FunctionProducer, OnSphereCosineSupplement2) {
+    initializeLogger();
+
+    ifstream mins("./mins_on_sphere_filtered");
+    size_t cnt;
+    mins >> cnt;
+
+    auto direction = readVect(mins);
+    ifstream input("./C2H4");
+    auto charges = readCharges(input);
+    auto equilStruct = readVect(input);
+
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
+    equilStruct = molecule.backTransform(equilStruct);
+    auto normalized = normalizeForPolar(molecule, equilStruct);
+    auto zeroEnergy = normalized(makeConstantVect(normalized.nDims, 0));
+
+    double const r = .1;
+    OnSphereCosineSupplement supplement(direction, (sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
+    testProducer(supplement, makeConstantVect(supplement.nDims, -1), makeConstantVect(supplement.nDims, 1), 1000);
 }

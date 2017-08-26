@@ -1,27 +1,27 @@
 #include "OnSphereCosineSupplement.h"
 
-OnSphereCosineSupplement::OnSphereCosineSupplement(size_t nDims, vect direction, double value)
-        : FunctionProducer(nDims), mDirection(move(direction)), mValue(value)
+OnSphereCosineSupplement::OnSphereCosineSupplement(vect direction, double value)
+        : FunctionProducer((size_t) direction.size()), mDirection(move(direction)), mValue(value)
 {
     mDirection.normalize();
 }
 
 double OnSphereCosineSupplement::operator()(vect const& x)
 {
-    double c = x.dot(mDirection);
+    double c = getCosine(x);
     return mValue * c * c * c;
 }
 
 vect OnSphereCosineSupplement::grad(vect const& x)
 {
-    double c = x.dot(mDirection);
-    return 3 * c * c * mDirection;
+    double c = getCosine(x);
+    return mValue * 3 * c * c * mDirection;
 }
 
 matrix OnSphereCosineSupplement::hess(vect const& x)
 {
-    double c = x.dot(mDirection);
-    return 6 * c * mDirection * mDirection.transpose();
+    double c = getCosine(x);
+    return mValue * 6 * c * mDirection * mDirection.transpose();
 }
 
 tuple<double, vect> OnSphereCosineSupplement::valueGrad(vect const& x)
@@ -35,7 +35,7 @@ tuple<double, vect, matrix> OnSphereCosineSupplement::valueGradHess(vect const& 
 };
 
 
-double OnSphereCosineSupplement::getCos(vect const& x) const
+double OnSphereCosineSupplement::getCosine(vect const& x) const
 {
-    return mDirection.dot(x / x.norm());
+    return max(0., mDirection.dot(x));
 }

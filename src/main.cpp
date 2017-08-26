@@ -369,6 +369,20 @@ void logFunctionInfo(string const& title, FuncT& func, vect const& p)
              title, p.transpose(), value, grad.norm(), grad.transpose(), singularValues(hess));
 }
 
+template<typename FuncT>
+void logFunctionPolarInfo(string const& title, FuncT& func, vect const& p, double r)
+{
+    auto polar = makePolarWithDirection(func, r, p);
+
+    auto valueGradHess = polar.valueGradHess(makeConstantVect(polar.nDims, M_PI / 2));
+    auto value = get<0>(valueGradHess);
+    auto grad = get<1>(valueGradHess);
+    auto hess = get<2>(valueGradHess);
+
+    LOG_INFO("{}\n\tposition: {}\n\tenergy: {}\n\tgradient: {} [{}]\n\thessian: {}\n\n",
+             title, p.transpose(), value, grad.norm(), grad.transpose(), singularValues(hess));
+}
+
 vector<vect> filterByDistance(vector<vect> const& vs, double r)
 {
     vector<vect> result;
@@ -580,90 +594,38 @@ int main()
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
-
     auto zeroEnergy = normalized(makeConstantVect(normalized.nDims, 0));
 
-    size_t N = 100;
+    auto const axis = framework.newPlot();
+    RandomProjection const projection(normalized.nDims);
+    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-7, 1e-7));
 
-    {
-        double const r = .2;
+    double const r = .1;
+    OnSphereCosineSupplement supplement(direction, (sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
+    auto func = normalized + supplement;
 
-        vector<double> vs1(N);
-        vector<double> vs2(N);
-        vector<double> vs3(N);
+    LOG_INFO("{}", direction.norm());
+    LOG_INFO("{} {} {} {}", zeroEnergy, normalized(direction), zeroEnergy + sqr(r) / 2, func(direction));
+    LOG_INFO("{}", supplement(direction));
 
-        #pragma omp parallel for
-        for (size_t i = 0; i < N; i++) {
-            auto value = normalized(randomVectOnSphere(normalized.nDims, r)) - zeroEnergy;
-//            LOG_INFO("{} {}", value, sqr(r) / 2);
-            vs1[i] = value / sqr(r);
-            vs2[i] = (value - sqr(r) / 2) / sqr(r);
-            vs3[i] = (value - sqr(r)) / sqr(r);
-        }
+    logFunctionPolarInfo("normalized", normalized, direction, r);
+    logFunctionPolarInfo("supplement", supplement, direction, r);
+    logFunctionPolarInfo("func", func, direction, r);
 
-        framework.createArray(vs1);
-        framework.createArray(vs2);
-        framework.createArray(vs3);
-    }
+    auto path = optimizeOnSphere(stopStrategy, func, randomVectOnSphere(func.nDims, r), r, 50);
 
-    LOG_INFO("first completed");
+    auto pos = path.back();
+    logFunctionPolarInfo("func", func, pos, r);
+    logFunctionPolarInfo("normalized", normalized, pos, r);
 
-    {
-        double const r = .1;
+    path = optimizeOnSphere(stopStrategy, normalized, pos, r, 50);
+    pos = path.back();
+    logFunctionPolarInfo("normalized after additional optimization", normalized, pos, r);
+    LOG_INFO("{} {}", (pos - direction).norm(), (pos / pos.norm()).dot(direction / direction.norm()));
 
-        vector<double> vs1(N);
-        vector<double> vs2(N);
-        vector<double> vs3(N);
-
-        #pragma omp parallel for
-        for (size_t i = 0; i < N; i++) {
-            auto value = normalized(randomVectOnSphere(normalized.nDims, r)) - zeroEnergy;
-
-            vs1[i] = value / sqr(r);
-            vs2[i] = (value - sqr(r) / 2) / sqr(r);
-            vs3[i] = (value - sqr(r)) / sqr(r);
-        }
-
-        framework.createArray(vs1);
-        framework.createArray(vs2);
-        framework.createArray(vs3);
-    }
-
-    LOG_INFO("second completed");
-
-    {
-        double const r = .05;
-
-        vector<double> vs1(N);
-        vector<double> vs2(N);
-        vector<double> vs3(N);
-
-        #pragma omp parallel for
-        for (size_t i = 0; i < N; i++) {
-            auto value = normalized(randomVectOnSphere(normalized.nDims, r)) - zeroEnergy;
-            vs1[i] = value / sqr(r);
-            vs2[i] = (value - sqr(r) / 2) / sqr(r);
-            vs3[i] = (value - sqr(r)) / sqr(r);
-        }
-
-        framework.createArray(vs1);
-        framework.createArray(vs2);
-        framework.createArray(vs3);
-    }
-
-    LOG_INFO("third completed");
-
-
-//    auto const axis = framework.newPlot();
-//    RandomProjection const projection(func.nDims);
-//    StopStrategy const stopStrategy(1e-7, 1e-7);
-
-//    ofstream output("./mins_on_sphere");
-//    output.precision(30);
-//
 //    for (size_t i = 0; i < 2 * func.nDims; i++)
 //    {
 //        vect pos = r * eye(func.nDims, i / 2);

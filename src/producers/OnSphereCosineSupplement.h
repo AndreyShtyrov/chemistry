@@ -7,7 +7,7 @@
 class OnSphereCosineSupplement : public FunctionProducer
 {
 public:
-    OnSphereCosineSupplement(size_t nDims, vect direction, double value);
+    OnSphereCosineSupplement(vect direction, double value);
 
     double operator()(vect const& x) override;
     vect grad(vect const& x) override;
@@ -16,7 +16,7 @@ public:
     tuple<double, vect, matrix> valueGradHess(vect const& x) override;
 
 private:
-    double getCos(vect const& x) const;
+    double getCosine(vect const& x) const;
 
     vect mDirection;
     double mValue;
