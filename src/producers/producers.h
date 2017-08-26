@@ -11,3 +11,4 @@
 #include "Constant.h"
 #include "ModelFunction.h"
 #include "GaussianProducer.h"
+#include "OnSphereCosineSupplement.h"

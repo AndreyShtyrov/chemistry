@@ -11,7 +11,7 @@ vect getRandomPoint(vect const& lowerBound, vect const& upperBound)
 }
 
 template<typename FuncT>
-void testGradient(FuncT& func, vect const& lowerBound, vect const& upperBound, size_t iters, double delta = 1e-4,
+void testGradient(FuncT& func, vect const& lowerBound, vect const& upperBound, size_t iters, double delta = 1e-5,
                   double eps = 1e-5)
 {
     size_t N = (size_t) lowerBound.rows();
@@ -227,4 +227,15 @@ TEST(FixValues, rotateToFix)
             if (i != 3 && i != 6 && i != 7)
                 ASSERT_LE(abs(v(0)), 1e-7) << "vector components error";
     }
+}
+
+TEST(FunctionProducer, OnSphereCosineSupplement)
+{
+    size_t const nDims = 2;
+
+    vect direction = makeRandomVect(nDims);
+    OnSphereCosineSupplement func(nDims, direction, 1.);
+
+    testGradient(func, makeConstantVect(nDims, 1), makeConstantVect(nDims, -1), 1000);
+    testHessian(func, makeConstantVect(nDims, 1), makeConstantVect(nDims, -1), 1000);
 }

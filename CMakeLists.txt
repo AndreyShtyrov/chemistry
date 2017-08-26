@@ -46,6 +46,7 @@ SET(SOURCE_FILES
         src/producers/FixValues.cpp
         src/producers/FunctionProducer.cpp
         src/producers/GaussianProducer.cpp
+        src/producers/OnSphereCosineSupplement.cpp
         )
 
 SET(TEST_SOURCE_FILES
@@ -59,8 +60,8 @@ SET(MODULES_SOURCE_FILES
         )
 
 
-add_executable(chemistry src/main.cpp ${SOURCE_FILES})
-target_link_libraries(chemistry ${Boost_LIBRARIES})
+add_executable(chemistry2 src/main.cpp ${SOURCE_FILES})
+target_link_libraries(chemistry2 ${Boost_LIBRARIES})
 
 add_executable(run_tests ${TEST_SOURCE_FILES} ${SOURCE_FILES})
 target_link_libraries(run_tests gtest_main )

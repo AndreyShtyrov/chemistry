@@ -525,7 +525,6 @@ void shs()
     }
 }
 
-
 template<typename FuncT>
 void findInitialPolarDirections(FuncT& func, double r)
 {
@@ -572,23 +571,127 @@ int main()
 {
     initializeLogger();
 
-//    ifstream input("./C2H4");
-//    auto charges = readCharges(input);
-//    auto equilStruct = readVect(input);
-//
-//    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
-//    equilStruct = molecule.backTransform(equilStruct);
-//    auto normalized = normalizeForPolar(molecule, equilStruct);
-
-    ifstream mins("./mins_on_sphere");
+    ifstream mins("./mins_on_sphere_filtered");
     size_t cnt;
     mins >> cnt;
-    vector<vect> vs;
-    for (size_t i = 0; i < cnt; i++)
-        vs.push_back(readVect(mins));
 
-    LOG_INFO("{}", vs.size());
-    LOG_INFO("{}", filterByDistance(vs, 1e-9).size());
+    auto direction = readVect(mins);
+    ifstream input("./C2H4");
+    auto charges = readCharges(input);
+    auto equilStruct = readVect(input);
+
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
+    equilStruct = molecule.backTransform(equilStruct);
+    auto normalized = normalizeForPolar(molecule, equilStruct);
+
+    auto zeroEnergy = normalized(makeConstantVect(normalized.nDims, 0));
+
+    size_t N = 100;
+
+    {
+        double const r = .2;
+
+        vector<double> vs1(N);
+        vector<double> vs2(N);
+        vector<double> vs3(N);
+
+        #pragma omp parallel for
+        for (size_t i = 0; i < N; i++) {
+            auto value = normalized(randomVectOnSphere(normalized.nDims, r)) - zeroEnergy;
+//            LOG_INFO("{} {}", value, sqr(r) / 2);
+            vs1[i] = value / sqr(r);
+            vs2[i] = (value - sqr(r) / 2) / sqr(r);
+            vs3[i] = (value - sqr(r)) / sqr(r);
+        }
+
+        framework.createArray(vs1);
+        framework.createArray(vs2);
+        framework.createArray(vs3);
+    }
+
+    LOG_INFO("first completed");
+
+    {
+        double const r = .1;
+
+        vector<double> vs1(N);
+        vector<double> vs2(N);
+        vector<double> vs3(N);
+
+        #pragma omp parallel for
+        for (size_t i = 0; i < N; i++) {
+            auto value = normalized(randomVectOnSphere(normalized.nDims, r)) - zeroEnergy;
+
+            vs1[i] = value / sqr(r);
+            vs2[i] = (value - sqr(r) / 2) / sqr(r);
+            vs3[i] = (value - sqr(r)) / sqr(r);
+        }
+
+        framework.createArray(vs1);
+        framework.createArray(vs2);
+        framework.createArray(vs3);
+    }
+
+    LOG_INFO("second completed");
+
+    {
+        double const r = .05;
+
+        vector<double> vs1(N);
+        vector<double> vs2(N);
+        vector<double> vs3(N);
+
+        #pragma omp parallel for
+        for (size_t i = 0; i < N; i++) {
+            auto value = normalized(randomVectOnSphere(normalized.nDims, r)) - zeroEnergy;
+            vs1[i] = value / sqr(r);
+            vs2[i] = (value - sqr(r) / 2) / sqr(r);
+            vs3[i] = (value - sqr(r)) / sqr(r);
+        }
+
+        framework.createArray(vs1);
+        framework.createArray(vs2);
+        framework.createArray(vs3);
+    }
+
+    LOG_INFO("third completed");
+
+
+//    auto const axis = framework.newPlot();
+//    RandomProjection const projection(func.nDims);
+//    StopStrategy const stopStrategy(1e-7, 1e-7);
+
+//    ofstream output("./mins_on_sphere");
+//    output.precision(30);
+//
+//    for (size_t i = 0; i < 2 * func.nDims; i++)
+//    {
+//        vect pos = r * eye(func.nDims, i / 2);
+//        if (i % 2)
+//            pos *= -1;
+//
+//        auto path = optimizeOnSphere(stopStrategy, func, pos, r, 50);
+//        if (path.empty())
+//            continue;
+//
+//        {
+//            vect p = path.back();
+//            output << p.size() << endl << fixed << p << endl;
+//
+//            vector<double> xs, ys;
+//            for (auto const& p : path) {
+//                vect proj = projection(p);
+//                xs.push_back(proj(0));
+//                ys.push_back(proj(1));
+//            }
+//
+//            framework.plot(axis, xs, ys);
+//            framework.scatter(axis, xs, ys);
+//
+//            auto polar = makePolarWithDirection(func, r, path.back());
+//            logFunctionInfo(str(format("new direction (%1%)") % path.back().transpose()), polar, makeConstantVect(polar.nDims, M_PI / 2));
+//        }
+//    }
 
 //    StopStrategy const stopStrategy(1e-7, 1e-7);
 //    #pragma omp parallel for
