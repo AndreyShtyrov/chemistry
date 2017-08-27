@@ -585,11 +585,6 @@ int main()
 {
     initializeLogger();
 
-    ifstream mins("./mins_on_sphere_filtered");
-    size_t cnt;
-    mins >> cnt;
-
-    auto direction = readVect(mins);
     ifstream input("./C2H4");
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
@@ -601,30 +596,46 @@ int main()
 
     auto const axis = framework.newPlot();
     RandomProjection const projection(normalized.nDims);
-    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-7, 1e-7));
+    auto stopStrategy = StopStrategy(1e-7, 1e-7);
 
     double const r = .1;
-    OnSphereCosineSupplement supplement(direction, (sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
-    auto func = normalized + supplement;
+    vector<double> values;
+    vector<vect> directions;
 
-    LOG_INFO("{}", direction.norm());
-    LOG_INFO("{} {} {} {}", zeroEnergy, normalized(direction), zeroEnergy + sqr(r) / 2, func(direction));
-    LOG_INFO("{}", supplement(direction));
+    while (true) {
+        Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
+        auto func = normalized + supplement;
 
-    logFunctionPolarInfo("normalized", normalized, direction, r);
-    logFunctionPolarInfo("supplement", supplement, direction, r);
-    logFunctionPolarInfo("func", func, direction, r);
+        auto path = optimizeOnSphere(stopStrategy, func, randomVectOnSphere(func.nDims, r), r, 50);
+        auto direction = path.back();
 
-    auto path = optimizeOnSphere(stopStrategy, func, randomVectOnSphere(func.nDims, r), r, 50);
+        logFunctionPolarInfo("func in new direction", func, direction, r);
+        logFunctionPolarInfo("normalized in new direction", normalized, direction, r);
 
-    auto pos = path.back();
-    logFunctionPolarInfo("func", func, pos, r);
-    logFunctionPolarInfo("normalized", normalized, pos, r);
+        auto supplePath = optimizeOnSphere(stopStrategy, normalized, direction, r, 50);
+        LOG_INFO("second optimization converged for {} steps", supplePath.size());
+        path.insert(path.end(), supplePath.begin(), supplePath.end());
+        direction = path.back();
 
-    path = optimizeOnSphere(stopStrategy, normalized, pos, r, 50);
-    pos = path.back();
-    logFunctionPolarInfo("normalized after additional optimization", normalized, pos, r);
-    LOG_INFO("{} {}", (pos - direction).norm(), (pos / pos.norm()).dot(direction / direction.norm()));
+        logFunctionPolarInfo("normalized after additional optimization", normalized, direction, r);
+
+        stringstream distances;
+        double minDist = 1;
+        for (auto prevDir : directions) {
+            minDist = min(minDist, (direction - prevDir).norm());
+            distances << boost::format("[%1% %2%]") % (direction - prevDir).norm() % (direction / direction.norm()).dot(prevDir / prevDir.norm());
+        }
+        LOG_INFO("Distances from previous directons [dist angle] : {}", distances.str());
+
+
+        if (minDist > .1) {
+            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
+            directions.push_back(direction);
+        }
+        else {
+            LOG_ERROR("min dist is too small: {}", minDist);
+        }
+    }
 
 //    for (size_t i = 0; i < 2 * func.nDims; i++)
 //    {

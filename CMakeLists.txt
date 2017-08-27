@@ -47,6 +47,7 @@ SET(SOURCE_FILES
         src/producers/FunctionProducer.cpp
         src/producers/GaussianProducer.cpp
         src/producers/OnSphereCosineSupplement.cpp
+        src/producers/Cosine3OnSphereInterpolation.cpp
         )
 
 SET(TEST_SOURCE_FILES

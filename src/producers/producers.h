@@ -14,3 +14,4 @@
 #include "ModelFunction.h"
 #include "GaussianProducer.h"
 #include "OnSphereCosineSupplement.h"
+#include "Cosine3OnSphereInterpolation.h"

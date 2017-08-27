@@ -74,7 +74,7 @@ void testCollected(FuncT func, vect lowerBound, vect upperBound, size_t iters, d
 }
 
 template<typename FuncT>
-void testProducer(FuncT func, vect lowerBound, vect upperBound, size_t iters, double delta = 1e-4, double eps = 1e-5)
+void testProducer(FuncT func, vect lowerBound, vect upperBound, size_t iters, double delta = 1e-5, double eps = 1e-4)
 {
     testGradient(func, lowerBound, upperBound, iters, delta, eps);
     testHessian(func, lowerBound, upperBound, iters, delta, eps);
@@ -260,3 +260,22 @@ TEST(FunctionProducer, OnSphereCosineSupplement2) {
     OnSphereCosineSupplement supplement(direction, (sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
     testProducer(supplement, makeConstantVect(supplement.nDims, -1), makeConstantVect(supplement.nDims, 1), 1000);
 }
+
+TEST(FunctionProducer, Cosine3OnSPhereInterpolation)
+{
+    size_t const nDims = 2;
+    size_t const N = 5;
+
+    vector<double> values;
+    vector<vect> directions;
+
+    uniform_real_distribution<double> random;
+    for (size_t i = 0; i < N; i++) {
+        values.push_back(random(randomGen));
+        directions.push_back(randomVectOnSphere(nDims));
+    }
+    Cosine3OnSPhereInterpolation func(directions, values);
+
+    testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
+}
+
