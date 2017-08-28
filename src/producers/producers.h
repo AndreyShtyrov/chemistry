@@ -15,3 +15,4 @@
 #include "GaussianProducer.h"
 #include "OnSphereCosineSupplement.h"
 #include "Cosine3OnSphereInterpolation.h"
+#include "ClosestCosine3OnSphere.h"

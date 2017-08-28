@@ -603,7 +603,8 @@ void minimaElimination()
     vector<vect> directions;
 
     while (true) {
-        Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
+//        Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
+        ClosestCosine3OnSphere supplement(normalized.nDims, values, directions);
         auto func = normalized + supplement;
 
         auto path = optimizeOnSphere(stopStrategy, func, randomVectOnSphere(func.nDims, r), r, 50);
@@ -629,8 +630,8 @@ void minimaElimination()
 
 
         if (minDist > .001) {
-//            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
-            values.push_back((sqr(r) / 2 - (func(direction) - zeroEnergy)) / r / r / r);
+            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
+//            values.push_back((sqr(r) / 2 - (func(direction) - zeroEnergy)) / r / r / r);
             directions.push_back(direction);
         }
         else {
