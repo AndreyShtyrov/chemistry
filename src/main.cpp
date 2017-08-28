@@ -596,9 +596,9 @@ void minimaElimination()
 
     auto const axis = framework.newPlot();
     RandomProjection const projection(normalized.nDims);
-    auto stopStrategy = StopStrategy(1e-7, 1e-7);
+    auto stopStrategy = StopStrategy(1e-8, 1e-8);
 
-    double const r = .1;
+    double const r = .01;
     vector<double> values;
     vector<vect> directions;
 
@@ -627,7 +627,6 @@ void minimaElimination()
             distances << boost::format("[%1% %2%]") % (direction - prevDir).norm() % (direction / direction.norm()).dot(prevDir / prevDir.norm());
         }
         LOG_INFO("Distances from previous directons [dist angle] : {}", distances.str());
-
 
         if (minDist > .001) {
             values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
@@ -659,7 +658,7 @@ int main()
     RandomProjection const projection(normalized.nDims);
     auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-7, 1e-7));
 
-    double const r = .1;
+    double const r = .01;
 
     auto path = optimizeOnSphere(stopStrategy, normalized, randomVectOnSphere(normalized.nDims, r), r, 50);
 //    for (size_t i = 0; i < 2 * func.nDims; i++)

@@ -78,7 +78,7 @@ namespace optimization
 
             auto valueGrad = polar.valueGrad(theta);
             auto value = get<0>(valueGrad);
-            vect grad = get<1>(valueGrad);
+            vect grad = get<1>(valueGrad) / r;
 
             if (iter) {
                 double was = momentum.norm();
@@ -198,7 +198,7 @@ namespace optimization
 
             auto valueGrad = polar.valueGrad(theta);
             auto value = get<0>(valueGrad);
-            auto grad = get<1>(valueGrad);
+            vect grad = get<1>(valueGrad);
 
             if (iter)
                 momentum = 0.5 * (1 + momentum.dot(grad) / (grad.norm() * momentum.norm())) * momentum + grad;
