@@ -581,7 +581,7 @@ void findInitialPolarDirections(FuncT& func, double r)
     }
 }
 
-int main()
+void minimaElimination()
 {
     initializeLogger();
 
@@ -628,15 +628,39 @@ int main()
         LOG_INFO("Distances from previous directons [dist angle] : {}", distances.str());
 
 
-        if (minDist > .1) {
-            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
+        if (minDist > .001) {
+//            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
+            values.push_back((sqr(r) / 2 - (func(direction) - zeroEnergy)) / r / r / r);
             directions.push_back(direction);
         }
         else {
             LOG_ERROR("min dist is too small: {}", minDist);
         }
     }
+}
 
+int main()
+{
+    initializeLogger();
+
+    minimaElimination();
+
+    ifstream input("./C2H4");
+    auto charges = readCharges(input);
+    auto equilStruct = readVect(input);
+
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
+    equilStruct = molecule.backTransform(equilStruct);
+    auto normalized = normalizeForPolar(molecule, equilStruct);
+    auto zeroEnergy = normalized(makeConstantVect(normalized.nDims, 0));
+
+    auto const axis = framework.newPlot();
+    RandomProjection const projection(normalized.nDims);
+    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-7, 1e-7));
+
+    double const r = .1;
+
+    auto path = optimizeOnSphere(stopStrategy, normalized, randomVectOnSphere(normalized.nDims, r), r, 50);
 //    for (size_t i = 0; i < 2 * func.nDims; i++)
 //    {
 //        vect pos = r * eye(func.nDims, i / 2);

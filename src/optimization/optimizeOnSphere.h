@@ -62,6 +62,13 @@ namespace optimization
         vector<vect> path;
         vect momentum;
 
+        vector<RandomProjection> projs;
+        vector<vector<double>> xss, yss;
+
+        for (size_t i = 0; i < 3; i++) {
+            projs.push_back(RandomProjection(func.nDims));
+        }
+
         for (size_t iter = 0; ; iter++) {
             if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, iter)) {
                 break;
@@ -71,10 +78,14 @@ namespace optimization
 
             auto valueGrad = polar.valueGrad(theta);
             auto value = get<0>(valueGrad);
-            auto grad = get<1>(valueGrad);
+            vect grad = get<1>(valueGrad);
 
-            if (iter)
+            if (iter) {
+                double was = momentum.norm();
+                double factor = max(0., momentum.dot(grad) / (grad.norm() * momentum.norm()));
                 momentum = max(0., momentum.dot(grad) / (grad.norm() * momentum.norm())) * momentum + grad;
+//                LOG_INFO("was: {}, factor: {}, now: {}", was, factor, momentum.norm());
+            }
             else
                 momentum = grad;
 
@@ -83,7 +94,38 @@ namespace optimization
             path.push_back(p);
 
             stopStrategy(iter, p, value, grad, momentum);
+
+            if (iter % 25 == 0) {
+                xss.clear();
+                yss.clear();
+
+                for (size_t i = 0; i < 3; i++) {
+                    vector<double> xs, ys;
+                    for (auto const& p : path) {
+                        auto projected = projs[i](p);
+                        xs.push_back(projected(0));
+                        ys.push_back(projected(1));
+                    }
+
+                    xss.push_back(xs);
+                    yss.push_back(ys);
+                }
+
+                framework = PythongraphicsFramework("func.out");
+
+                auto axis = framework.newPlot();
+                for (size_t i = 0; i < 3; i++)
+                    framework.plot(axis, xss[i], yss[i]);
+
+                axis = framework.newPlot();
+                for (size_t i = 0; i < 3; i++) {
+                    framework.plot(axis, xss[i], yss[i]);
+                    framework.scatter(axis, xss[i], yss[i]);
+                }
+            }
         }
+
+        LOG_INFO("converged for {} steps", path.size());
 
         return path;
     }
