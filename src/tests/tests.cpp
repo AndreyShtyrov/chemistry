@@ -298,6 +298,24 @@ TEST(FunctionProducer, ClosestCosine3OnSphere)
     testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
 }
 
+TEST(FunctionProducer, LargestCosine3OnSphere)
+{
+    size_t const nDims = 25;
+    size_t const N = 5;
+
+    vector<double> values;
+    vector<vect> directions;
+
+    uniform_real_distribution<double> random;
+    for (size_t i = 0; i < N; i++) {
+        values.push_back(random(randomGen));
+        directions.push_back(randomVectOnSphere(nDims));
+    }
+    LargestCosine3OnSphere func(nDims, values, directions);
+
+    testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
+}
+
 TEST(FunctionProducer, Calculations)
 {
     size_t const nDims = 10;

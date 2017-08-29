@@ -50,6 +50,7 @@ SET(SOURCE_FILES
         src/producers/OnSphereCosineSupplement.cpp
         src/producers/Cosine3OnSphereInterpolation.cpp
         src/producers/ClosestCosine3OnSphere.cpp
+        src/producers/LargestCosine3OnSphere.cpp
         src/producers/SqrNorm.cpp
         )
 
