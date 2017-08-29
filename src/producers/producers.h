@@ -3,6 +3,7 @@
 #include "FunctionProducer.h"
 
 #include "Sum.h"
+#include "MultipliedByConstant.h"
 
 #include "InPolar.h"
 #include "LagrangeMultiplier.h"

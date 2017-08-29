@@ -132,3 +132,18 @@ vect toDistanceSpace(vect v, bool sorted)
 
     return res;
 };
+
+vect normalized(vect const& v)
+{
+    return v / v.norm();
+}
+
+double distance(vect const& u, vect const& v)
+{
+    return (u - v).norm();
+}
+
+double angleCosine(vect const& u, vect const& v)
+{
+    return normalized(u).dot(normalized(v));
+}

@@ -594,47 +594,112 @@ void minimaElimination()
     auto normalized = normalizeForPolar(molecule, equilStruct);
     auto zeroEnergy = normalized(makeConstantVect(normalized.nDims, 0));
 
-    auto const axis = framework.newPlot();
-    RandomProjection const projection(normalized.nDims);
-    auto stopStrategy = StopStrategy(1e-8, 1e-8);
-
-    double const r = .01;
+    double const r = .05;
     vector<double> values;
     vector<vect> directions;
 
+    auto const axis = framework.newPlot();
+    RandomProjection const projection(normalized.nDims);
+    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4 * r, 1e-4 * r));
+
     while (true) {
-//        Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
-        ClosestCosine3OnSphere supplement(normalized.nDims, values, directions);
-        auto func = normalized + supplement;
+        for (size_t iter = 0; iter < normalized.nDims * 2; iter++) {
+            //        Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
+            ClosestCosine3OnSphere supplement(normalized.nDims, values, directions);
+            auto func = normalized + supplement;
 
-        auto path = optimizeOnSphere(stopStrategy, func, randomVectOnSphere(func.nDims, r), r, 50);
-        auto direction = path.back();
+            int sign = 2 * ((int) iter % 2) - 1;
+            vect startingDirection = r * sign * eye(normalized.nDims, iter / 2);
+            auto path = optimizeOnSphere(stopStrategy, func, startingDirection, r, 50);
+            auto direction = path.back();
 
-        logFunctionPolarInfo("func in new direction", func, direction, r);
-        logFunctionPolarInfo("normalized in new direction", normalized, direction, r);
+            logFunctionPolarInfo("func in new direction", func, direction, r);
+            logFunctionPolarInfo("normalized in new direction", normalized, direction, r);
 
-        auto supplePath = optimizeOnSphere(stopStrategy, normalized, direction, r, 50);
-        LOG_INFO("second optimization converged for {} steps", supplePath.size());
-        path.insert(path.end(), supplePath.begin(), supplePath.end());
-        direction = path.back();
+            stringstream distances;
+            double minAngle = 0;
+            for (auto const& prevDir : directions) {
+                minAngle = max(minAngle, angleCosine(direction, prevDir));
+                distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+            }
+            LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
+                      distances.str(), minAngle);
 
-        logFunctionPolarInfo("normalized after additional optimization", normalized, direction, r);
+            {
+                size_t const N = 10;
 
-        stringstream distances;
-        double minDist = 1;
-        for (auto prevDir : directions) {
-            minDist = min(minDist, (direction - prevDir).norm());
-            distances << boost::format("[%1% %2%]") % (direction - prevDir).norm() % (direction / direction.norm()).dot(prevDir / prevDir.norm());
-        }
-        LOG_INFO("Distances from previous directons [dist angle] : {}", distances.str());
+                auto directionMem = direction;
+                bool converged = true;
 
-        if (minDist > .001) {
-            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
-//            values.push_back((sqr(r) / 2 - (func(direction) - zeroEnergy)) / r / r / r);
-            directions.push_back(direction);
-        }
-        else {
-            LOG_ERROR("min dist is too small: {}", minDist);
+                for (size_t i = 0; i < N; i++) {
+                    double alpha = (double) (i + 1) / N;
+                    auto linearComb = alpha * normalized + (1 - alpha) * func;
+                    vector<vect> supplePath;
+
+                    if (tryToConverge(stopStrategy, linearComb, direction, r, supplePath, 3)) {
+                        direction = supplePath.back();
+                        LOG_ERROR("Experimental convergence step {}: cos(angle) = {} ",
+                                  i + 1, angleCosine(direction, directionMem));
+                    }
+                    else {
+                        converged = false;
+                        LOG_ERROR("Could not converted during experimental convergence");
+                        break;
+                    }
+                }
+
+                stringstream distances;
+                double minAngle = 0;
+                for (auto const& prevDir : directions) {
+                    minAngle = max(minAngle, angleCosine(direction, prevDir));
+                    distances
+                       << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+                }
+                LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
+                          distances.str(), minAngle);
+
+                LOG_ERROR("Experimental convergence result:cos(angle) = {}, distances from prevous:\n{}\nmin angle = {}",
+                          angleCosine(direction, directionMem), distances.str(), minAngle);
+
+                direction = directionMem;
+            }
+
+            bool needToAssert = false;
+
+            vector<vect> supplePath;
+            if (tryToConverge(stopStrategy, normalized, direction, r, supplePath, 10)) {
+                LOG_ERROR("second optimization converged for {} steps", supplePath.size());
+            } else {
+                LOG_ERROR("second optimization did not converged with hessian update. Tryin standard optimization");
+                supplePath = optimizeOnSphere(stopStrategy, normalized, direction, r, 50);
+                needToAssert = true;
+            }
+
+            path.insert(path.end(), supplePath.begin(), supplePath.end());
+            auto oldDirection = direction;
+            direction = path.back();
+            LOG_ERROR("cos(oldDirection, direction) = {} after second optimization", angleCosine(oldDirection, direction));
+
+            logFunctionPolarInfo("normalized after additional optimization", normalized, direction, r);
+
+            distances = stringstream();
+            minAngle = 0;
+            for (auto const& prevDir : directions) {
+                minAngle = max(minAngle, angleCosine(direction, prevDir));
+                distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+            }
+            LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
+                      distances.str(), minAngle);
+
+            if (minAngle < .9) {
+                values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
+                //            values.push_back((sqr(r) / 2 - (func(direction) - zeroEnergy)) / r / r / r);
+                directions.push_back(direction);
+
+                assert(!needToAssert);
+            } else {
+                LOG_ERROR("min angle is too large: {}", minAngle);
+            }
         }
     }
 }
@@ -655,13 +720,17 @@ int main()
     auto zeroEnergy = normalized(makeConstantVect(normalized.nDims, 0));
 
     auto const axis = framework.newPlot();
-    RandomProjection const projection(normalized.nDims);
     auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-7, 1e-7));
 
     double const r = .01;
 
-    auto path = optimizeOnSphere(stopStrategy, normalized, randomVectOnSphere(normalized.nDims, r), r, 50);
-//    for (size_t i = 0; i < 2 * func.nDims; i++)
+    while (true) {
+        auto path = optimizeOnSphere(stopStrategy, normalized, randomVectOnSphere(normalized.nDims, r), r, 50);
+        LOG_WARN("finished, press key");
+        char c;
+        cin >> c;
+    }
+    //    for (size_t i = 0; i < 2 * func.nDims; i++)
 //    {
 //        vect pos = r * eye(func.nDims, i / 2);
 //        if (i % 2)

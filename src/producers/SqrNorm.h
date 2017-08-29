@@ -7,23 +7,11 @@
 class SqrNorm : public FunctionProducer
 {
 public:
-//    using FunctionProducer<N_DIMS>::N;
+    explicit SqrNorm(size_t nDims);
 
-    SqrNorm(size_t nDims) : FunctionProducer(nDims)
-    { }
-
-    virtual double operator()(vect const& x) override
-    {
-        return x.transpose() * x;
-    }
-
-    virtual vect grad(vect const& x) override
-    {
-        return 2 * x;
-    }
-
-    virtual matrix hess(vect const& x) override
-    {
-        return 2. * matrix::Identity(x.rows(), x.rows());
-    }
+    double operator()(vect const& x) override;
+    vect grad(vect const& x) override;
+    matrix hess(vect const& x) override;
+    tuple<double, vect> valueGrad(vect const& x) override;
+    tuple<double, vect, matrix> valueGradHess(vect const& x) override;
 };

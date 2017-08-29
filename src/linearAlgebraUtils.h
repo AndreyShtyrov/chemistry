@@ -32,7 +32,15 @@ vect projection(vect wich, vect to);
 
 matrix singularValues(matrix m);
 
+
 vect toDistanceSpace(vect v, bool sorted=true);
+
+vect normalized(vect const& v);
+
+double distance(vect const& u, vect const& v);
+
+double angleCosine(vect const& u, vect const& v);
+
 
 class RandomProjection
 {

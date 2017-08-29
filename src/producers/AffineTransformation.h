@@ -9,7 +9,7 @@ template<typename FuncT>
 class AffineTransformation : public FunctionProducer
 {
 public:
-    AffineTransformation(FuncT func, vect delta, matrix const& basis) : FunctionProducer((size_t) basis.cols()),
+    AffineTransformation(FuncT func, vect delta, matrix const& basis) : FunctionProducer(func.nDims),
                                                                         mFunc(move(func)), mDelta(move(delta)),
                                                                         mBasis(basis), mBasisT(basis.transpose())
     {}

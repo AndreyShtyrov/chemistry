@@ -10,14 +10,14 @@
 namespace optimization
 {
     template<typename FuncT, typename StopStrategy>
-    bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t globalIter=0)
+    bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t iterLimit=5, size_t globalIter=0)
     {
         auto const theta = makeConstantVect(func.nDims - 1, M_PI / 2);
         bool converged = false;
 
         vector<vect> newPath;
-        try {
-            for (size_t i = 0; i < 5; i++) {
+//        try {
+            for (size_t i = 0; i < iterLimit; i++) {
                 auto polar = makePolarWithDirection(func, r, p);
 
                 auto valueGradHess = polar.valueGradHess(theta);
@@ -26,10 +26,12 @@ namespace optimization
                 auto hess = get<2>(valueGradHess);
 
                 auto sValues = singularValues(hess);
-                for (size_t j = 0; j < sValues.size(); j++)
+                for (size_t j = 0; j < sValues.size(); j++) {
                     if (sValues(j) < 0) {
+                        LOG_INFO("singular values converge break");
                         return false;
                     }
+                }
 
                 auto lastP = p;
                 p = polar.getInnerFunction().transform(polar.transform(theta - hess.inverse() * grad));
@@ -40,9 +42,9 @@ namespace optimization
                     break;
                 }
             }
-        } catch (GaussianException const& exc) {
-            LOG_ERROR("Did not converged");
-        }
+//        } catch (GaussianException const& exc) {
+//            LOG_ERROR("GaussianException converge break");
+//        }
 
         if (converged) {
             path.insert(path.end(), newPath.begin(), newPath.end());
@@ -70,7 +72,7 @@ namespace optimization
         }
 
         for (size_t iter = 0; ; iter++) {
-            if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, iter)) {
+            if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, 5, iter)) {
                 break;
             }
 
@@ -78,13 +80,13 @@ namespace optimization
 
             auto valueGrad = polar.valueGrad(theta);
             auto value = get<0>(valueGrad);
-            vect grad = get<1>(valueGrad) / r;
+            vect grad = get<1>(valueGrad);
 
             if (iter) {
                 double was = momentum.norm();
-                double factor = max(0., momentum.dot(grad) / (grad.norm() * momentum.norm()));
-                momentum = max(0., momentum.dot(grad) / (grad.norm() * momentum.norm())) * momentum + grad;
-//                LOG_INFO("was: {}, factor: {}, now: {}", was, factor, momentum.norm());
+                double factor = sqrt(max(0., angleCosine(momentum, grad)));
+                momentum = factor * momentum + grad / r;
+                LOG_INFO("was: {}, factor: {}, now: {} [delta: {}]", was, factor, momentum.norm(), grad.norm());
             }
             else
                 momentum = grad;
@@ -189,7 +191,7 @@ namespace optimization
         vect momentum;
 
         for (size_t iter = 0; ; iter++) {
-            if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, iter)) {
+            if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, 5, iter)) {
                 LOG_ERROR("breaked here");
                 break;
             }

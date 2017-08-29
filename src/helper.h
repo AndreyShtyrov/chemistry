@@ -8,6 +8,7 @@
 #include <memory>
 #include <cmath>
 #include <random>
+#include <type_traits>
 
 #include <Eigen/Core>
 #include <Eigen/Dense>

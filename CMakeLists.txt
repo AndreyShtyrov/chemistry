@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(chemistry)
 
-set(CMAKE_CXX_FLAGS "-std=c++14 -Werror -fopenmp -DSPDLOG_DEBUG_ON")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "-Werror -fopenmp -DSPDLOG_DEBUG_ON")
 set(CMAKE_EXE_LINKER_FLAGS "-pthread")
 SET(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 
@@ -49,6 +50,7 @@ SET(SOURCE_FILES
         src/producers/OnSphereCosineSupplement.cpp
         src/producers/Cosine3OnSphereInterpolation.cpp
         src/producers/ClosestCosine3OnSphere.cpp
+        src/producers/SqrNorm.cpp
         )
 
 SET(TEST_SOURCE_FILES

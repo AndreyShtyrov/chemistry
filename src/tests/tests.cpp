@@ -74,7 +74,7 @@ void testCollected(FuncT func, vect lowerBound, vect upperBound, size_t iters, d
 }
 
 template<typename FuncT>
-void testProducer(FuncT func, vect lowerBound, vect upperBound, size_t iters, double delta = 1e-5, double eps = 1e-4)
+void testProducer(FuncT func, vect lowerBound, vect upperBound, size_t iters, double delta = 1e-5, double eps = 1e-3)
 {
     testGradient(func, lowerBound, upperBound, iters, delta, eps);
     testHessian(func, lowerBound, upperBound, iters, delta, eps);
@@ -274,8 +274,41 @@ TEST(FunctionProducer, Cosine3OnSPhereInterpolation)
         values.push_back(random(randomGen));
         directions.push_back(randomVectOnSphere(nDims));
     }
-    Cosine3OnSPhereInterpolation func(directions, values);
+    Cosine3OnSPhereInterpolation func(nDims, values, directions);
 
+    testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
+}
+
+
+TEST(FunctionProducer, ClosestCosine3OnSphere)
+{
+    size_t const nDims = 25;
+    size_t const N = 5;
+
+    vector<double> values;
+    vector<vect> directions;
+
+    uniform_real_distribution<double> random;
+    for (size_t i = 0; i < N; i++) {
+        values.push_back(random(randomGen));
+        directions.push_back(randomVectOnSphere(nDims));
+    }
+    ClosestCosine3OnSphere func(nDims, values, directions);
+
+    testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
+}
+
+TEST(FunctionProducer, Calculations)
+{
+    size_t const nDims = 10;
+
+    SqrNorm norm(nDims);
+    auto func = 1.3 * norm + (-0.3) * norm;
+
+    for (size_t i = 0; i < 10; i++) {
+        auto v = makeRandomVect(nDims);
+        ASSERT_LE(abs(func(v) - v.dot(v)), 1e-7);
+    }
     testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
 }
 

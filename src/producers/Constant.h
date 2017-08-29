@@ -7,29 +7,13 @@
 class Constant : public FunctionProducer
 {
 public:
-//    using FunctionProducer<N_DIMS>::N;
+    Constant(size_t nDims, double value);
 
-    Constant(int nDims, double value) : FunctionProducer(nDims), mValue(value)
-    { }
-
-    virtual double operator()(vect const& x)
-    {
-        return mValue;
-    }
-
-    virtual vect grad(vect const& x)
-    {
-        vect grad(x.rows());
-        grad.setZero();
-        return grad;
-    }
-
-    virtual matrix hess(vect const& x)
-    {
-        matrix hess(x.rows(), x.rows());
-        hess.setZero();
-        return hess;
-    };
+    double operator()(vect const& x);
+    vect grad(vect const& x);
+    matrix hess(vect const& x);
+    tuple<double, vect> valueGrad(vect const& x);
+    tuple<double, vect, matrix> valueGradHess(vect const& x);
 
 private:
     double mValue;

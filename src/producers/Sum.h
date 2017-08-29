@@ -8,9 +8,9 @@ template<typename Func1T, typename Func2T>
 class Sum : public FunctionProducer
 {
 public:
-    Sum(Func1T const& func1, Func2T const& func2) : FunctionProducer(func1.nDims), mFunc1(func1), mFunc2(func2)
+    Sum(Func1T func1, Func2T func2) : FunctionProducer(func1.nDims), mFunc1(move(func1)), mFunc2(move(func2))
     {
-        assert(func1.nDims == func2.nDims);
+        assert(mFunc1.nDims == mFunc2.nDims);
     }
 
     double operator()(vect const& x) override
