@@ -57,7 +57,7 @@ public:
     {
         vect to(nDims + mPoss.size());
         for (size_t i = 0, j = 0, k = 0; i < mFunc.nDims; i++)
-            if (i == mPoss[j])
+            if (j < mPoss.size() && i == mPoss[j])
                 to(i) = mVals[j++];
             else
                 to(i) = from(k++);
@@ -68,7 +68,7 @@ public:
     {
         vect result(nDims);
         for (size_t i = 0, j = 0, k = 0; (int) i < from.rows(); i++)
-            if (i == mPoss[k]) {
+            if (k < mPoss.size() && i == mPoss[k]) {
                 assert(abs(from(i) - mVals[k]) < 1e-7);
                 k++;
             }
@@ -102,7 +102,7 @@ private:
     {
         vect transformed(nDims);
         for (size_t i = 0, j = 0, k = 0; i < mFunc.nDims; i++)
-            if (i == mPoss[j])
+            if (j < mPoss.size() && i == mPoss[j])
                 j++;
             else
                 transformed(k++) = grad(i);
@@ -113,11 +113,11 @@ private:
     {
         matrix transformed(nDims, nDims);
         for (size_t i1 = 0, j1 = 0, k1 = 0; i1 < mFunc.nDims; i1++)
-            if (i1 == mPoss[j1])
+            if (j1 < mPoss.size() && i1 == mPoss[j1])
                 j1++;
             else {
                 for (size_t i2 = 0, j2 = 0, k2 = 0; i2 < mFunc.nDims; i2++)
-                    if (i2 == mPoss[j2])
+                    if (j2 < mPoss.size() && i2 == mPoss[j2])
                         j2++;
                     else {
                         transformed(k1, k2++) = hess(i1, i2);

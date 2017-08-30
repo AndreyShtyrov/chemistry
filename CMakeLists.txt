@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 3.0)
 project(chemistry)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "-Werror -fopenmp -DSPDLOG_DEBUG_ON")
+set(CMAKE_CXX_FLAGS "-Werror -fopenmp -DSPDLOG_DEBUG_ON -D_GLIBCXX_DEBUG")
+
 set(CMAKE_EXE_LINKER_FLAGS "-pthread")
 SET(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 

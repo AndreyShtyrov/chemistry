@@ -605,8 +605,8 @@ void minimaElimination()
     while (true) {
         for (size_t iter = 0; iter < normalized.nDims * 2; iter++) {
             //Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
-//            LargestCosine3OnSphere supplement(normalized.nDims, values, directions);
-            Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
+            LargestCosine3OnSphere supplement(normalized.nDims, values, directions);
+//            Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
             auto func = normalized + supplement;
 
             int sign = 2 * ((int) iter % 2) - 1;
@@ -626,44 +626,44 @@ void minimaElimination()
             LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
                       distances.str(), minAngle);
 
-            {
-                size_t const N = 10;
-
-                auto directionMem = direction;
-                bool converged = true;
-
-                for (size_t i = 0; i < N; i++) {
-                    double alpha = (double) (i + 1) / N;
-                    auto linearComb = alpha * normalized + (1 - alpha) * func;
-                    vector<vect> supplePath;
-
-                    if (tryToConverge(stopStrategy, linearComb, direction, r, supplePath, 3)) {
-                        direction = supplePath.back();
-                        LOG_ERROR("Experimental convergence step {}: cos(angle) = {} ",
-                                  i + 1, angleCosine(direction, directionMem));
-                    }
-                    else {
-                        converged = false;
-                        LOG_ERROR("Could not converted during experimental convergence");
-                        break;
-                    }
-                }
-
-                stringstream distances;
-                double minAngle = 0;
-                for (auto const& prevDir : directions) {
-                    minAngle = max(minAngle, angleCosine(direction, prevDir));
-                    distances
-                       << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
-                }
-                LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
-                          distances.str(), minAngle);
-
-                LOG_ERROR("Experimental convergence result:cos(angle) = {}, distances from prevous:\n{}\nmin angle = {}",
-                          angleCosine(direction, directionMem), distances.str(), minAngle);
-
-                direction = directionMem;
-            }
+//            {
+//                size_t const N = 10;
+//
+//                auto directionMem = direction;
+//                bool converged = true;
+//
+//                for (size_t i = 0; i < N; i++) {
+//                    double alpha = (double) (i + 1) / N;
+//                    auto linearComb = alpha * normalized + (1 - alpha) * func;
+//                    vector<vect> supplePath;
+//
+//                    if (tryToConverge(stopStrategy, linearComb, direction, r, supplePath, 3)) {
+//                        direction = supplePath.back();
+//                        LOG_ERROR("Experimental convergence step {}: cos(angle) = {} ",
+//                                  i + 1, angleCosine(direction, directionMem));
+//                    }
+//                    else {
+//                        converged = false;
+//                        LOG_ERROR("Could not converted during experimental convergence");
+//                        break;
+//                    }
+//                }
+//
+//                stringstream distances;
+//                double minAngle = 0;
+//                for (auto const& prevDir : directions) {
+//                    minAngle = max(minAngle, angleCosine(direction, prevDir));
+//                    distances
+//                       << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+//                }
+//                LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
+//                          distances.str(), minAngle);
+//
+//                LOG_ERROR("Experimental convergence result:cos(angle) = {}, distances from prevous:\n{}\nmin angle = {}",
+//                          angleCosine(direction, directionMem), distances.str(), minAngle);
+//
+//                direction = directionMem;
+//            }
 
             bool needToAssert = false;
 
