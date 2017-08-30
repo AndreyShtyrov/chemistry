@@ -9,10 +9,10 @@ template<typename FuncT>
 class AffineTransformation : public FunctionProducer
 {
 public:
-    AffineTransformation(FuncT func, vect delta, matrix const& basis) : FunctionProducer(func.nDims),
-                                                                        mFunc(move(func)), mDelta(move(delta)),
-                                                                        mBasis(basis), mBasisT(basis.transpose())
-    {}
+    AffineTransformation(FuncT func, vect delta, matrix basis) : FunctionProducer(func.nDims),
+                                                                 mFunc(move(func)), mDelta(move(delta)),
+                                                                 mBasis(move(basis))
+    { }
 
     double operator()(vect const& x) override
     {
@@ -86,16 +86,15 @@ private:
 
     vect mDelta;
     matrix mBasis;
-    matrix mBasisT;
 
     vect transformGrad(vect const& grad)
     {
-        return mBasisT * grad;
+        return mBasis.transpose() * grad;
     }
 
     matrix transformHess(matrix const& hess)
     {
-        return mBasisT * hess * mBasis;
+        return mBasis.transpose() * hess * mBasis;
     }
 };
 
