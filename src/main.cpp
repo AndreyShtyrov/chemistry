@@ -604,7 +604,7 @@ void minimaElimination()
 
     while (true) {
         for (size_t iter = 0; iter < normalized.nDims * 2; iter++) {
-            //Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
+//            Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
 //            LargestCosine3OnSphere supplement(normalized.nDims, values, directions);
             Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
             auto func = normalized + supplement;
@@ -692,10 +692,18 @@ void minimaElimination()
             LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
                       distances.str(), minAngle);
 
-            if (minAngle < .9) {
+            if (minAngle < .975) {
                 values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
                 //            values.push_back((sqr(r) / 2 - (func(direction) - zeroEnergy)) / r / r / r);
                 directions.push_back(direction);
+
+                ofstream mins("./mins_on_sphere");
+                mins.precision(21);
+
+                mins << directions.size() << endl;
+                for (auto const& dir : directions) {
+                    mins << dir.size() << endl << fixed << dir.transpose() << endl;
+                }
 
                 assert(!needToAssert);
             } else {
