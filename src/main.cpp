@@ -604,8 +604,9 @@ void minimaElimination()
 
     while (true) {
         for (size_t iter = 0; iter < normalized.nDims * 2; iter++) {
-            //        Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
-            LargestCosine3OnSphere supplement(normalized.nDims, values, directions);
+            //Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
+//            LargestCosine3OnSphere supplement(normalized.nDims, values, directions);
+            Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
             auto func = normalized + supplement;
 
             int sign = 2 * ((int) iter % 2) - 1;
