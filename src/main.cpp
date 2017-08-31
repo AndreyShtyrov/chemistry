@@ -602,8 +602,16 @@ void minimaElimination()
     RandomProjection const projection(normalized.nDims);
     auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4 * r, 1e-4 * r));
 
-    while (true) {
-        for (size_t iter = 0; iter < normalized.nDims * 2; iter++) {
+    bool firstEpochFinished = false;
+    size_t lastSuccessIter = (size_t) -1;
+
+    while (!firstEpochFinished) {
+        for (size_t iter = 0; iter < (normalized.nDims - 2) * 2; iter++) {
+            if (iter == lastSuccessIter) {
+                firstEpochFinished = true;
+                break;
+            }
+
 //            Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
 //            LargestCosine3OnSphere supplement(normalized.nDims, values, directions);
             Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
@@ -625,45 +633,6 @@ void minimaElimination()
             }
             LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
                       distances.str(), minAngle);
-
-//            {
-//                size_t const N = 10;
-//
-//                auto directionMem = direction;
-//                bool converged = true;
-//
-//                for (size_t i = 0; i < N; i++) {
-//                    double alpha = (double) (i + 1) / N;
-//                    auto linearComb = alpha * normalized + (1 - alpha) * func;
-//                    vector<vect> supplePath;
-//
-//                    if (tryToConverge(stopStrategy, linearComb, direction, r, supplePath, 3)) {
-//                        direction = supplePath.back();
-//                        LOG_ERROR("Experimental convergence step {}: cos(angle) = {} ",
-//                                  i + 1, angleCosine(direction, directionMem));
-//                    }
-//                    else {
-//                        converged = false;
-//                        LOG_ERROR("Could not converted during experimental convergence");
-//                        break;
-//                    }
-//                }
-//
-//                stringstream distances;
-//                double minAngle = 0;
-//                for (auto const& prevDir : directions) {
-//                    minAngle = max(minAngle, angleCosine(direction, prevDir));
-//                    distances
-//                       << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
-//                }
-//                LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
-//                          distances.str(), minAngle);
-//
-//                LOG_ERROR("Experimental convergence result:cos(angle) = {}, distances from prevous:\n{}\nmin angle = {}",
-//                          angleCosine(direction, directionMem), distances.str(), minAngle);
-//
-//                direction = directionMem;
-//            }
 
             bool needToAssert = false;
 
@@ -705,10 +674,75 @@ void minimaElimination()
                     mins << dir.size() << endl << fixed << dir.transpose() << endl;
                 }
 
+                lastSuccessIter = iter;
+
                 assert(!needToAssert);
             } else {
                 LOG_ERROR("min angle is too large: {}", minAngle);
             }
+        }
+    }
+
+    while (true) {
+        Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
+        auto func = normalized + supplement;
+
+        auto path = optimizeOnSphere(stopStrategy, func, r * randomVectOnSphere(normalized.nDims), r, 50);
+        auto direction = path.back();
+
+        logFunctionPolarInfo("func in new direction", func, direction, r);
+        logFunctionPolarInfo("normalized in new direction", normalized, direction, r);
+
+        stringstream distances;
+        double minAngle = 0;
+        for (auto const& prevDir : directions) {
+            minAngle = max(minAngle, angleCosine(direction, prevDir));
+            distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+        }
+        LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
+                  distances.str(), minAngle);
+
+        size_t const N = 10;
+        auto directionMem = direction;
+
+        for (size_t i = 0; i < N; i++) {
+            double alpha = (double) (i + 1) / N;
+            auto linearComb = alpha * normalized + (1 - alpha) * func;
+
+            auto supplePath = optimizeOnSphere(stopStrategy, normalized, direction, r, 50);
+            path.insert(path.end(), supplePath.begin(), supplePath.end());
+        }
+
+        LOG_ERROR("Experimental convergence result:cos(angle) = {}, distances from prevous:\n{}\nmin angle = {}",
+                  angleCosine(direction, directionMem), distances.str(), minAngle);
+
+        logFunctionPolarInfo("normalized after additional optimization", normalized, direction, r);
+
+        distances = stringstream();
+        minAngle = 0;
+        for (auto const& prevDir : directions) {
+            minAngle = max(minAngle, angleCosine(direction, prevDir));
+            distances
+               << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+        }
+        LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
+                  distances.str(), minAngle);
+
+        if (minAngle < .975) {
+            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
+            //            values.push_back((sqr(r) / 2 - (func(direction) - zeroEnergy)) / r / r / r);
+            directions.push_back(direction);
+
+            ofstream mins("./mins_on_sphere");
+            mins.precision(21);
+
+            mins << directions.size() << endl;
+            for (auto const& dir : directions) {
+                mins << dir.size() << endl << fixed << dir.transpose() << endl;
+            }
+
+        } else {
+            LOG_ERROR("min angle is too large: {}", minAngle);
         }
     }
 }
