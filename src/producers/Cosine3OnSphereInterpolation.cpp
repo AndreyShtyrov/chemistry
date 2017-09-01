@@ -2,7 +2,7 @@
 
 #include "linearAlgebraUtils.h"
 
-Cosine3OnSPhereInterpolation::Cosine3OnSPhereInterpolation(size_t nDims, vector<double> const& values, vector<vect> const& directions)
+Cosine3OnSphereInterpolation::Cosine3OnSphereInterpolation(size_t nDims, vector<double> const& values, vector<vect> const& directions)
         : FunctionProducer(nDims)
 {
     assert(values.size() == directions.size());
@@ -11,14 +11,14 @@ Cosine3OnSPhereInterpolation::Cosine3OnSPhereInterpolation(size_t nDims, vector<
     }
 }
 
-double Cosine3OnSPhereInterpolation::operator()(vect const& x)
+double Cosine3OnSphereInterpolation::operator()(vect const& x)
 {
     double value = 0;
     for (auto& supplement : mSupplements)
         value += supplement(x);
 }
 
-vect Cosine3OnSPhereInterpolation::grad(vect const& x)
+vect Cosine3OnSphereInterpolation::grad(vect const& x)
 {
     auto grad = makeConstantVect(nDims, 0);
     for (auto& supplement : mSupplements)
@@ -26,7 +26,7 @@ vect Cosine3OnSPhereInterpolation::grad(vect const& x)
     return grad;
 }
 
-matrix Cosine3OnSPhereInterpolation::hess(vect const& x)
+matrix Cosine3OnSphereInterpolation::hess(vect const& x)
 {
     auto hess = makeConstantMatrix(nDims, nDims, 0);
     for (auto& supplement : mSupplements)
@@ -34,12 +34,12 @@ matrix Cosine3OnSPhereInterpolation::hess(vect const& x)
     return hess;
 }
 
-tuple<double, vect> Cosine3OnSPhereInterpolation::valueGrad(vect const& x)
+tuple<double, vect> Cosine3OnSphereInterpolation::valueGrad(vect const& x)
 {
     return FunctionProducer::valueGrad(x);
 };
 
-tuple<double, vect, matrix> Cosine3OnSPhereInterpolation::valueGradHess(vect const& x)
+tuple<double, vect, matrix> Cosine3OnSphereInterpolation::valueGradHess(vect const& x)
 {
     return FunctionProducer::valueGradHess(x);
 };

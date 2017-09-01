@@ -5,10 +5,10 @@
 #include <producers/FunctionProducer.h>
 #include <producers/OnSphereCosineSupplement.h>
 
-class Cosine3OnSphereInterpolation : public FunctionProducer
+class CleverCosine3OnSphereInterpolation : public FunctionProducer
 {
 public:
-    Cosine3OnSphereInterpolation(size_t nDims, vector<double> const& values, vector<vect> const& directions);
+    CleverCosine3OnSphereInterpolation(size_t nDims, vector<double> const& values, vector<vect> const& directions);
 
     double operator()(vect const& x) override;
     vect grad(vect const& x) override;
@@ -17,5 +17,9 @@ public:
     tuple<double, vect, matrix> valueGradHess(vect const& x) override;
 
 private:
+    vector<double> mValues;
+    vector<vect> mDirections;
     vector<OnSphereCosineSupplement> mSupplements;
+
+    size_t getClosest(vect const& x);
 };

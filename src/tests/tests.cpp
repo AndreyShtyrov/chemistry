@@ -274,7 +274,7 @@ TEST(FunctionProducer, Cosine3OnSPhereInterpolation)
         values.push_back(random(randomGen));
         directions.push_back(randomVectOnSphere(nDims));
     }
-    Cosine3OnSPhereInterpolation func(nDims, values, directions);
+    Cosine3OnSphereInterpolation func(nDims, values, directions);
 
     testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
 }
@@ -316,6 +316,28 @@ TEST(FunctionProducer, LargestCosine3OnSphere)
     testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
 }
 
+TEST(FunctionProducer, CleverCosine3OnSphereInterpolation)
+{
+    initializeLogger();
+
+    size_t const nDims = 25;
+    size_t const N = 5;
+
+    vector<double> values;
+    vector<vect> directions;
+
+    uniform_real_distribution<double> random;
+    for (size_t i = 0; i < N; i++) {
+        values.push_back(random(randomGen));
+        directions.push_back(randomVectOnSphere(nDims));
+    }
+
+    CleverCosine3OnSphereInterpolation func(nDims, values, directions);
+
+//    testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
+}
+
+
 TEST(FunctionProducer, Calculations)
 {
     size_t const nDims = 10;
@@ -329,4 +351,5 @@ TEST(FunctionProducer, Calculations)
     }
     testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
 }
+
 

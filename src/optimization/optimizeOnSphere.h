@@ -28,7 +28,8 @@ namespace optimization
                 auto sValues = singularValues(hess);
                 for (size_t j = 0; j < sValues.size(); j++) {
                     if (sValues(j) < 0) {
-                        LOG_INFO("singular values converge break");
+                        LOG_INFO("singular values converge break, stop strategy with zero delta: {}",
+                                 stopStrategy(globalIter + i, p, value, grad, hess, p - p));
                         return false;
                     }
                 }
@@ -55,7 +56,7 @@ namespace optimization
     };
 
     template<typename FuncT, typename StopStrategy>
-    vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, double r, size_t preHessIters)
+    vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, double r, size_t preHessIters, size_t convergeIters)
     {
         assert(abs(r - p.norm()) < 1e-7);
 
@@ -72,7 +73,7 @@ namespace optimization
         }
 
         for (size_t iter = 0; ; iter++) {
-            if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, 5, iter)) {
+            if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, convergeIters, iter)) {
                 break;
             }
 

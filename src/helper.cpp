@@ -2,9 +2,9 @@
 
 #include "PythongraphicsFramework.h"
 
-thread_local mt19937 randomGen;
+//thread_local mt19937 randomGen;
 //thread_local mt19937 randomGen(std::hash<std::thread::id>()(std::this_thread::get_id()));
-//thread_local mt19937 randomGen(random_device{}());
+thread_local mt19937 randomGen(random_device{}());
 
 PythongraphicsFramework framework("func.out");
 shared_ptr<spdlog::logger> logger;

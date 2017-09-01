@@ -28,7 +28,7 @@ namespace optimization
             LOG_INFO(
                "Delta strategy iteration:\n\titeration: {}\n\tvalue: {:.13f}\n\tpoint: {}\n\tgrad: {} [{}]\n\tdelta: {} [{}]\n\thess values: {}\n",
                iter, value, p.transpose(), grad.norm(), grad.transpose(), delta.norm(), delta.transpose(),
-               Eigen::JacobiSVD<matrix>(hess).singularValues().transpose());
+               singularValues(hess));
 
             mValues.push_back(value);
             mGrads.push_back(grad);
@@ -40,7 +40,7 @@ namespace optimization
 //        {
 //            LOG_INFO("Delta strategy iteration:\n\titeration: {}\n\tpoint: {}\n\tgrad: {}\n\thess values: {}", iter,
 //                     p.transpose(), grad.transpose(), Eigen::JacobiSVD<matrix>(hess).singularValues().transpose());
-//            mValues.push_back(value);
+//            mValues.push_back(value);you
 //            mGrads.push_back(grad);
 //
 //            return mStopStrategy(iter, p, value, grad, hess);

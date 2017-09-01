@@ -18,3 +18,4 @@
 #include "Cosine3OnSphereInterpolation.h"
 #include "ClosestCosine3OnSphere.h"
 #include "LargestCosine3OnSphere.h"
+#include "CleverCosine3OnSphereInterpolation.h"
