@@ -40,11 +40,11 @@ public:
         plot(axis, arange(ys.size()), ys);
     }
 
-    void plot(string const& axis, vector<double> const& xs, vector<double> const& ys)
+    void plot(string const& axis, vector<double> const& xs, vector<double> const& ys, string label="''")
     {
         auto vxs = createArray(xs);
         auto vys = createArray(ys);
-        mOutput << axis << ".plot(" << vxs << ", " << vys << ")" << endl;
+        mOutput << boost::format("%1%.plot(%2%, %3%, label=%4%)") % axis % vxs % vys % label << endl;
     }
 
     template<typename MatrixT>
@@ -115,6 +115,12 @@ public:
         mOutput << "]" << endl;
 
         return var;
+    }
+
+    void legend(string axis)
+    {
+//        mOutput << boost::format("%1%.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)") % axis << endl;
+        mOutput << boost::format("%1%.legend()") % axis << endl;
     }
 
 

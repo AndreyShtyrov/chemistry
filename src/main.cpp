@@ -464,27 +464,26 @@ void analizeMinsOnSphere()
     }
 }
 
-
 void shs()
 {
     ifstream input("./C2H4");
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
+    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
     equilStruct = molecule.backTransform(equilStruct);
     auto normalized = normalizeForPolar(molecule, equilStruct);
 
     logFunctionInfo("normalized energy for equil structure", normalized, makeConstantVect(normalized.nDims, 0));
 
-    ifstream minsOnSphere("./mins_on_sphere_filtered");
+    ifstream minsOnSphere("./data/mins_on_sphere");
     size_t cnt;
     minsOnSphere >> cnt;
     vector<vect> vs;
     for (size_t i = 0; i < cnt; i++)
         vs.push_back(readVect(minsOnSphere));
 
-    double const firstR = 0.1;
+    double const firstR = 0.05;
     double const deltaR = 0.01;
 
     auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-4, 5e-4));
@@ -771,145 +770,71 @@ int main()
 {
     initializeLogger();
 
-    minimaElimination();
+//    ofstream output("./test.xyz");
+//    for (size_t i = 0; i < 3; i++) {
+//        vector<size_t> charges;
+//        vect structure;
+//
+//        tie(charges, structure) = readChemcraft(ifstream(str(format("./0/%1%.xyz") % i)));
+//
+//        output << charges.size() << endl << "comment" << endl;
+//        for (size_t j = 0; j < charges.size(); j++)
+//            output << charges[j] << ' ' << structure.block(j * 3, 0, 3, 1).transpose() << endl;
+//    }
+//
+//    return 0;
+//
+//    minimaElimination();
+//    shs();
+    vector<size_t> cnts = {381, 375, 375, 381, 381, 381, 57};
+//    vector<size_t> cnts = {2, 2, 2, 2, 2, 2, 2};
 
-    ifstream input("./C2H4");
-    auto charges = readCharges(input);
-    auto equilStruct = readVect(input);
+    RandomProjection projection(15);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
-    equilStruct = molecule.backTransform(equilStruct);
-    auto normalized = normalizeForPolar(molecule, equilStruct);
-    auto zeroEnergy = normalized(makeConstantVect(normalized.nDims, 0));
+    auto axis1 = framework.newPlot("distance space false");
+    auto axis2 = framework.newPlot("distance space true");
 
-    auto const axis = framework.newPlot();
-    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-7, 1e-7));
+    #pragma omp parallel for
+    for (size_t i = 0; i < cnts.size(); i++) {
+        vector<double> vals;
+        vector<double> grads;
+        vector<double> xs1, ys1;
+        vector<double> xs2, ys2;
 
-    double const r = .05;
+        for (size_t j = 0; j < cnts[i]; j++) {
+            vector<size_t> charges;
+            vect structure;
 
-    vector<double> values;
-    vector<vect> directions;
-    {
-        ifstream mins("./data/mins_on_sphere");
-        size_t cnt;
-        mins >> cnt;
+            tie(charges, structure) = readChemcraft(ifstream(str(format("./%1%/%2%.xyz") % i % j)));
+            GaussianProducer molecule(charges, 1);
+            auto valueGrad = molecule.valueGrad(structure);
 
-        for (size_t i = 0; i < cnt; i++) {
-            auto direction = readVect(mins);
+            vals.push_back(get<0>(valueGrad));
+            grads.push_back(get<1>(valueGrad).norm());
 
-//            logFunctionPolarInfo("", normalized, direction, r);
+            {
+                auto proj = projection(toDistanceSpace(structure, false));
+                xs1.push_back(proj(0));
+                ys1.push_back(proj(1));
+            }
+            {
+                auto proj = projection(toDistanceSpace(structure, true));
+                xs2.push_back(proj(0));
+                ys2.push_back(proj(1));
+            }
+        }
 
-            directions.push_back(direction);
-            values.push_back(sqr(r) / 2 - (normalized(direction) - zeroEnergy));
+        #pragma omp critical
+        {
+            framework.plot(axis1, xs1, ys1, to_string(i));
+            framework.plot(axis2, xs2, ys2, to_string(i));
+            framework.plot(framework.newPlot(str(format("values %1%") % i)), vals);
+            framework.plot(framework.newPlot(str(format("grads  %1%") % i)), grads);
         }
     }
 
-    CleverCosine3OnSphereInterpolation func(normalized.nDims, values, directions);
-
-    for (size_t i = 0; i < directions.size(); i++) {
-        LOG_INFO("{} {}", zeroEnergy + sqr(r) / 2, normalized(directions[i]) + func(directions[i]));
-    }
-
-    return 0;
-
-    while (true) {
-        auto path = optimizeOnSphere(stopStrategy, normalized, randomVectOnSphere(normalized.nDims, r), r, 50, 5);
-        LOG_WARN("finished, press key");
-        char c;
-        cin >> c;
-    }
-    //    for (size_t i = 0; i < 2 * func.nDims; i++)
-//    {
-//        vect pos = r * eye(func.nDims, i / 2);
-//        if (i % 2)
-//            pos *= -1;
-//
-//        auto path = optimizeOnSphere(stopStrategy, func, pos, r, 50);
-//        if (path.empty())
-//            continue;
-//
-//        {
-//            vect p = path.back();
-//            output << p.size() << endl << fixed << p << endl;
-//
-//            vector<double> xs, ys;
-//            for (auto const& p : path) {
-//                vect proj = projection(p);
-//                xs.push_back(proj(0));
-//                ys.push_back(proj(1));
-//            }
-//
-//            framework.plot(axis, xs, ys);
-//            framework.scatter(axis, xs, ys);
-//
-//            auto polar = makePolarWithDirection(func, r, path.back());
-//            logFunctionInfo(str(format("new direction (%1%)") % path.back().transpose()), polar, makeConstantVect(polar.nDims, M_PI / 2));
-//        }
-//    }
-
-//    StopStrategy const stopStrategy(1e-7, 1e-7);
-//    #pragma omp parallel for
-//    for (size_t i = 0; i < vs.size(); i++) {
-//        vector<vect> path;
-//        assert(tryToConverge(stopStrategy, normalized, vs[i], .1, path));
-//        vs[i] = path.back();
-//        LOG_INFO("{}: {} iters to converge");
-//    }
-//
-//    vs = filterBySingularValues(vs, normalized);
-//    LOG_INFO("{}", vs.size());
-
-
-//    auto p = vs[8];
-//
-//    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4, 1e-4));
-//    double const r = .1;
-//    auto const theta = makeConstantVect(normalized.nDims - 1, M_PI / 2);
-//
-//    vect momentum;
-//    vector<vect> path;
-//
-//    for (size_t iter = 0; ; iter++) {
-//        if (iter % 50 == 0 && tryToConverge(stopStrategy, normalized, p, r, path, iter)) {
-//            LOG_ERROR("breaked here");
-//            break;
-//        }
-//
-//        auto polar = makePolarWithDirection(normalized, r, p);
-//
-//        auto valueGrad = polar.valueGrad(theta);
-//        auto value = get<0>(valueGrad);
-//        auto grad = get<1>(valueGrad);
-//
-//        if (iter)
-//            momentum = max(0., momentum.dot(grad) / (grad.norm() * momentum.norm())) * momentum + grad;
-//        else
-//            momentum = grad;
-//
-//        auto lastP = p;
-//        p = polar.getInnerFunction().transform(polar.transform(theta - momentum));
-//        path.push_back(p);
-//
-//        stopStrategy(iter, p, value, grad, momentum);
-//    }
-
-//    shs();
-
-//    auto startTime = chrono::system_clock::now();
-//    auto result = findInitialPolarDirections(normalized, 0.1);
-//    LOG_INFO("time passed: {}s", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
-//
-//    ofstream output("./mins_on_sphere");
-//    output.precision(30);
-//    for (auto& v : result)
-//        output << v.rows() << endl << fixed << v.transpose() << endl;
-//
-//    ofstream output2("./mins_on_sphere2");
-//    output2.precision(30);
-//    for (auto v : result) {
-//        v = normalized.fullTransform(v);
-//        output2 << v.rows() << endl << fixed << v.transpose() << endl;
-//    }
+    framework.legend(axis1);
+    framework.legend(axis2);
 
     return 0;
 }
