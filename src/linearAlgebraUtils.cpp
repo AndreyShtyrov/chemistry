@@ -55,9 +55,9 @@ matrix identity(size_t rows, size_t cols)
 };
 
 
-matrix isqrt(matrix m)
+matrix isqrt(matrix m, size_t removedCnt)
 {
-    for (int i = 0; i < m.rows(); i++)
+    for (size_t i = 0; i < m.rows() - removedCnt; i++)
         m(i, i) = 1. / sqrt(abs(m(i, i)));
     return m;
 };
@@ -69,10 +69,12 @@ matrix linearization(matrix m)
 }
 
 //m - symmetric matrix
-matrix linearizationNormalization(matrix m)
+matrix linearizationNormalization(matrix m, size_t removedCnt)
 {
     Eigen::JacobiSVD<matrix> d(m, Eigen::ComputeFullU);
-    return d.matrixU() * isqrt(matrix(d.singularValues().asDiagonal()));
+    auto diagonal = d.singularValues();
+    diagonal.block(diagonal.size() - removedCnt, 0, removedCnt, 1).setZero();
+    return d.matrixU() * isqrt(matrix(diagonal.asDiagonal()), removedCnt);
 };
 
 matrix rotationMatrix(vect u, vect v, double alpha)

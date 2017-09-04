@@ -20,7 +20,7 @@ matrix identity(size_t rows, size_t cols);
 
 matrix linearization(matrix m);
 
-matrix linearizationNormalization(matrix m);
+matrix linearizationNormalization(matrix m, size_t removedCnt=0);
 
 matrix rotationMatrix(vect u, vect v, double alpha);
 

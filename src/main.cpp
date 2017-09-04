@@ -545,7 +545,7 @@ void findInitialPolarDirections(FuncT& func, double r)
     RandomProjection const projection(func.nDims);
     StopStrategy const stopStrategy(1e-7, 1e-7);
 
-    ofstream output("./mins_on_sphere");
+    ofstream output("./C2H4/mins_on_sphere");
     output.precision(30);
 
     #pragma omp parallel for
@@ -602,85 +602,88 @@ void minimaElimination()
     auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4 * r, 1e-4 * r));
 
     bool firstEpochFinished = false;
-    size_t lastSuccessIter = (size_t) -1;
+    auto lastSuccessIter = (size_t) -1;
 
-//    while (!firstEpochFinished) {
-//        for (size_t iter = 0; iter < (normalized.nDims - 2) * 2; iter++) {
-//            if (iter == lastSuccessIter) {
-//                firstEpochFinished = true;
-//                break;
-//            }
-//
-////            Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
-////            LargestCosine3OnSphere supplement(normalized.nDims, values, directions);
+    while (!firstEpochFinished) {
+        for (size_t iter = 0; iter < (normalized.nDims - 2) * 2; iter++) {
+            if (iter == lastSuccessIter) {
+                firstEpochFinished = true;
+                break;
+            }
+
 //            Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
-//            auto func = normalized + supplement;
-//
-//            int sign = 2 * ((int) iter % 2) - 1;
-//            vect startingDirection = r * sign * eye(normalized.nDims, iter / 2);
-//            auto path = optimizeOnSphere(stopStrategy, func, startingDirection, r, 50);
-//            auto direction = path.back();
-//
-//            logFunctionPolarInfo("func in new direction", func, direction, r);
-//            logFunctionPolarInfo("normalized in new direction", normalized, direction, r);
-//
-//            stringstream distances;
-//            double minAngle = 0;
-//            for (auto const& prevDir : directions) {
-//                minAngle = max(minAngle, angleCosine(direction, prevDir));
-//                distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
-//            }
-//            LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
-//                      distances.str(), minAngle);
-//
-//            bool needToAssert = false;
-//
-//            vector<vect> supplePath;
-//            if (tryToConverge(stopStrategy, normalized, direction, r, supplePath, 10)) {
-//                LOG_ERROR("second optimization converged for {} steps", supplePath.size());
-//            } else {
-//                LOG_ERROR("second optimization did not converged with hessian update. Tryin standard optimization");
-//                supplePath = optimizeOnSphere(stopStrategy, normalized, direction, r, 50);
-//                needToAssert = true;
-//            }
-//
-//            path.insert(path.end(), supplePath.begin(), supplePath.end());
-//            auto oldDirection = direction;
-//            direction = path.back();
-//            LOG_ERROR("cos(oldDirection, direction) = {} after second optimization", angleCosine(oldDirection, direction));
-//
-//            logFunctionPolarInfo("normalized after additional optimization", normalized, direction, r);
-//
-//            distances = stringstream();
-//            minAngle = 0;
-//            for (auto const& prevDir : directions) {
-//                minAngle = max(minAngle, angleCosine(direction, prevDir));
-//                distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
-//            }
-//            LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
-//                      distances.str(), minAngle);
-//
-//            if (minAngle < .975) {
+//            LargestCosine3OnSphere supplement(normalized.nDims, values, directions);
+//            Cosine3OnSphereInterpolation supplement(normalized.nDims, values, directions);
+            CleverCosine3OnSphereInterpolation supplement(normalized.nDims, values, directions);
+
+            auto func = normalized + supplement;
+
+            int sign = 2 * ((int) iter % 2) - 1;
+            vect startingDirection = r * sign * eye(normalized.nDims, iter / 2);
+            auto path = optimizeOnSphere(stopStrategy, func, startingDirection, r, 50);
+            auto direction = path.back();
+
+            logFunctionPolarInfo("func in new direction", func, direction, r);
+            logFunctionPolarInfo("normalized in new direction", normalized, direction, r);
+
+            stringstream distances;
+            double minAngle = 0;
+            for (auto const& prevDir : directions) {
+                minAngle = max(minAngle, angleCosine(direction, prevDir));
+                distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+            }
+            LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
+                      distances.str(), minAngle);
+
+            bool needToAssert = false;
+
+            vector<vect> supplePath;
+            if (tryToConverge(stopStrategy, normalized, direction, r, supplePath, 10)) {
+                LOG_ERROR("second optimization converged for {} steps", supplePath.size());
+            } else {
+                LOG_ERROR("second optimization did not converged with hessian update. Tryin standard optimization");
+                supplePath = optimizeOnSphere(stopStrategy, normalized, direction, r, 50);
+                needToAssert = true;
+            }
+
+            path.insert(path.end(), supplePath.begin(), supplePath.end());
+            auto oldDirection = direction;
+            direction = path.back();
+            LOG_ERROR("cos(oldDirection, direction) = {} after second optimization", angleCosine(oldDirection, direction));
+
+            logFunctionPolarInfo("normalized after additional optimization", normalized, direction, r);
+
+            distances = stringstream();
+            minAngle = 0;
+            for (auto const& prevDir : directions) {
+                minAngle = max(minAngle, angleCosine(direction, prevDir));
+                distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+            }
+            LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
+                      distances.str(), minAngle);
+
+            if (minAngle < .975) {
 //                values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
-//                //            values.push_back((sqr(r) / 2 - (func(direction) - zeroEnergy)) / r / r / r);
-//                directions.push_back(direction);
-//
-//                ofstream mins("./mins_on_sphere");
-//                mins.precision(21);
-//
-//                mins << directions.size() << endl;
-//                for (auto const& dir : directions) {
-//                    mins << dir.size() << endl << fixed << dir.transpose() << endl;
-//                }
-//
-//                lastSuccessIter = iter;
-//
-//                assert(!needToAssert);
-//            } else {
-//                LOG_ERROR("min angle is too large: {}", minAngle);
-//            }
-//        }
-//    }
+                values.push_back(sqr(r) / 2 - (normalized(direction) - zeroEnergy));
+
+                directions.push_back(direction);
+
+                ofstream mins("./mins_on_sphere");
+                mins.precision(21);
+
+                mins << directions.size() << endl;
+                for (auto const& dir : directions) {
+                    mins << dir.size() << endl << fixed << dir.transpose() << endl;
+                }
+
+                lastSuccessIter = iter;
+
+                assert(!needToAssert);
+            } else {
+                LOG_ERROR("min angle is too large: {}", minAngle);
+            }
+        }
+    }
 
     {
         ifstream mins("./data/mins_on_sphere");
@@ -749,7 +752,7 @@ void minimaElimination()
         if (minAngle < .975) {
 //            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
 //            values.push_back((sqr(r) / 2 - (func(direction) - zeroEnergy)) / r / r / r);
-            values.push_back(sqr(r) / 2 - (func(direction) - zeroEnergy));
+            values.push_back(sqr(r) / 2 - (normalized(direction) - zeroEnergy));
             directions.push_back(direction);
 
             ofstream mins("./mins_on_sphere");
@@ -766,35 +769,16 @@ void minimaElimination()
     }
 }
 
-int main()
+void researchTrajectories()
 {
-    initializeLogger();
-
-//    ofstream output("./test.xyz");
-//    for (size_t i = 0; i < 3; i++) {
-//        vector<size_t> charges;
-//        vect structure;
-//
-//        tie(charges, structure) = readChemcraft(ifstream(str(format("./0/%1%.xyz") % i)));
-//
-//        output << charges.size() << endl << "comment" << endl;
-//        for (size_t j = 0; j < charges.size(); j++)
-//            output << charges[j] << ' ' << structure.block(j * 3, 0, 3, 1).transpose() << endl;
-//    }
-//
-//    return 0;
-//
-//    minimaElimination();
-//    shs();
-    vector<size_t> cnts = {381, 375, 375, 381, 381, 381, 57};
-//    vector<size_t> cnts = {2, 2, 2, 2, 2, 2, 2};
+    vector<size_t> cnts = {2, 2, 2, 2, 2, 2, 2};
 
     RandomProjection projection(15);
 
     auto axis1 = framework.newPlot("distance space false");
     auto axis2 = framework.newPlot("distance space true");
 
-    #pragma omp parallel for
+#pragma omp parallel for
     for (size_t i = 0; i < cnts.size(); i++) {
         vector<double> vals;
         vector<double> grads;
@@ -824,7 +808,7 @@ int main()
             }
         }
 
-        #pragma omp critical
+#pragma omp critical
         {
             framework.plot(axis1, xs1, ys1, to_string(i));
             framework.plot(axis2, xs2, ys2, to_string(i));
@@ -835,6 +819,72 @@ int main()
 
     framework.legend(axis1);
     framework.legend(axis2);
+}
+
+int main()
+{
+    initializeLogger();
+
+    minimaElimination();
+
+//    logFunctionInfo("", molecule, equilStruct);
+
+//    equilStruct = molecule.backTransform(equilStruct);
+//    auto normalized = normalizeForPolar(molecule, equilStruct);
+
+
+//    findInitialPolarDirections();
+//    vector<size_t> cnts = {381, 375, 375, 381, 381, 381, 57};
+//
+//    vector<double> vals(cnts[1]);
+//    vector<double> grads(cnts[1]);
+//
+//    vector<double> dists;
+//
+//    auto startTime = chrono::system_clock::now();
+//
+////    #pragma omp parallel for
+//    for (size_t i = 0; i < cnts[1] / 38; i++) {
+//        vector<size_t> charges;
+//        vect structure;
+//
+//        tie(charges, structure) = readChemcraft(ifstream(str(format("./1/%1%.xyz") % i)));
+//        static vect prev_structure = structure;
+//        dists.push_back(distance(prev_structure, structure));
+//        prev_structure = structure;
+//
+//        GaussianProducer producer(charges, 1);
+//        auto fixed = fixAtomSymmetry(producer);
+//
+//        auto valueGrad = fixed.valueGrad(fixed.backTransform(structure));
+//        vals[i] = get<0>(valueGrad);
+//        grads[i] = get<1>(valueGrad).norm();
+//    }
+//
+//    framework.plot(framework.newPlot("values 1"), vals);
+//    framework.plot(framework.newPlot("grads 1"), grads);
+////    framework.plot(framework.newPlot(), dists);
+//
+//    LOG_INFO("{}", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
+//
+//    return 0;
+
+//    ofstream output("./test.xyz");
+//    for (size_t i = 0; i < 3; i++) {
+//        vector<size_t> charges;
+//        vect structure;
+//
+//        tie(charges, structure) = readChemcraft(ifstream(str(format("./0/%1%.xyz") % i)));
+//
+//        output << charges.size() << endl << "comment" << endl;
+//        for (size_t j = 0; j < charges.size(); j++)
+//            output << charges[j] << ' ' << structure.block(j * 3, 0, 3, 1).transpose() << endl;
+//    }
+//
+//    return 0;
+//
+//    minimaElimination();
+//    shs();
 
     return 0;
 }

@@ -121,3 +121,11 @@ auto normalizeForPolar(FuncT&& func, vect const& v)
 {
     return makeAffineTransfomation(forward<FuncT>(func), v, linearizationNormalization(func.hess(v)));
 }
+
+template<typename FuncT>
+auto toNormalCooridnates(FuncT&& func, vect const& v)
+{
+    auto A = linearization(func.hess(v));
+
+    return makeAffineTransfomation(forward<FuncT>(func), v, linearizationNormalization(func.hess(v)));
+}

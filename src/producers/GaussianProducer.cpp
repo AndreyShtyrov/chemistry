@@ -15,6 +15,7 @@ string const GAUSSIAN_HEADER = "%%RWF=%1%rwf\n"
 
 string const SCF_METHOD = "scf";
 string const FORCE_METHOD = "force";
+//string const FORCE_METHOD = "freq=ReadFC";
 string const HESS_METHOD = "freq";
 
 
