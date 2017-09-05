@@ -584,13 +584,27 @@ void minimaElimination()
 {
     initializeLogger();
 
+//    ifstream input("./C2H4");
+//    auto charges = readCharges(input);
+//    auto equilStruct = readVect(input);
+//
+//    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
+//    equilStruct = molecule.backTransform(equilStruct);
+//    auto normalized = normalizeForPolar(molecule, equilStruct);
+
     ifstream input("./C2H4");
     auto charges = readCharges(input);
     auto equilStruct = readVect(input);
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
-    equilStruct = molecule.backTransform(equilStruct);
-    auto normalized = normalizeForPolar(molecule, equilStruct);
+    auto molecule = GaussianProducer(charges, 1);
+
+    auto hess = molecule.hess(equilStruct);
+    auto A = linearizationNormalization(hess, 6);
+    size_t nDims = molecule.nDims;
+    vector<size_t> poss = {nDims - 6, nDims - 5, nDims - 4, nDims - 3, nDims - 2, nDims - 1};
+    vector<double> vals(poss.size(), 0.);
+    auto normalized = fix(makeAffineTransfomation(molecule, equilStruct, A), poss, vals);
+
     auto zeroEnergy = normalized(makeConstantVect(normalized.nDims, 0));
 
     double const r = .05;
@@ -620,7 +634,7 @@ void minimaElimination()
 
             int sign = 2 * ((int) iter % 2) - 1;
             vect startingDirection = r * sign * eye(normalized.nDims, iter / 2);
-            auto path = optimizeOnSphere(stopStrategy, func, startingDirection, r, 50);
+            auto path = optimizeOnSphere(stopStrategy, func, startingDirection, r, 50, 5);
             auto direction = path.back();
 
             logFunctionPolarInfo("func in new direction", func, direction, r);
@@ -642,7 +656,7 @@ void minimaElimination()
                 LOG_ERROR("second optimization converged for {} steps", supplePath.size());
             } else {
                 LOG_ERROR("second optimization did not converged with hessian update. Tryin standard optimization");
-                supplePath = optimizeOnSphere(stopStrategy, normalized, direction, r, 50);
+                supplePath = optimizeOnSphere(stopStrategy, normalized, direction, r, 50, 5);
                 needToAssert = true;
             }
 
