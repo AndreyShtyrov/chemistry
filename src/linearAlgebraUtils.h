@@ -35,7 +35,7 @@ matrix singularValues(matrix m);
 
 vect toDistanceSpace(vect v, bool sorted=true);
 
-vect normalized(vect const& v);
+//vect normalized(vect const& v);
 
 double distance(vect const& u, vect const& v);
 

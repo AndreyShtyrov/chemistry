@@ -11,6 +11,7 @@
 #include "optimization/optimizations.h"
 #include "optimization/optimizeOnSphere.h"
 #include "InputOutputUtils.h"
+#include "constants.h"
 
 using namespace std;
 using namespace boost;
@@ -75,42 +76,6 @@ void optimizeStructure()
     cout << toChemcraftCoords(molecule.getCharges(), prepared.transform(optimized)) << endl;
 }
 
-vector<vect> parseLogForStartingPoints(string const& file, size_t nDims)
-{
-    vector<vect> result;
-
-    ifstream log(file);
-    string s;
-    while (getline(log, s))
-        if (s.find("initial polar Direction") != string::npos) {
-            stringstream ss(s);
-            for (int i = 0; i < 5; i++)
-                ss >> s;
-
-            vect v(nDims);
-            for (int i = 0; i < v.rows(); i++)
-                ss >> v(i);
-            result.push_back(v);
-
-//            stringstream ss;
-//
-//            getline(log, s);
-//            for (int i = 0; i < 6; i++) {
-//                getline(log, s);
-//                ss << s << endl;
-//            }
-//
-//            vector<size_t> charges;
-//            vect initState;
-//            tie(charges, initState) = readMolecule(ss);
-//
-//            result.push_back(initState);
-        }
-
-    return result;
-}
-
-
 vector<vector<double>> calcPairwiseDists(vect v)
 {
     assert(v.rows() % 3 == 0);
@@ -148,74 +113,6 @@ double calcDist(vect v1, vect v2)
     return minMse;
 }
 
-void filterPolarDirectionsLogFile()
-{
-    ifstream input("C2H4");
-    auto charges = readCharges(input);
-    auto equilStruct = readVect(input);
-
-    auto molecule = GaussianProducer(charges);
-    auto fixedSym = fixAtomSymmetry(molecule);
-    equilStruct = fixedSym.backTransform(equilStruct);
-
-    auto linearHessian = normalizeForPolar(fixedSym, equilStruct);
-
-    auto ps = parseLogForStartingPoints("./logs/log_2017-05-31_13-38", 12);
-    cout << ps.size() << endl;
-
-    vector<bool> used(ps.size());
-    for (size_t i = 0; i < ps.size(); i++)
-        for (size_t j = i + 1; j < ps.size(); j++)
-            if (calcDist(linearHessian.fullTransform(ps[i]), linearHessian.fullTransform(ps[j])) < 1e-1)
-                used[j] = true;
-
-    size_t cnt = 0;
-    for (size_t i = 0; i < ps.size(); i++)
-        if (!used[i])
-            cnt++;
-    cout << cnt << endl;
-
-    for (auto val : used)
-        cout << val;
-    cout << endl << endl;
-
-    cout.precision(10);
-    for (size_t i = 0; i < ps.size(); i++)
-        if (!used[i]) {
-            cout << ps[i].rows() << endl;
-            for (int j = 0; j < ps[i].rows(); j++)
-                cout << fixed << ps[i](j) << ' ';
-            cout << endl;
-        }
-    cout << endl << endl << endl;
-
-    cout << ps.size() << endl;
-    for (auto const& p : ps)
-        cout << p.transpose() << endl;
-    cout << endl << endl;
-
-    cout.precision(2);
-    for (size_t i = 0; i < ps.size(); i++) {
-        auto const& p1 = ps[i];
-        if (used[i])
-            continue;
-
-        vector<double> xs;
-
-        for (auto const& p2 : ps) {
-//            auto dist = (p1 - p2).norm();
-            auto dist = calcDist(linearHessian.fullTransform(p1), linearHessian.fullTransform(p2));
-
-            cout << fixed << dist << ' ';
-            xs.push_back(dist);
-        }
-        cout << endl;
-
-        sort(xs.begin(), xs.end());
-        framework.plot(framework.newPlot(), xs);
-    }
-}
-
 vector<vect> fromCartesianToPositions(vect v)
 {
     assert(v.rows() % 3 == 0);
@@ -226,83 +123,25 @@ vector<vect> fromCartesianToPositions(vect v)
     return rs;
 }
 
-vect centerOfMass(vector<vect> const& rs)
+vect centerOfMass(vector<size_t> charges, vector<vect> const& rs)
 {
+    double massSum = 0;
     auto p = makeConstantVect(3, 0);
-    for (auto r : rs)
-        p += r;
-    return p;
+
+    for (size_t i = 0; i < charges.size(); i++) {
+        p += rs[i] * MASSES[charges[i]];
+        massSum += MASSES[charges[i]];
+    }
+
+    return p / massSum;
 }
 
-matrix tensorOfInertia(vector<vect> const& rs)
+matrix tensorOfInertia(vector<size_t> charges, vector<vect> const& rs)
 {
     auto J = makeConstantMatrix(3, 3, 0);
-    for (auto r : rs)
-        J += identity(3) * r.dot(r) + r * r.transpose();
+    for (size_t i = 0; i < charges.size(); i++)
+        J += MASSES[charges[i]] * (identity(3) * rs[i].dot(rs[i]) + rs[i] * rs[i].transpose());
     return J;
-}
-
-vect solveEquations(vect v)
-{
-    auto withZeros = makeConstantVect((size_t) v.rows() + 6, 0);
-    for (size_t i = 0, j = 0; i < (size_t) withZeros.rows(); i++)
-        if (i < 7 && i != 5)
-            withZeros(i) = 0;
-        else
-            withZeros(i) = v(j++);
-    LOG_INFO("\nv = {}\nw = {}", v.transpose(), withZeros.transpose());
-    v = withZeros;
-
-    auto rs = fromCartesianToPositions(v);
-    auto p = centerOfMass(rs);
-    auto J = tensorOfInertia(rs);
-
-    LOG_INFO("before:\np: {}\nJ:\n{}", p.transpose(), J);
-
-    double A = -p(0);
-    double B = -p(1);
-    double C = -p(2);
-    double D = -J(0, 1);
-    double E = -J(0, 2);
-    double F = -J(1, 2);
-
-    LOG_INFO("values: {} {} {} {} {} {}", A, B, C, D, E, F);
-
-    {
-        LOG_INFO("Linear Equasions #2: x: {}", C);
-        v(2) = C;
-    }
-
-    {
-        Eigen::Matrix2d m;
-        m << 1, 1, v(2), v(5);
-        Eigen::Vector2d b;
-        b << B, F;
-        Eigen::Vector2d x = m.colPivHouseholderQr().solve(b);
-        LOG_INFO("Linear Equasions #2:\nm:\n{}\nb: {}\nx: {}", m, b.transpose(), x.transpose());
-        v(1) = x(0);
-        v(4) = x(1);
-    }
-
-    {
-        Eigen::Matrix3d m;
-        m << 1, 1, 1, v(1), v(4), v(7), v(2), v(5), v(8);
-        Eigen::Vector3d b;
-        b << A, D, E;
-        Eigen::Vector3d x = m.colPivHouseholderQr().solve(b);
-        LOG_INFO("Linear Equasions #3:\nm:\n{}\nb: {}\nx: {}", m, b.transpose(), x.transpose());
-        v(0) = x(0);
-        v(3) = x(1);
-        v(6) = x(2);
-    }
-
-    rs = fromCartesianToPositions(v);
-    p = centerOfMass(rs);
-    J = tensorOfInertia(rs);
-    LOG_INFO("after:\np: {}\nJ:\n{}", p.transpose(), J);
-    LOG_INFO("result: {}", v.transpose());
-
-    return v;
 }
 
 void analizeFolder()
@@ -464,19 +303,12 @@ void analizeMinsOnSphere()
     }
 }
 
-void shs()
+template<typename FuncT>
+void shs(FuncT& func)
 {
-    ifstream input("./C2H4");
-    auto charges = readCharges(input);
-    auto equilStruct = readVect(input);
+    logFunctionInfo("normalized energy for equil structure", func, makeConstantVect(func.nDims, 0));
 
-    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 1));
-    equilStruct = molecule.backTransform(equilStruct);
-    auto normalized = normalizeForPolar(molecule, equilStruct);
-
-    logFunctionInfo("normalized energy for equil structure", normalized, makeConstantVect(normalized.nDims, 0));
-
-    ifstream minsOnSphere("./data/mins_on_sphere");
+    ifstream minsOnSphere("./mins_on_sphere");
     size_t cnt;
     minsOnSphere >> cnt;
     vector<vect> vs;
@@ -490,51 +322,63 @@ void shs()
 
 #pragma omp parallel for
     for (size_t i = 0; i < cnt; i++) {
+        vector<vect> trajectory;
+
         auto direction = vs[i];
         LOG_INFO("Path #{}. Initial direction: {}", i, direction.transpose());
 
-        system(str(boost::format("mkdir %1%") % i).c_str());
-        double value = normalized(direction);
+        double value = func(direction);
+        double r = firstR;
 
-        size_t j = 0;
-        for (j = 0; j < 600; j++) {
+        for (size_t j = 0; j < 600; j++) {
             if (!j) {
-                auto polar = makePolarWithDirection(normalized, .1, direction);
+                auto polar = makePolarWithDirection(func, .1, direction);
                 logFunctionInfo(str(boost::format("Paht %1% initial direction info") % i), polar, makeConstantVect(polar.nDims, M_PI / 2));
             }
-
-            double r = firstR + deltaR * j;
 
             vect prev = direction;
             direction = direction / direction.norm() * r;
             try {
-                vector<vect> path;
-                if (!tryToConverge(stopStrategy, normalized, direction, r, path)) {
-                    LOG_INFO("Path #{}. did not conveged", i);
-                    break;
+                bool converged = false;
+                for (double curDeltaR = deltaR; ; curDeltaR *= .75) {
+                    vector<vect> path;
+                    if (tryToConverge(stopStrategy, func, direction, r + curDeltaR, path, 10)) {
+                        LOG_INFO("Path #{} converged with delta r {}", i, curDeltaR);
+                        r += curDeltaR;
+                        direction = path.back();
+
+                        break;
+                    }
+                    else {
+                        LOG_INFO("Path #{} did not converged with delta r {}", i, curDeltaR);
+                    }
                 }
-                direction = path.back();
-
-                double newValue = normalized(direction);
-                LOG_INFO("New {} point in path {}:\n\tvalue = {:.13f}\n\tdelta norm = {:.13f}\n\t{}\nchemcraft coords:\n{}", j, i,
-                         newValue, (direction / direction.norm() - prev / prev.norm()).norm(), direction.transpose(),
-                         toChemcraftCoords(charges, normalized.fullTransform(direction)));
-
-                ofstream output(str(boost::format("./%1%/%2%.xyz") % i % j));
-                output << toChemcraftCoords(charges, normalized.fullTransform(direction)) << endl;
-
-                if (newValue < value) {
-                    LOG_ERROR("newValue < value [{:.13f} < {:.13f}]. Stopping", newValue, value);
-                    //break;
-                }
-
-                value = newValue;
             } catch (GaussianException const &exc) {
+                LOG_ERROR("Path #{} terminated with gaussian assert", i);
                 break;
+            }
+
+            double newValue = func(direction);
+            LOG_INFO("New {} point in path {}:\n\tvalue = {:.13f}\n\tdelta angle cosine = {:.13f}\n\tdirection: {}", j, i,
+                     newValue, angleCosine(direction, prev), direction.transpose());
+
+            trajectory.push_back(func.fullTransform(direction));
+
+            if (newValue < value) {
+                LOG_ERROR("newValue < value [{:.13f} < {:.13f}]. Stopping", newValue, value);
+                //break;
+            }
+
+            value = newValue;
+
+            {
+                ofstream output(str(format("./results/%1%.xyz") % i));
+                for (size_t j = 0; j < trajectory.size(); j++)
+                    output << toChemcraftCoords(func.getFullInnerFunction().getCharges(), trajectory[j], to_string(j));
             }
         }
 
-        LOG_INFO("Path #{} finished with {} iterations", i, j);
+        LOG_INFO("Path #{} finished with {} iterations", i, trajectory.size());
     }
 }
 
@@ -580,46 +424,24 @@ void findInitialPolarDirections(FuncT& func, double r)
     }
 }
 
-void minimaElimination()
+template<typename FuncT>
+void minimaElimination(FuncT& func)
 {
-    initializeLogger();
-
-//    ifstream input("./C2H4");
-//    auto charges = readCharges(input);
-//    auto equilStruct = readVect(input);
-//
-//    auto molecule = fixAtomSymmetry(GaussianProducer(charges, 3));
-//    equilStruct = molecule.backTransform(equilStruct);
-//    auto normalized = normalizeForPolar(molecule, equilStruct);
-
-    ifstream input("./C2H4");
-    auto charges = readCharges(input);
-    auto equilStruct = readVect(input);
-
-    auto molecule = GaussianProducer(charges, 1);
-
-    auto hess = molecule.hess(equilStruct);
-    auto A = linearizationNormalization(hess, 6);
-    size_t nDims = molecule.nDims;
-    vector<size_t> poss = {nDims - 6, nDims - 5, nDims - 4, nDims - 3, nDims - 2, nDims - 1};
-    vector<double> vals(poss.size(), 0.);
-    auto normalized = fix(makeAffineTransfomation(molecule, equilStruct, A), poss, vals);
-
-    auto zeroEnergy = normalized(makeConstantVect(normalized.nDims, 0));
+    auto zeroEnergy = func(makeConstantVect(func.nDims, 0));
 
     double const r = .05;
     vector<double> values;
     vector<vect> directions;
 
     auto const axis = framework.newPlot();
-    RandomProjection const projection(normalized.nDims);
+    RandomProjection const projection(func.nDims);
     auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4 * r, 1e-4 * r));
 
     bool firstEpochFinished = false;
     auto lastSuccessIter = (size_t) -1;
 
     while (!firstEpochFinished) {
-        for (size_t iter = 0; iter < (normalized.nDims - 2) * 2; iter++) {
+        for (size_t iter = 0; iter < (func.nDims - 2) * 2; iter++) {
             if (iter == lastSuccessIter) {
                 firstEpochFinished = true;
                 break;
@@ -628,17 +450,16 @@ void minimaElimination()
 //            Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
 //            LargestCosine3OnSphere supplement(normalized.nDims, values, directions);
 //            Cosine3OnSphereInterpolation supplement(normalized.nDims, values, directions);
-            CleverCosine3OnSphereInterpolation supplement(normalized.nDims, values, directions);
-
-            auto func = normalized + supplement;
+            CleverCosine3OnSphereInterpolation supplement(func.nDims, values, directions);
+            auto withSupplement = func + supplement;
 
             int sign = 2 * ((int) iter % 2) - 1;
-            vect startingDirection = r * sign * eye(normalized.nDims, iter / 2);
-            auto path = optimizeOnSphere(stopStrategy, func, startingDirection, r, 50, 5);
+            vect startingDirection = r * sign * eye(func.nDims, iter / 2);
+            auto path = optimizeOnSphere(stopStrategy, withSupplement, startingDirection, r, 50, 5);
             auto direction = path.back();
 
-            logFunctionPolarInfo("func in new direction", func, direction, r);
-            logFunctionPolarInfo("normalized in new direction", normalized, direction, r);
+            logFunctionPolarInfo("func in new direction", withSupplement, direction, r);
+            logFunctionPolarInfo("normalized in new direction", func, direction, r);
 
             stringstream distances;
             double minAngle = 0;
@@ -652,11 +473,11 @@ void minimaElimination()
             bool needToAssert = false;
 
             vector<vect> supplePath;
-            if (tryToConverge(stopStrategy, normalized, direction, r, supplePath, 10)) {
+            if (tryToConverge(stopStrategy, func, direction, r, supplePath, 10)) {
                 LOG_ERROR("second optimization converged for {} steps", supplePath.size());
             } else {
                 LOG_ERROR("second optimization did not converged with hessian update. Tryin standard optimization");
-                supplePath = optimizeOnSphere(stopStrategy, normalized, direction, r, 50, 5);
+                supplePath = optimizeOnSphere(stopStrategy, func, direction, r, 50, 5);
                 needToAssert = true;
             }
 
@@ -665,7 +486,7 @@ void minimaElimination()
             direction = path.back();
             LOG_ERROR("cos(oldDirection, direction) = {} after second optimization", angleCosine(oldDirection, direction));
 
-            logFunctionPolarInfo("normalized after additional optimization", normalized, direction, r);
+            logFunctionPolarInfo("normalized after additional optimization", func, direction, r);
 
             distances = stringstream();
             minAngle = 0;
@@ -677,8 +498,7 @@ void minimaElimination()
                       distances.str(), minAngle);
 
             if (minAngle < .975) {
-//                values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
-                values.push_back(sqr(r) / 2 - (normalized(direction) - zeroEnergy));
+                values.push_back(sqr(r) / 2 - (func(direction) - zeroEnergy));
 
                 directions.push_back(direction);
 
@@ -707,24 +527,24 @@ void minimaElimination()
         for (size_t i = 0; i < cnt; i++) {
             auto direction = readVect(mins);
 
-            logFunctionPolarInfo("", normalized, direction, r);
+            logFunctionPolarInfo("", func, direction, r);
 
             directions.push_back(direction);
 //            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
-            values.push_back(sqr(r) / 2 - (normalized(direction) - zeroEnergy));
+            values.push_back(sqr(r) / 2 - (func(direction) - zeroEnergy));
         }
     }
 
     while (true) {
 //        Cosine3OnSphereInterpolation supplement(normalized.nDims, values, directions);
-        CleverCosine3OnSphereInterpolation supplement(normalized.nDims, values, directions);
-        auto func = normalized + supplement;
+        CleverCosine3OnSphereInterpolation supplement(func.nDims, values, directions);
+        auto withSupplement = func + supplement;
 
-        auto path = optimizeOnSphere(stopStrategy, func, r * randomVectOnSphere(normalized.nDims), r, 50, 5);
+        auto path = optimizeOnSphere(stopStrategy, withSupplement, r * randomVectOnSphere(func.nDims), r, 50, 5);
         auto direction = path.back();
 
-        logFunctionPolarInfo("func in new direction", func, direction, r);
-        logFunctionPolarInfo("normalized in new direction", normalized, direction, r);
+        logFunctionPolarInfo("func in new direction", withSupplement, direction, r);
+        logFunctionPolarInfo("normalized in new direction", func, direction, r);
 
         stringstream distances;
         double minAngle = 0;
@@ -740,7 +560,7 @@ void minimaElimination()
 
         for (size_t i = 0; i < N; i++) {
             double alpha = (double) (i + 1) / N;
-            auto linearComb = alpha * normalized + (1 - alpha) * func;
+            auto linearComb = alpha * func + (1 - alpha) * withSupplement;
 
             auto supplePath = optimizeOnSphere(stopStrategy, linearComb, direction, r, 50, 10);
             LOG_ERROR("experimental iteration {}: converged for {} steps", i + 1, supplePath.size());
@@ -751,7 +571,7 @@ void minimaElimination()
 
         LOG_ERROR("Experimental convergence result:cos(angle) = {}", angleCosine(direction, directionMem));
 
-        logFunctionPolarInfo("normalized after additional optimization", normalized, direction, r);
+        logFunctionPolarInfo("normalized after additional optimization", func, direction, r);
 
         distances = stringstream();
         minAngle = 0;
@@ -764,9 +584,7 @@ void minimaElimination()
                   distances.str(), minAngle);
 
         if (minAngle < .975) {
-//            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
-//            values.push_back((sqr(r) / 2 - (func(direction) - zeroEnergy)) / r / r / r);
-            values.push_back(sqr(r) / 2 - (normalized(direction) - zeroEnergy));
+            values.push_back(sqr(r) / 2 - (func(direction) - zeroEnergy));
             directions.push_back(direction);
 
             ofstream mins("./mins_on_sphere");
@@ -835,11 +653,28 @@ void researchTrajectories()
     framework.legend(axis2);
 }
 
+
 int main()
 {
     initializeLogger();
 
-    minimaElimination();
+    ifstream C2H4("./C2H4");
+    auto charges = readCharges(C2H4);
+    auto equilStruct = readVect(C2H4);
+
+    auto center = centerOfMass(charges, fromCartesianToPositions(equilStruct));
+    for (size_t i = 0; i < equilStruct.size(); i += 3)
+        equilStruct.block(i, 0, 3, 1) -= center;
+
+    auto molecule = GaussianProducer(charges, 1);
+    auto hess = molecule.hess(equilStruct);
+    auto A = linearizationNormalization(hess, 6);
+    size_t nDims = molecule.nDims;
+    vector<size_t> poss = {nDims - 6, nDims - 5, nDims - 4, nDims - 3, nDims - 2, nDims - 1};
+    vector<double> vals(poss.size(), 0.);
+    auto normalized = fix(makeAffineTransfomation(molecule, equilStruct, A), poss, vals);
+
+    shs(normalized);
 
 //    logFunctionInfo("", molecule, equilStruct);
 
