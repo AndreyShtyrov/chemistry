@@ -67,8 +67,8 @@ SET(MODULES_SOURCE_FILES
         )
 
 
-add_executable(chemistry2 src/main.cpp ${SOURCE_FILES})
-target_link_libraries(chemistry2 ${Boost_LIBRARIES})
+add_executable(chemistry src/main.cpp ${SOURCE_FILES})
+target_link_libraries(chemistry ${Boost_LIBRARIES})
 
 add_executable(run_tests ${TEST_SOURCE_FILES} ${SOURCE_FILES})
 target_link_libraries(run_tests gtest_main )
