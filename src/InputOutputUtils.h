@@ -39,26 +39,49 @@ vector<size_t> readCharges(StreamT&& stream)
 template<typename StreamT>
 tuple<vector<size_t>, vect> readChemcraft(StreamT&& stream)
 {
-    vector<size_t> charges;
-    vector<Eigen::Vector3d> poss;
 
-    size_t charge = 0;
-    while (stream >> charge) {
-        Eigen::Vector3d pos;
-        for (size_t i = 0; i < 3; i++)
-            stream >> pos(i);
+    size_t cnt = 0;
+    stream >> cnt;
 
-        charges.push_back(charge);
-        poss.push_back(pos);
+    string comment;
+    stream >> comment;
+
+    vector<size_t> charges(cnt);
+    vect structure(cnt * 3);
+    for (size_t i = 0; i < cnt; i++) {
+        stream >> charges[i];
+        structure.block(i * 3, 0, 3, 1) = readVect(3, stream);
     }
 
-    vect pos(charges.size() * 3, 1);
-    for (size_t i = 0; i < charges.size(); i++) {
-        pos.block(i * 3, 0, 3, 1) = poss[i];
-    }
-
-    return make_tuple(charges, pos);
+    return make_tuple(charges, structure);
 }
+
+template<typename StreamT>
+tuple<vector<vector<size_t>>, vector<vect>> readWholeChemcraft(StreamT&& stream)
+{
+    vector<vector<size_t>> charges;
+    vector<vect> structures;
+
+    size_t cnt = 0;
+
+    while (stream >> cnt) {
+        string comment;
+        stream >> comment;
+
+        vector<size_t> currentCharges(cnt);
+        vect structure(cnt * 3);
+        for (size_t i = 0; i < cnt; i++) {
+            stream >> currentCharges[i];
+            structure.block(i * 3, 0, 3, 1) = readVect(3, stream);
+        }
+
+        charges.push_back(currentCharges);
+        structures.push_back(structure);
+    }
+
+    return make_tuple(charges, structures);
+}
+
 
 string toChemcraftCoords(vector<size_t> const& charges, vect p, string comment="");
 

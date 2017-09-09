@@ -658,82 +658,99 @@ int main()
 {
     initializeLogger();
 
-    ifstream C2H4("./C2H4");
-    auto charges = readCharges(C2H4);
-    auto equilStruct = readVect(C2H4);
-
-    auto center = centerOfMass(charges, fromCartesianToPositions(equilStruct));
-    for (size_t i = 0; i < equilStruct.size(); i += 3)
-        equilStruct.block(i, 0, 3, 1) -= center;
-
-    auto molecule = GaussianProducer(charges, 1);
-    auto hess = molecule.hess(equilStruct);
-    auto A = linearizationNormalization(hess, 6);
-    size_t nDims = molecule.nDims;
-    vector<size_t> poss = {nDims - 6, nDims - 5, nDims - 4, nDims - 3, nDims - 2, nDims - 1};
-    vector<double> vals(poss.size(), 0.);
-    auto normalized = fix(makeAffineTransfomation(molecule, equilStruct, A), poss, vals);
-
-    shs(normalized);
+//    ifstream C2H4("./C2H4");
+//    auto charges = readCharges(C2H4);
+//    auto equilStruct = readVect(C2H4);
+//
+//    auto center = centerOfMass(charges, fromCartesianToPositions(equilStruct));
+//    for (size_t i = 0; i < equilStruct.size(); i += 3)
+//        equilStruct.block(i, 0, 3, 1) -= center;
+//
+//    auto molecule = GaussianProducer(charges, 1);
+//    auto hess = molecule.hess(equilStruct);
+//    auto A = linearizationNormalization(hess, 6);
+//    size_t nDims = molecule.nDims;
+//    vector<size_t> poss = {nDims - 6, nDims - 5, nDims - 4, nDims - 3, nDims - 2, nDims - 1};
+//    vector<double> vals(poss.size(), 0.);
+//    auto normalized = fix(makeAffineTransfomation(molecule, equilStruct, A), poss, vals);
+//
+//    shs(normalized);
 
 //    logFunctionInfo("", molecule, equilStruct);
 
 //    equilStruct = molecule.backTransform(equilStruct);
 //    auto normalized = normalizeForPolar(molecule, equilStruct);
 
+    RandomProjection projection(15);
+    auto axis1 = framework.newPlot("true distance space");
+    auto axis2 = framework.newPlot("false distance space");
 
-//    findInitialPolarDirections();
-//    vector<size_t> cnts = {381, 375, 375, 381, 381, 381, 57};
-//
-//    vector<double> vals(cnts[1]);
-//    vector<double> grads(cnts[1]);
-//
-//    vector<double> dists;
-//
-//    auto startTime = chrono::system_clock::now();
-//
-////    #pragma omp parallel for
-//    for (size_t i = 0; i < cnts[1] / 38; i++) {
-//        vector<size_t> charges;
-//        vect structure;
-//
-//        tie(charges, structure) = readChemcraft(ifstream(str(format("./1/%1%.xyz") % i)));
-//        static vect prev_structure = structure;
-//        dists.push_back(distance(prev_structure, structure));
-//        prev_structure = structure;
-//
-//        GaussianProducer producer(charges, 1);
-//        auto fixed = fixAtomSymmetry(producer);
-//
-//        auto valueGrad = fixed.valueGrad(fixed.backTransform(structure));
-//        vals[i] = get<0>(valueGrad);
-//        grads[i] = get<1>(valueGrad).norm();
-//    }
-//
-//    framework.plot(framework.newPlot("values 1"), vals);
-//    framework.plot(framework.newPlot("grads 1"), grads);
-////    framework.plot(framework.newPlot(), dists);
-//
-//    LOG_INFO("{}", chrono::duration<double>(chrono::system_clock::now() - startTime).count());
-//
-//    return 0;
+    for (size_t i = 0; i < 11; i++) {
+        vector<vector<size_t>> charges;
+        vector<vect> structures;
 
-//    ofstream output("./test.xyz");
-//    for (size_t i = 0; i < 3; i++) {
-//        vector<size_t> charges;
-//        vect structure;
-//
-//        tie(charges, structure) = readChemcraft(ifstream(str(format("./0/%1%.xyz") % i)));
-//
-//        output << charges.size() << endl << "comment" << endl;
-//        for (size_t j = 0; j < charges.size(); j++)
-//            output << charges[j] << ' ' << structure.block(j * 3, 0, 3, 1).transpose() << endl;
-//    }
-//
-//    return 0;
-//
-//    minimaElimination();
-//    shs();
+        tie(charges, structures) = readWholeChemcraft(ifstream(str(format("./results/%1%.xyz") % i)));
+
+        {
+            vector<double> xs, ys;
+            for (auto structure : structures) {
+                auto proj = projection(toDistanceSpace(structure, true));
+                xs.push_back(proj(0));
+                ys.push_back(proj(1));
+            }
+
+            framework.plot(axis1, xs, ys, to_string(i));
+        }
+
+        {
+            vector<double> xs, ys;
+            for (auto structure : structures) {
+                auto proj = projection(toDistanceSpace(structure, false));
+                xs.push_back(proj(0));
+                ys.push_back(proj(1));
+            }
+
+            framework.plot(axis2, xs, ys, to_string(i));
+        }
+    }
+    framework.legend(axis1);
+    framework.legend(axis2);
+
+    LOG_INFO("trajectories were built");
+
+    for (size_t i = 0; i < 11; i++) {
+        vector<vector<size_t>> charges;
+        vector<vect> structures;
+
+        tie(charges, structures) = readWholeChemcraft(ifstream(str(format("./results/%1%.xyz") % i)));
+
+        vector<double> vals(charges.size());
+        vector<double> grads(charges.size());
+        vector<double> dists(charges.size());
+
+        vect prev_structure = structures[0];
+
+#pragma omp parallel for
+        for (size_t j = 0; j < charges.size(); j++) {
+            auto structure = structures[j];
+            auto curCharges = charges[j];
+
+
+            GaussianProducer molecule(curCharges, 1);
+
+            auto valueGrad = molecule.valueGrad(structure);
+            vals[j] = get<0>(valueGrad);
+            grads[j] = get<1>(valueGrad).norm();
+            dists[j] = distance(prev_structure, structure);
+
+            prev_structure = structure;
+        }
+
+        framework.plot(framework.newPlot("values" + to_string(i)), vals);
+        framework.plot(framework.newPlot("grads" + to_string(i)), grads);
+        framework.plot(framework.newPlot("dists" + to_string(i)), dists);
+    }
+
 
     return 0;
 }
