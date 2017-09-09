@@ -1,5 +1,4 @@
 build
 cmake-build-debug
-.idea
 work/logs
 work/tmp
