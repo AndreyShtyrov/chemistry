@@ -17,7 +17,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="work in progress">
+    <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
@@ -50,8 +50,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="838" column="36" lean-forward="true" selection-start-line="838" selection-start-column="36" selection-end-line="838" selection-end-column="36" />
+            <state relative-caret-position="251">
+              <caret line="834" column="48" lean-forward="false" selection-start-line="834" selection-start-column="48" selection-end-line="834" selection-end-column="48" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
@@ -611,7 +611,7 @@
       <workItem from="1504957417421" duration="16411000" />
       <workItem from="1505028219454" duration="13469000" />
       <workItem from="1505114825768" duration="15955000" />
-      <workItem from="1505234891916" duration="10581000" />
+      <workItem from="1505234891916" duration="10625000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -725,7 +725,14 @@
       <option name="project" value="LOCAL" />
       <updated>1504120549860</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="modified shs version, standard shs for server">
+      <created>1505289624160</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1505289624160</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -761,7 +768,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="304913000" />
+    <option name="totallyTimeSpent" value="304957000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -808,7 +815,8 @@
     <MESSAGE value="minima elimination technique implemented" />
     <MESSAGE value="minima elimination technique in progress" />
     <MESSAGE value="work in progress" />
-    <option name="LAST_COMMIT_MESSAGE" value="work in progress" />
+    <MESSAGE value="modified shs version, standard shs for server" />
+    <option name="LAST_COMMIT_MESSAGE" value="modified shs version, standard shs for server" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -988,6 +996,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="342">
           <caret line="19" column="18" lean-forward="false" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
+          <folding>
+            <element signature="e#14#33#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1171,8 +1182,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="838" column="36" lean-forward="true" selection-start-line="838" selection-start-column="36" selection-end-line="838" selection-end-column="36" />
+        <state relative-caret-position="251">
+          <caret line="834" column="48" lean-forward="false" selection-start-line="834" selection-start-column="48" selection-end-line="834" selection-end-column="48" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />
