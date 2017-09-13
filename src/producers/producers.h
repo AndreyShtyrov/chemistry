@@ -3,6 +3,7 @@
 #include "FunctionProducer.h"
 
 #include "Sum.h"
+#include "Difference.h"
 #include "MultipliedByConstant.h"
 
 #include "InPolar.h"
@@ -19,3 +20,4 @@
 #include "ClosestCosine3OnSphere.h"
 #include "LargestCosine3OnSphere.h"
 #include "CleverCosine3OnSphereInterpolation.h"
+#include "SecondOrderFunction.h"

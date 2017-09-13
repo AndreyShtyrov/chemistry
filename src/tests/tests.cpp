@@ -352,4 +352,23 @@ TEST(FunctionProducer, Calculations)
     testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
 }
 
+TEST(FunctionProducer, SecondOrderFunction)
+{
+    size_t const N = 10;
+    uniform_real_distribution<double> random;
+
+
+    for (size_t i = 0; i < N; i++) {
+        size_t const nDims = 10;
+
+        auto value = random(randomGen);
+        auto grad = makeRandomVect(nDims);
+        auto hess = makeRandomMatrix(nDims, nDims);
+
+        SecondOrderFunction func(value, grad, hess);
+
+        testProducer(func, makeConstantVect(nDims, -1), makeConstantVect(nDims, 1), 1000);
+    }
+}
+
 

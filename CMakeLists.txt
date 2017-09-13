@@ -44,7 +44,6 @@ SET(SOURCE_FILES
         src/helper.cpp
         src/InputOutputUtils.cpp
         src/linearAlgebraUtils.cpp
-        src/testing/coordinateSystemChange.cpp
         src/producers/FixValues.cpp
         src/producers/FunctionProducer.cpp
         src/producers/GaussianProducer.cpp
@@ -54,6 +53,7 @@ SET(SOURCE_FILES
         src/producers/LargestCosine3OnSphere.cpp
         src/producers/SqrNorm.cpp
         src/producers/CleverCosine3OnSphereInterpolation.cpp
+        src/producers/SecondOrderFunction.cpp
         )
 
 SET(TEST_SOURCE_FILES

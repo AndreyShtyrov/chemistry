@@ -2,13 +2,13 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
-      <config projectName="chemistry" targetName="gtest_main" />
       <config projectName="chemistry" targetName="run_tests" />
+      <config projectName="chemistry" targetName="gtest_main" />
+      <config projectName="chemistry" targetName="chemistry" />
+      <config projectName="chemistry" targetName="gtest" />
+      <config projectName="chemistry" targetName="gmock_main" />
       <config projectName="chemistry" targetName="modules" />
       <config projectName="chemistry" targetName="gmock" />
-      <config projectName="chemistry" targetName="gmock_main" />
-      <config projectName="chemistry" targetName="gtest" />
-      <config projectName="chemistry" targetName="chemistry" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true" ADDITIONAL_BUILD_OPTIONS="-j 4">
@@ -18,8 +18,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="work in progress">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/linearAlgebraUtils.cpp" afterPath="$PROJECT_DIR$/src/linearAlgebraUtils.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/linearAlgebraUtils.h" afterPath="$PROJECT_DIR$/src/linearAlgebraUtils.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/modules/findInitialPolarDirections.cpp" afterPath="$PROJECT_DIR$/src/modules/findInitialPolarDirections.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" afterPath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/AffineTransformation.h" afterPath="$PROJECT_DIR$/src/producers/AffineTransformation.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/Difference.h" afterPath="$PROJECT_DIR$/src/producers/Difference.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/SecondOrderFunction.cpp" afterPath="$PROJECT_DIR$/src/producers/SecondOrderFunction.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/SecondOrderFunction.h" afterPath="$PROJECT_DIR$/src/producers/SecondOrderFunction.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/Sum.h" afterPath="$PROJECT_DIR$/src/producers/Sum.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/producers.h" afterPath="$PROJECT_DIR$/src/producers/producers.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tests/tests.cpp" afterPath="$PROJECT_DIR$/src/tests/tests.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -37,73 +50,30 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="463" column="35" lean-forward="false" selection-start-line="463" selection-start-column="35" selection-end-line="463" selection-end-column="35" />
+            <state relative-caret-position="323">
+              <caret line="838" column="36" lean-forward="true" selection-start-line="838" selection-start-column="36" selection-end-line="838" selection-end-column="36" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
-                <element signature="e#6141#6157#0" expanded="true" />
-                <element signature="e#7060#7076#0" expanded="true" />
+                <element signature="e#6224#6240#0" expanded="true" />
+                <element signature="e#7147#7163#0" expanded="true" />
+                <element signature="e#7678#9047#0" expanded="false" />
+                <element signature="e#11957#13239#0" expanded="false" />
+                <element signature="e#13241#20650#0" expanded="false" />
+                <element signature="e#20652#23995#0" expanded="false" />
+                <element signature="e#24005#24021#0" expanded="true" />
+                <element signature="e#24447#24463#0" expanded="true" />
+                <element signature="e#26015#28075#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="feed_args.hpp" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/include/boost/format/feed_args.hpp">
+      <file leaf-file-name="Product.h" pinned="false" current-in-tab="false">
+        <entry file="file:///usr/include/eigen3/Eigen/src/Core/Product.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4743">
-              <caret line="279" column="0" lean-forward="false" selection-start-line="279" selection-start-column="0" selection-end-line="279" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InputOutputUtils.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/InputOutputUtils.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="7" lean-forward="false" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GaussianProducer.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="833">
-              <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FixValues.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/producers/FixValues.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="867">
-              <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="optimizeOnSphere.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="9" lean-forward="false" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InPolar.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/producers/InPolar.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3077">
-              <caret line="181" column="19" lean-forward="false" selection-start-line="181" selection-start-column="19" selection-end-line="181" selection-end-column="19" />
+            <state relative-caret-position="193">
+              <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -112,32 +82,68 @@
       <file leaf-file-name="AffineTransformation.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="901">
-              <caret line="53" column="9" lean-forward="false" selection-start-line="53" selection-start-column="9" selection-end-line="53" selection-end-column="9" />
+            <state relative-caret-position="342">
+              <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Sum.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/producers/Sum.h">
+      <file leaf-file-name="GaussianProducer.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="680">
-              <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-              <folding>
-                <element signature="e#14#33#0" expanded="true" />
-                <element signature="e#74#108#0" expanded="true" />
-                <element signature="e#1233#1267#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="139">
+              <caret line="88" column="48" lean-forward="false" selection-start-line="88" selection-start-column="48" selection-end-line="88" selection-end-column="48" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HistoryStrategyWrapper.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/optimization/stop_strategies/HistoryStrategyWrapper.h">
+      <file leaf-file-name="GeneralProduct.h" pinned="false" current-in-tab="false">
+        <entry file="file:///usr/include/eigen3/Eigen/src/Core/GeneralProduct.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+            <state relative-caret-position="463">
+              <caret line="414" column="0" lean-forward="false" selection-start-line="414" selection-start-column="0" selection-end-line="414" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Matrix.h" pinned="false" current-in-tab="false">
+        <entry file="file:///usr/include/eigen3/Eigen/src/Core/Matrix.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="193">
+              <caret line="378" column="0" lean-forward="false" selection-start-line="378" selection-start-column="0" selection-end-line="378" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlainObjectBase.h" pinned="false" current-in-tab="false">
+        <entry file="file:///usr/include/eigen3/Eigen/src/Core/PlainObjectBase.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="543">
+              <caret line="346" column="0" lean-forward="false" selection-start-line="346" selection-start-column="0" selection-end-line="346" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ColPivHouseholderQR.h" pinned="false" current-in-tab="false">
+        <entry file="file:///usr/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="193">
+              <caret line="545" column="0" lean-forward="false" selection-start-line="545" selection-start-column="0" selection-end-line="545" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FixValues.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/producers/FixValues.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="193">
+              <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -174,6 +180,9 @@
       <find>Path #6</find>
       <find>Path #6 converged</find>
       <find>not co</find>
+      <find>final</find>
+      <find>Converged with r = 0.05</find>
+      <find>nor</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -192,13 +201,10 @@
         <option value="$PROJECT_DIR$/src/producers/FixValues.cpp" />
         <option value="$PROJECT_DIR$/src/PythongraphicsFramework.h" />
         <option value="$PROJECT_DIR$/src/testing/CoordinateSystemChange.cpp" />
-        <option value="$PROJECT_DIR$/src/linearAlgebraUtils.cpp" />
-        <option value="$PROJECT_DIR$/src/linearAlgebraUtils.h" />
         <option value="$PROJECT_DIR$/src/helper.h" />
         <option value="$PROJECT_DIR$/src/InputOutputUtils.cpp" />
         <option value="$PROJECT_DIR$/src/InputOutputUtils.h" />
         <option value="$PROJECT_DIR$/src/testing/tests.h" />
-        <option value="$PROJECT_DIR$/src/testing/coordinateSystemChange.cpp" />
         <option value="$PROJECT_DIR$/src/producers/FunctionProducer.cpp.cpp" />
         <option value="$PROJECT_DIR$/src/optimization/stop_strategies/AtomicStopStrategy.h" />
         <option value="$PROJECT_DIR$/src/producers/FunctionProducer.h" />
@@ -210,18 +216,24 @@
         <option value="$PROJECT_DIR$/src/producers/GaussianProducer.h" />
         <option value="$PROJECT_DIR$/src/modules/findInitialPolarDirections.cpp" />
         <option value="$PROJECT_DIR$/src/modules/benchmarkTest.cpp" />
-        <option value="$PROJECT_DIR$/src/producers/Sum.h" />
         <option value="$PROJECT_DIR$/src/producers/OnSphereCosineSupplement.cpp" />
         <option value="$PROJECT_DIR$/src/producers/OnSphereCosineSupplement.h" />
-        <option value="$PROJECT_DIR$/src/producers/producers.h" />
         <option value="$PROJECT_DIR$/src/helper.cpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/tests/tests.cpp" />
         <option value="$PROJECT_DIR$/src/producers/Cosine3OnSphereInterpolation.h" />
         <option value="$PROJECT_DIR$/src/producers/Cosine3OnSphereInterpolation.cpp" />
-        <option value="$PROJECT_DIR$/src/producers/AffineTransformation.h" />
         <option value="$PROJECT_DIR$/src/optimization/stop_strategies/HistoryStrategyWrapper.h" />
+        <option value="$PROJECT_DIR$/src/producers/SecondOrderFunction.h" />
+        <option value="$PROJECT_DIR$/src/producers/SecondOrderFunction.cpp" />
+        <option value="$PROJECT_DIR$/src/tests/tests.cpp" />
+        <option value="$PROJECT_DIR$/src/producers/Sum.h" />
+        <option value="$PROJECT_DIR$/src/producers/producers.h" />
+        <option value="$PROJECT_DIR$/src/producers/Difference.h" />
+        <option value="$PROJECT_DIR$/src/testing/coordinateSystemChange.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
+        <option value="$PROJECT_DIR$/src/linearAlgebraUtils.cpp" />
+        <option value="$PROJECT_DIR$/src/linearAlgebraUtils.h" />
+        <option value="$PROJECT_DIR$/src/producers/AffineTransformation.h" />
         <option value="$PROJECT_DIR$/src/main.cpp" />
       </list>
     </option>
@@ -235,7 +247,7 @@
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
     <option name="width" value="1920" />
-    <option name="height" value="1061" />
+    <option name="height" value="1063" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -274,18 +286,6 @@
               <item name="chemistry" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
               <item name="chemistry" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="optimization" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="chemistry" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="chemistry" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="producers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="chemistry" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="chemistry" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="testing" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -298,234 +298,6 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="js.eslint.eslintPackage" value="" />
     <property name="settings.editor.selected.configurable" value="CMakeSettings" />
-  </component>
-  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
-    <UpdatedFiles>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Updated from server" />
-        <option name="myStatusName" value="Changed on server" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="CHANGED_ON_SERVER" />
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Updated" />
-          <option name="myStatusName" value="Changed" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="UPDATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/CMakeLists.txt</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/InputOutputUtils.h</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/linearAlgebraUtils.h</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/main.cpp</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/framework.ipynb</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/func.out</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/mins_on_sphere</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/results/0.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/results/1.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/results/10.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/results/2.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/results/3.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/results/4.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/results/5.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/results/6.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/results/7.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/results/8.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/work/results/9.xyz</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Created" />
-          <option name="myStatusName" value="Created" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="CREATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/constants.h</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Deleted" />
-          <option name="myStatusName" value="Deleted" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="true" />
-          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/0.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/1.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/10.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/11.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/12.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/13.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/14.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/15.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/16.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/17.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/18.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/19.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/2.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/3.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/4.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/5.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/6.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/7.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/8.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/0/9.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/0.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/1.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/10.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/11.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/12.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/13.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/14.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/15.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/16.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/17.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/18.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/19.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/2.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/3.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/4.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/5.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/6.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/7.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/8.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/H2/9.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/cur.in</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/0.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/1.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/10.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/11.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/12.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/13.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/14.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/15.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/16.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/17.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/18.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/19.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/2.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/3.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/4.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/5.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/6.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/7.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/8.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/inverse/9.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/1.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/10.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/11.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/12.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/13.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/14.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/15.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/16.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/17.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/18.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/19.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/2.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/3.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/4.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/5.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/6.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/7.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/8.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/left_out/9.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/0.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/1.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/10.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/11.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/12.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/13.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/14.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/15.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/16.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/17.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/18.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/19.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/2.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/3.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/4.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/5.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/6.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/7.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/8.xyz</PATH>
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/data_old/right_out/9.xyz</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Restored" />
-          <option name="myStatusName" value="Will be restored" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="RESTORED" />
-        </FILE-GROUP>
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Modified" />
-        <option name="myStatusName" value="Modified" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MODIFIED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Skipped" />
-        <option name="myStatusName" value="Skipped" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="SKIPPED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with conflicts" />
-        <option name="myStatusName" value="Will be merged with conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_CONFLICTS" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with tree conflicts" />
-        <option name="myStatusName" value="Merged with tree conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with property conflicts" />
-        <option name="myStatusName" value="Will be merged with property conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged" />
-        <option name="myStatusName" value="Will be merged" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Not in repository" />
-        <option name="myStatusName" value="Not in repository" />
-        <option name="mySupportsDeletion" value="true" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="UNKNOWN" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Locally added" />
-        <option name="myStatusName" value="Locally added" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="LOCALLY_ADDED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Locally removed" />
-        <option name="myStatusName" value="Locally removed" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="LOCALLY_REMOVED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Switched" />
-        <option name="myStatusName" value="Switched" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="SWITCHED" />
-      </FILE-GROUP>
-    </UpdatedFiles>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -540,9 +312,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Application.chemistry">
-    <configuration name="Benchmark.ScfNonParallel" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" WORKING_DIR="file://$PROJECT_DIR$/work" PASS_PARENT_ENVS_2="true" PROJECT_NAME="chemistry" TARGET_NAME="modules" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="chemistry" RUN_TARGET_NAME="modules" TEST_CLASS="Benchmark" TEST_METHOD="ScfNonParallel" TEST_MODE="SUITE_TEST">
-      <envs />
-    </configuration>
     <configuration name="Benchmark.ScfParallel" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" WORKING_DIR="file://$PROJECT_DIR$/work" PASS_PARENT_ENVS_2="true" PROJECT_NAME="chemistry" TARGET_NAME="modules" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="chemistry" RUN_TARGET_NAME="modules" TEST_CLASS="Benchmark" TEST_METHOD="ScfParallel" TEST_MODE="SUITE_TEST">
       <envs />
     </configuration>
@@ -551,6 +320,9 @@
       <method>
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="false" />
       </method>
+    </configuration>
+    <configuration name="FunctionProducer.Calculations" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" WORKING_DIR="file://$PROJECT_DIR$/work" PASS_PARENT_ENVS_2="true" PROJECT_NAME="chemistry" TARGET_NAME="run_tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="chemistry" RUN_TARGET_NAME="run_tests" TEST_CLASS="FunctionProducer" TEST_METHOD="Calculations" TEST_MODE="SUITE_TEST">
+      <envs />
     </configuration>
     <configuration name="FunctionProducer.Cosine3OnSPhereInterpolation" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" WORKING_DIR="file://$PROJECT_DIR$/work" PASS_PARENT_ENVS_2="true" PROJECT_NAME="chemistry" TARGET_NAME="run_tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="chemistry" RUN_TARGET_NAME="run_tests" TEST_CLASS="FunctionProducer" TEST_METHOD="Cosine3OnSPhereInterpolation" TEST_MODE="SUITE_TEST">
       <envs />
@@ -765,32 +537,35 @@
       </method>
     </configuration>
     <list size="13">
-      <item index="0" class="java.lang.String" itemvalue="Application.Build All" />
-      <item index="1" class="java.lang.String" itemvalue="Application.gmock" />
-      <item index="2" class="java.lang.String" itemvalue="Application.gmock_main" />
-      <item index="3" class="java.lang.String" itemvalue="Application.gtest" />
-      <item index="4" class="java.lang.String" itemvalue="Application.gtest_main" />
-      <item index="5" class="java.lang.String" itemvalue="Google Test.run_tests" />
-      <item index="6" class="java.lang.String" itemvalue="Application.chemistry" />
+      <item index="0" class="java.lang.String" itemvalue="Application.chemistry" />
+      <item index="1" class="java.lang.String" itemvalue="Application.Build All" />
+      <item index="2" class="java.lang.String" itemvalue="Application.gmock" />
+      <item index="3" class="java.lang.String" itemvalue="Application.gmock_main" />
+      <item index="4" class="java.lang.String" itemvalue="Application.gtest" />
+      <item index="5" class="java.lang.String" itemvalue="Application.gtest_main" />
+      <item index="6" class="java.lang.String" itemvalue="Google Test.run_tests" />
       <item index="7" class="java.lang.String" itemvalue="Google Test.modules" />
-      <item index="8" class="java.lang.String" itemvalue="Google Test.Benchmark.ScfNonParallel" />
-      <item index="9" class="java.lang.String" itemvalue="Google Test.Benchmark.ScfParallel" />
-      <item index="10" class="java.lang.String" itemvalue="Google Test.FunctionProducer.OnSphereCosineSupplement" />
-      <item index="11" class="java.lang.String" itemvalue="Google Test.FunctionProducer.OnSphereCosineSupplement2" />
-      <item index="12" class="java.lang.String" itemvalue="Google Test.FunctionProducer.Cosine3OnSPhereInterpolation" />
+      <item index="8" class="java.lang.String" itemvalue="Google Test.Benchmark.ScfParallel" />
+      <item index="9" class="java.lang.String" itemvalue="Google Test.FunctionProducer.OnSphereCosineSupplement" />
+      <item index="10" class="java.lang.String" itemvalue="Google Test.FunctionProducer.OnSphereCosineSupplement2" />
+      <item index="11" class="java.lang.String" itemvalue="Google Test.FunctionProducer.Cosine3OnSPhereInterpolation" />
+      <item index="12" class="java.lang.String" itemvalue="Google Test.FunctionProducer.Calculations" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Google Test.FunctionProducer.Cosine3OnSPhereInterpolation" />
-        <item index="1" class="java.lang.String" itemvalue="Google Test.FunctionProducer.OnSphereCosineSupplement2" />
-        <item index="2" class="java.lang.String" itemvalue="Google Test.FunctionProducer.OnSphereCosineSupplement" />
-        <item index="3" class="java.lang.String" itemvalue="Google Test.Benchmark.ScfParallel" />
-        <item index="4" class="java.lang.String" itemvalue="Google Test.Benchmark.ScfNonParallel" />
+        <item index="0" class="java.lang.String" itemvalue="Google Test.FunctionProducer.Calculations" />
+        <item index="1" class="java.lang.String" itemvalue="Google Test.FunctionProducer.Cosine3OnSPhereInterpolation" />
+        <item index="2" class="java.lang.String" itemvalue="Google Test.FunctionProducer.OnSphereCosineSupplement2" />
+        <item index="3" class="java.lang.String" itemvalue="Google Test.FunctionProducer.OnSphereCosineSupplement" />
+        <item index="4" class="java.lang.String" itemvalue="Google Test.Benchmark.ScfParallel" />
       </list>
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -833,6 +608,10 @@
       <workItem from="1504686231721" duration="18168000" />
       <workItem from="1504858312544" duration="680000" />
       <workItem from="1504953378363" duration="309000" />
+      <workItem from="1504957417421" duration="16411000" />
+      <workItem from="1505028219454" duration="13469000" />
+      <workItem from="1505114825768" duration="15955000" />
+      <workItem from="1505234891916" duration="10581000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -950,11 +729,8 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="FunctionProducer_Cosine3OnSPhereInterpolation - 2017.08.27 at 13h 36m 39s.xml">
-      <configuration name="FunctionProducer.Cosine3OnSPhereInterpolation" configurationId="CMakeGoogleTestRunConfigurationType" />
-    </history-entry>
-    <history-entry file="FunctionProducer_Cosine3OnSPhereInterpolation - 2017.08.27 at 13h 37m 13s.xml">
-      <configuration name="FunctionProducer.Cosine3OnSPhereInterpolation" configurationId="CMakeGoogleTestRunConfigurationType" />
+    <history-entry file="FunctionProducer_Calculations - 2017.09.10 at 11h 21m 35s.xml">
+      <configuration name="FunctionProducer.Calculations" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
     <history-entry file="FunctionProducer_Cosine3OnSPhereInterpolation - 2017.08.27 at 13h 38m 06s.xml">
       <configuration name="FunctionProducer.Cosine3OnSPhereInterpolation" configurationId="CMakeGoogleTestRunConfigurationType" />
@@ -980,27 +756,30 @@
     <history-entry file="FunctionProducer_OnSphereCosineSupplement2 - 2017.08.26 at 19h 32m 51s.xml">
       <configuration name="FunctionProducer.OnSphereCosineSupplement2" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
+    <history-entry file="run_tests - 2017.09.11 at 21h 12m 35s.xml">
+      <configuration name="run_tests" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="248497000" />
+    <option name="totallyTimeSpent" value="304913000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1061" extended-state="0" />
+    <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.217119" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20876826" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32885212" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37331954" sideWeight="0.5020877" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.373706" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37331954" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1033,69 +812,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="5" />
+      <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///usr/include/eigen3/Eigen/src/Core/products/GeneralBlockPanelKernel.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="1422" column="0" lean-forward="false" selection-start-line="1422" selection-start-column="0" selection-end-line="1422" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/testing/CoordinateSystemChange.cpp" />
-    <entry file="file:///usr/include/eigen3/Eigen/src/Core/Product.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2210">
-          <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/eigen3/Eigen/src/Core/GeneralProduct.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7038">
-          <caret line="414" column="0" lean-forward="false" selection-start-line="414" selection-start-column="0" selection-end-line="414" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/stdlib.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="618" column="11" lean-forward="false" selection-start-line="618" selection-start-column="11" selection-end-line="618" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/testing/newDegreeDelition.cpp" />
-    <entry file="file://$PROJECT_DIR$/src/testing/tests.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/boost/throw_exception.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1156">
-          <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/boost/format/format_implementation.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/CMakeFiles/Progress/16">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="5" lean-forward="true" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/optimization/stop_strategies/AtomicStopStrategy.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="445">
@@ -1107,13 +828,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
           <caret line="452" column="6" lean-forward="false" selection-start-line="452" selection-start-column="6" selection-end-line="452" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/testing/coordinateSystemChange.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="29" column="33" lean-forward="false" selection-start-line="29" selection-start-column="33" selection-end-line="29" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -1147,13 +861,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/include/eigen3/Eigen/src/Core/PlainObjectBase.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4828">
-          <caret line="284" column="0" lean-forward="false" selection-start-line="284" selection-start-column="0" selection-end-line="284" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/work/np-complete/study/au/chemistry/cmake-build-debug/googletest-src/googletest/src/gtest.cc">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="40783">
@@ -1169,31 +876,10 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/tests.cpp" />
-    <entry file="file:///usr/include/eigen3/Eigen/src/Core/Dot.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="73" column="0" lean-forward="false" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/linearAlgebraUtils.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
-          <caret line="100" column="28" lean-forward="false" selection-start-line="100" selection-start-column="28" selection-end-line="100" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/modules/benchmarkTest.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1326">
           <caret line="78" column="36" lean-forward="false" selection-start-line="78" selection-start-column="36" selection-end-line="78" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="35" column="0" lean-forward="false" selection-start-line="33" selection-start-column="4" selection-end-line="35" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1204,38 +890,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/FunctionProducer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="0" lean-forward="false" selection-start-line="16" selection-start-column="4" selection-end-line="18" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/producers/OnSphereCosineSupplement.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" column="24" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/producers.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="41" lean-forward="false" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/helper.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="31" column="28" lean-forward="false" selection-start-line="31" selection-start-column="28" selection-end-line="31" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/tests/tests.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="76" column="116" lean-forward="false" selection-start-line="76" selection-start-column="116" selection-end-line="76" selection-end-column="116" />
         </state>
       </provider>
     </entry>
@@ -1274,13 +932,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/linearAlgebraUtils.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="663">
-          <caret line="47" column="13" lean-forward="false" selection-start-line="47" selection-start-column="13" selection-end-line="47" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/modules/findInitialPolarDirections.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
@@ -1288,98 +939,252 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="833">
-          <caret line="49" column="42" lean-forward="false" selection-start-line="49" selection-start-column="42" selection-end-line="49" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/optimization/stop_strategies/HistoryStrategyWrapper.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
+        <state relative-caret-position="324">
           <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="833">
-          <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/FixValues.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="867">
-          <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/Sum.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-          <folding>
-            <element signature="e#14#33#0" expanded="true" />
-            <element signature="e#74#108#0" expanded="true" />
-            <element signature="e#1233#1267#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="901">
-          <caret line="53" column="9" lean-forward="false" selection-start-line="53" selection-start-column="9" selection-end-line="53" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/InPolar.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3077">
-          <caret line="181" column="19" lean-forward="false" selection-start-line="181" selection-start-column="19" selection-end-line="181" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/InputOutputUtils.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="7" lean-forward="false" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file:///usr/include/boost/format/feed_args.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4743">
+        <state relative-caret-position="5022">
           <caret line="279" column="0" lean-forward="false" selection-start-line="279" selection-start-column="0" selection-end-line="279" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/InputOutputUtils.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="7" lean-forward="false" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/helper.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="24" column="23" lean-forward="false" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/FunctionProducer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="0" lean-forward="false" selection-start-line="12" selection-start-column="4" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/SqrNorm.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/SecondOrderFunction.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="19" column="18" lean-forward="false" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/SecondOrderFunction.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="522">
+          <caret line="29" column="29" lean-forward="false" selection-start-line="29" selection-start-column="29" selection-end-line="29" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tests/tests.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="496">
+          <caret line="373" column="0" lean-forward="false" selection-start-line="373" selection-start-column="0" selection-end-line="373" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/Sum.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1026">
+          <caret line="57" column="0" lean-forward="false" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/producers.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="23" lean-forward="false" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/Difference.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1026">
+          <caret line="57" column="0" lean-forward="false" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+          <folding>
+            <element signature="e#14#33#0" expanded="true" />
+            <element signature="e#74#108#0" expanded="true" />
+            <element signature="e#1247#1281#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="15" column="16" lean-forward="false" selection-start-line="15" selection-start-column="16" selection-end-line="15" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/c++/5/debug/vector">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="408" column="0" lean-forward="false" selection-start-line="408" selection-start-column="0" selection-end-line="408" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/eigen3/Eigen/src/Core/Dot.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="73" column="0" lean-forward="false" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/InPolar.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3186">
+          <caret line="177" column="56" lean-forward="false" selection-start-line="177" selection-start-column="56" selection-end-line="177" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/testing/coordinateSystemChange.cpp" />
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="828">
+          <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="9" lean-forward="false" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
+        <state relative-caret-position="612">
+          <caret line="34" column="19" lean-forward="false" selection-start-line="34" selection-start-column="19" selection-end-line="34" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/linearAlgebraUtils.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="460">
+          <caret line="168" column="47" lean-forward="false" selection-start-line="168" selection-start-column="47" selection-end-line="168" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/linearAlgebraUtils.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="46" column="0" lean-forward="true" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/eigen3/Eigen/src/Core/util/Memory.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="545" column="0" lean-forward="false" selection-start-line="545" selection-start-column="0" selection-end-line="545" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/eigen3/Eigen/src/Core/PlainObjectBase.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="543">
+          <caret line="346" column="0" lean-forward="false" selection-start-line="346" selection-start-column="0" selection-end-line="346" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/eigen3/Eigen/src/Core/Matrix.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="378" column="0" lean-forward="false" selection-start-line="378" selection-start-column="0" selection-end-line="378" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/eigen3/Eigen/src/Core/GeneralProduct.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="463">
+          <caret line="414" column="0" lean-forward="false" selection-start-line="414" selection-start-column="0" selection-end-line="414" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/eigen3/Eigen/src/Core/Product.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/FixValues.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="88" column="48" lean-forward="false" selection-start-line="88" selection-start-column="48" selection-end-line="88" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="463" column="35" lean-forward="false" selection-start-line="463" selection-start-column="35" selection-end-line="463" selection-end-column="35" />
+        <state relative-caret-position="323">
+          <caret line="838" column="36" lean-forward="true" selection-start-line="838" selection-start-column="36" selection-end-line="838" selection-end-column="36" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />
-            <element signature="e#6141#6157#0" expanded="true" />
-            <element signature="e#7060#7076#0" expanded="true" />
+            <element signature="e#6224#6240#0" expanded="true" />
+            <element signature="e#7147#7163#0" expanded="true" />
+            <element signature="e#7678#9047#0" expanded="false" />
+            <element signature="e#11957#13239#0" expanded="false" />
+            <element signature="e#13241#20650#0" expanded="false" />
+            <element signature="e#20652#23995#0" expanded="false" />
+            <element signature="e#24005#24021#0" expanded="true" />
+            <element signature="e#24447#24463#0" expanded="true" />
+            <element signature="e#26015#28075#0" expanded="false" />
           </folding>
         </state>
       </provider>

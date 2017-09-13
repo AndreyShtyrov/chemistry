@@ -149,3 +149,24 @@ double angleCosine(vect const& u, vect const& v)
 {
     return normalized(u).dot(normalized(v));
 }
+
+matrix verticalStack(matrix const& a, matrix const& b)
+{
+    assert(a.cols() == b.cols());
+
+    matrix result(a.rows() + b.rows(), a.cols());
+    result.block(0, 0, a.rows(), a.cols()) = a;
+    result.block(a.rows(), 0, b.rows(), b.cols()) = b;
+    return result;
+}
+
+matrix horizontalStack(matrix const& a, matrix const& b)
+{
+    assert(a.rows() == b.rows());
+
+    matrix result(a.rows(), a.cols() + b.cols());
+    result.block(0, 0, a.rows(), a.cols()) = a;
+    result.block(0, a.cols(), b.rows(), b.cols()) = b;
+
+    return result;
+}

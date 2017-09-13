@@ -14,7 +14,7 @@
 using namespace optimization;
 
 template<typename FuncT>
-void logFunctionInfo(string const& title, FuncT& func, vect const& p)
+void logFunctionInfo(FuncT& func, vect const& p, string const& title)
 {
     auto valueGradHess = func.valueGradHess(p);
     auto value = get<0>(valueGradHess);
@@ -59,7 +59,7 @@ void findInitialPolarDirections(FuncT& func, double r)
             framework.scatter(axis, xs, ys);
 
             auto polar = makePolarWithDirection(func, r, path.back());
-            logFunctionInfo("new initial polar direction", polar, makeConstantVect(polar.nDims, M_PI / 2));
+            logFunctionInfo(polar, makeConstantVect(polar.nDims, M_PI / 2), "new initial polar direction");
         }
     }
 }

@@ -25,14 +25,14 @@ namespace optimization
                 auto grad = get<1>(valueGradHess);
                 auto hess = get<2>(valueGradHess);
 
-                auto sValues = singularValues(hess);
-                for (size_t j = 0; j < sValues.size(); j++) {
-                    if (sValues(j) < 0) {
-                        LOG_INFO("singular values converge break, stop strategy with zero delta: {}",
-                                 stopStrategy(globalIter + i, p, value, grad, hess, p - p));
-                        return false;
-                    }
-                }
+//                auto sValues = singularValues(hess);
+//                for (size_t j = 0; j < sValues.size(); j++) {
+//                    if (sValues(j) < 0) {
+//                        LOG_INFO("singular values converge break, stop strategy with zero delta: {}",
+//                                 stopStrategy(globalIter + i, p, value, grad, hess, p - p));
+//                        return false;
+//                    }
+//                }
 
                 auto lastP = p;
                 p = polar.getInnerFunction().transform(polar.transform(theta - hess.inverse() * grad));
@@ -58,6 +58,7 @@ namespace optimization
     template<typename FuncT, typename StopStrategy>
     vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, double r, size_t preHessIters, size_t convergeIters)
     {
+        LOG_INFO("{} {}", r, p.norm());
         assert(abs(r - p.norm()) < 1e-7);
 
         auto const theta = makeConstantVect(func.nDims - 1, M_PI / 2);
@@ -90,12 +91,14 @@ namespace optimization
                 LOG_INFO("was: {}, factor: {}, now: {} [delta: {}]", was, factor, momentum.norm(), grad.norm());
             }
             else
-                momentum = grad;
+                momentum = grad / r;
 
             auto lastP = p;
             p = polar.getInnerFunction().transform(polar.transform(theta - momentum));
             path.push_back(p);
 
+//            if (stopStrategy(iter, p, value, grad, momentum))
+//                break;
             stopStrategy(iter, p, value, grad, momentum);
 
             if (iter % 25 == 0) {

@@ -1,16 +1,23 @@
-//
-// Created by george on 10.09.17.
-//
+#pragma once
 
-#ifndef CHEMISTRY_SECONDORDERFUNCTION_H
-#define CHEMISTRY_SECONDORDERFUNCTION_H
+#include "helper.h"
+#include "FunctionProducer.h"
+
+class SecondOrderFunction : public FunctionProducer
+{
+public:
+    SecondOrderFunction(double value, vect grad, matrix hess);
+
+    double operator()(vect const& x);
+    vect grad(vect const& x);
+    matrix hess(vect const& x);
+
+    tuple<double, vect> valueGrad(vect const& x);
+    tuple<double, vect, matrix> valueGradHess(vect const& x);
 
 
-
-class SecondOrderFunction {
-
+private:
+    double mValue;
+    vect mGrad;
+    matrix mHess;
 };
-
-
-
-#endif //CHEMISTRY_SECONDORDERFUNCTION_H

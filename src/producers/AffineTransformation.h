@@ -9,7 +9,7 @@ template<typename FuncT>
 class AffineTransformation : public FunctionProducer
 {
 public:
-    AffineTransformation(FuncT func, vect delta, matrix basis) : FunctionProducer(func.nDims),
+    AffineTransformation(FuncT func, vect delta, matrix basis) : FunctionProducer((size_t) basis.cols()),
                                                                  mFunc(move(func)), mDelta(move(delta)),
                                                                  mBasis(move(basis))
     { }
@@ -68,7 +68,8 @@ public:
     {
         assert((size_t) x.rows() == nDims);
 
-        return mBasis.inverse() * (x - mDelta);
+        return mBasis.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(x - mDelta);
+//        return mBasis.inverse() * (x - mDelta);
     }
 
     FuncT const& getInnerFunction() const
@@ -79,6 +80,11 @@ public:
     auto const& getFullInnerFunction() const
     {
         return mFunc.getFullInnerFunction();
+    }
+
+    matrix const& getBasis() const
+    {
+        return mBasis;
     }
 
 private:
