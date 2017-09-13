@@ -832,7 +832,7 @@ int main()
     for (size_t i = 0; i < equilStruct.size(); i += 3)
         equilStruct.block(i, 0, 3, 1) -= center;
 
-    auto molecule = GaussianProducer(_charges, 1);
+    auto molecule = GaussianProducer(_charges, 3);
     auto normalized = remove6LesserHessValues(molecule, equilStruct);
 
     shs(normalized);

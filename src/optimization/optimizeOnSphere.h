@@ -25,14 +25,14 @@ namespace optimization
                 auto grad = get<1>(valueGradHess);
                 auto hess = get<2>(valueGradHess);
 
-//                auto sValues = singularValues(hess);
-//                for (size_t j = 0; j < sValues.size(); j++) {
-//                    if (sValues(j) < 0) {
-//                        LOG_INFO("singular values converge break, stop strategy with zero delta: {}",
-//                                 stopStrategy(globalIter + i, p, value, grad, hess, p - p));
-//                        return false;
-//                    }
-//                }
+                auto sValues = singularValues(hess);
+                for (size_t j = 0; j < sValues.size(); j++) {
+                    if (sValues(j) < 0) {
+                        LOG_INFO("singular values converge break, stop strategy with zero delta: {}",
+                                 stopStrategy(globalIter + i, p, value, grad, hess, p - p));
+                        return false;
+                    }
+                }
 
                 auto lastP = p;
                 p = polar.getInnerFunction().transform(polar.transform(theta - hess.inverse() * grad));

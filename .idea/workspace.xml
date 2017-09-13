@@ -18,21 +18,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/linearAlgebraUtils.cpp" afterPath="$PROJECT_DIR$/src/linearAlgebraUtils.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/linearAlgebraUtils.h" afterPath="$PROJECT_DIR$/src/linearAlgebraUtils.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/modules/findInitialPolarDirections.cpp" afterPath="$PROJECT_DIR$/src/modules/findInitialPolarDirections.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" afterPath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/AffineTransformation.h" afterPath="$PROJECT_DIR$/src/producers/AffineTransformation.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/Difference.h" afterPath="$PROJECT_DIR$/src/producers/Difference.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/SecondOrderFunction.cpp" afterPath="$PROJECT_DIR$/src/producers/SecondOrderFunction.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/SecondOrderFunction.h" afterPath="$PROJECT_DIR$/src/producers/SecondOrderFunction.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/Sum.h" afterPath="$PROJECT_DIR$/src/producers/Sum.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/producers.h" afterPath="$PROJECT_DIR$/src/producers/producers.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tests/tests.cpp" afterPath="$PROJECT_DIR$/src/tests/tests.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/mins_on_sphere" afterPath="$PROJECT_DIR$/work/mins_on_sphere" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/0.xyz" afterPath="$PROJECT_DIR$/work/results/0.xyz" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/10.xyz" afterPath="$PROJECT_DIR$/work/results/10.xyz" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/2.xyz" afterPath="$PROJECT_DIR$/work/results/2.xyz" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/4.xyz" afterPath="$PROJECT_DIR$/work/results/4.xyz" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/6.xyz" afterPath="$PROJECT_DIR$/work/results/6.xyz" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/8.xyz" afterPath="$PROJECT_DIR$/work/results/8.xyz" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -50,8 +46,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
-              <caret line="834" column="48" lean-forward="false" selection-start-line="834" selection-start-column="48" selection-end-line="834" selection-end-column="48" />
+            <state relative-caret-position="503">
+              <caret line="839" column="0" lean-forward="true" selection-start-line="839" selection-start-column="0" selection-end-line="839" selection-end-column="0" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
@@ -72,7 +68,7 @@
       <file leaf-file-name="Product.h" pinned="false" current-in-tab="false">
         <entry file="file:///usr/include/eigen3/Eigen/src/Core/Product.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
+            <state relative-caret-position="2340">
               <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
               <folding />
             </state>
@@ -82,8 +78,8 @@
       <file leaf-file-name="AffineTransformation.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+            <state relative-caret-position="396">
+              <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -92,7 +88,7 @@
       <file leaf-file-name="GaussianProducer.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="139">
+            <state relative-caret-position="1584">
               <caret line="88" column="48" lean-forward="false" selection-start-line="88" selection-start-column="48" selection-end-line="88" selection-end-column="48" />
               <folding />
             </state>
@@ -102,7 +98,7 @@
       <file leaf-file-name="GeneralProduct.h" pinned="false" current-in-tab="false">
         <entry file="file:///usr/include/eigen3/Eigen/src/Core/GeneralProduct.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="463">
+            <state relative-caret-position="7452">
               <caret line="414" column="0" lean-forward="false" selection-start-line="414" selection-start-column="0" selection-end-line="414" selection-end-column="0" />
               <folding />
             </state>
@@ -112,8 +108,18 @@
       <file leaf-file-name="Matrix.h" pinned="false" current-in-tab="false">
         <entry file="file:///usr/include/eigen3/Eigen/src/Core/Matrix.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
+            <state relative-caret-position="6804">
               <caret line="378" column="0" lean-forward="false" selection-start-line="378" selection-start-column="0" selection-end-line="378" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="optimizeOnSphere.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="594">
+              <caret line="33" column="17" lean-forward="false" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -122,7 +128,7 @@
       <file leaf-file-name="PlainObjectBase.h" pinned="false" current-in-tab="false">
         <entry file="file:///usr/include/eigen3/Eigen/src/Core/PlainObjectBase.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="543">
+            <state relative-caret-position="6228">
               <caret line="346" column="0" lean-forward="false" selection-start-line="346" selection-start-column="0" selection-end-line="346" selection-end-column="0" />
               <folding />
             </state>
@@ -132,7 +138,7 @@
       <file leaf-file-name="ColPivHouseholderQR.h" pinned="false" current-in-tab="false">
         <entry file="file:///usr/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
+            <state relative-caret-position="9810">
               <caret line="545" column="0" lean-forward="false" selection-start-line="545" selection-start-column="0" selection-end-line="545" selection-end-column="0" />
               <folding />
             </state>
@@ -142,7 +148,7 @@
       <file leaf-file-name="FixValues.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/producers/FixValues.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
+            <state relative-caret-position="882">
               <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
               <folding />
             </state>
@@ -230,10 +236,10 @@
         <option value="$PROJECT_DIR$/src/producers/Difference.h" />
         <option value="$PROJECT_DIR$/src/testing/coordinateSystemChange.cpp" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
         <option value="$PROJECT_DIR$/src/linearAlgebraUtils.cpp" />
         <option value="$PROJECT_DIR$/src/linearAlgebraUtils.h" />
         <option value="$PROJECT_DIR$/src/producers/AffineTransformation.h" />
+        <option value="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
         <option value="$PROJECT_DIR$/src/main.cpp" />
       </list>
     </option>
@@ -611,7 +617,8 @@
       <workItem from="1504957417421" duration="16411000" />
       <workItem from="1505028219454" duration="13469000" />
       <workItem from="1505114825768" duration="15955000" />
-      <workItem from="1505234891916" duration="10625000" />
+      <workItem from="1505234891916" duration="18432000" />
+      <workItem from="1505331491789" duration="266000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -732,7 +739,14 @@
       <option name="project" value="LOCAL" />
       <updated>1505289624160</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="fixed">
+      <created>1505289635372</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1505289635372</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -768,15 +782,14 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="304957000" />
+    <option name="totallyTimeSpent" value="313030000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20876826" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19311064" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32885212" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37331954" sideWeight="0.5020877" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -784,9 +797,10 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37331954" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.52016544" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32885212" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -816,7 +830,8 @@
     <MESSAGE value="minima elimination technique in progress" />
     <MESSAGE value="work in progress" />
     <MESSAGE value="modified shs version, standard shs for server" />
-    <option name="LAST_COMMIT_MESSAGE" value="modified shs version, standard shs for server" />
+    <MESSAGE value="fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -951,7 +966,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
           <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -973,7 +987,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="432">
           <caret line="24" column="23" lean-forward="false" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -981,7 +994,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
           <caret line="18" column="0" lean-forward="false" selection-start-line="12" selection-start-column="4" selection-end-line="18" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -996,9 +1008,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="342">
           <caret line="19" column="18" lean-forward="false" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
-          <folding>
-            <element signature="e#14#33#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1028,7 +1037,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="5" column="23" lean-forward="false" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1036,11 +1044,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1026">
           <caret line="57" column="0" lean-forward="false" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
-          <folding>
-            <element signature="e#14#33#0" expanded="true" />
-            <element signature="e#74#108#0" expanded="true" />
-            <element signature="e#1247#1281#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1048,7 +1051,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="15" column="16" lean-forward="false" selection-start-line="15" selection-start-column="16" selection-end-line="15" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1071,7 +1073,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3186">
           <caret line="177" column="56" lean-forward="false" selection-start-line="177" selection-start-column="56" selection-end-line="177" selection-end-column="56" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1084,19 +1085,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="34" column="19" lean-forward="false" selection-start-line="34" selection-start-column="19" selection-end-line="34" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/linearAlgebraUtils.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="460">
           <caret line="168" column="47" lean-forward="false" selection-start-line="168" selection-start-column="47" selection-end-line="168" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1112,13 +1104,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="193">
           <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file:///usr/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
+        <state relative-caret-position="9810">
           <caret line="545" column="0" lean-forward="false" selection-start-line="545" selection-start-column="0" selection-end-line="545" selection-end-column="0" />
           <folding />
         </state>
@@ -1126,7 +1117,7 @@
     </entry>
     <entry file="file:///usr/include/eigen3/Eigen/src/Core/PlainObjectBase.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="543">
+        <state relative-caret-position="6228">
           <caret line="346" column="0" lean-forward="false" selection-start-line="346" selection-start-column="0" selection-end-line="346" selection-end-column="0" />
           <folding />
         </state>
@@ -1134,7 +1125,7 @@
     </entry>
     <entry file="file:///usr/include/eigen3/Eigen/src/Core/Matrix.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
+        <state relative-caret-position="6804">
           <caret line="378" column="0" lean-forward="false" selection-start-line="378" selection-start-column="0" selection-end-line="378" selection-end-column="0" />
           <folding />
         </state>
@@ -1142,7 +1133,7 @@
     </entry>
     <entry file="file:///usr/include/eigen3/Eigen/src/Core/GeneralProduct.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="463">
+        <state relative-caret-position="7452">
           <caret line="414" column="0" lean-forward="false" selection-start-line="414" selection-start-column="0" selection-end-line="414" selection-end-column="0" />
           <folding />
         </state>
@@ -1150,7 +1141,7 @@
     </entry>
     <entry file="file:///usr/include/eigen3/Eigen/src/Core/Product.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
+        <state relative-caret-position="2340">
           <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
           <folding />
         </state>
@@ -1158,15 +1149,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+        <state relative-caret-position="396">
+          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/producers/FixValues.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
+        <state relative-caret-position="882">
           <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding />
         </state>
@@ -1174,16 +1165,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
+        <state relative-caret-position="1584">
           <caret line="88" column="48" lean-forward="false" selection-start-line="88" selection-start-column="48" selection-end-line="88" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="594">
+          <caret line="33" column="17" lean-forward="false" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="834" column="48" lean-forward="false" selection-start-line="834" selection-start-column="48" selection-end-line="834" selection-end-column="48" />
+        <state relative-caret-position="503">
+          <caret line="839" column="0" lean-forward="true" selection-start-line="839" selection-start-column="0" selection-end-line="839" selection-end-column="0" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />
