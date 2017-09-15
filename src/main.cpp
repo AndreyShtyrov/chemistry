@@ -307,6 +307,7 @@ void analizeMinsOnSphere()
 template<typename FuncT>
 void shs(FuncT& func)
 {
+    func.getFullInnerFunction().setGaussianNProc(1);
     logFunctionInfo(func, makeConstantVect(func.nDims, 0), "normalized energy for equil structure");
 
     ifstream minsOnSphere("./mins_on_sphere");
@@ -430,6 +431,7 @@ void findInitialPolarDirections(FuncT& func, double r)
 template<typename FuncT>
 void minimaElimination(FuncT& func)
 {
+    func.getFullInnerFunction().setGaussianNProc(3);
     auto zeroEnergy = func(makeConstantVect(func.nDims, 0));
 
     double const r = .05;
@@ -833,10 +835,9 @@ int main()
         equilStruct.block(i, 0, 3, 1) -= center;
 
     auto molecule = GaussianProducer(_charges, 3);
-    auto normalized = remove6LesserHessValues(molecule, equilStruct);
 
-    shs(normalized);
-//    minimaElimination(normalized);
+//    shs(remove6LesserHessValues(molecule, equilStruct));
+//    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 
     ifstream minsOnSphere("./mins_on_sphere");
     size_t cnt;
@@ -844,10 +845,7 @@ int main()
     vector<vect> vs;
     for (size_t i = 0; i < cnt; i++) {
         vs.push_back(readVect(minsOnSphere));
-        logFunctionPolarInfo(normalized, vs.back(), 0.05);
     }
-
-    return 0;
 
 //    double const firstR = 0.05;
     double const deltaR = 0.05;
@@ -860,6 +858,7 @@ int main()
     vector<vect> path;
     path.push_back(pos);
 
+    molecule.setGaussianNProc(3);
     for (size_t j = 0; j < 600; j++) {
         auto normalized = remove6LesserHessValues(molecule, pos);
         auto valueGradHess = normalized.valueGradHess(makeConstantVect(normalized.nDims, 0.));

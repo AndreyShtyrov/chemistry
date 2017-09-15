@@ -37,7 +37,11 @@ public:
     vector<size_t> const& getCharges() const;
     vect transform(vect from) const;
     vect fullTransform(vect from) const;
-    GaussianProducer const &getFullInnerFunction() const;
+    GaussianProducer const& getFullInnerFunction() const;
+    GaussianProducer& getFullInnerFunction();
+
+    void setGaussianNProc(size_t nProc);
+    void setGaussianMem(size_t mem);
 
 private:
     size_t mNProc;

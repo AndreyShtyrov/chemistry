@@ -96,7 +96,22 @@ vect GaussianProducer::fullTransform(vect from) const
     return from;
 }
 
+void GaussianProducer::setGaussianNProc(size_t nProc)
+{
+    mNProc = nProc;
+}
+
+void GaussianProducer::setGaussianMem(size_t mem)
+{
+    mMem = mem;
+}
+
 GaussianProducer const& GaussianProducer::getFullInnerFunction() const
+{
+    return *this;
+}
+
+GaussianProducer& GaussianProducer::getFullInnerFunction()
 {
     return *this;
 }
