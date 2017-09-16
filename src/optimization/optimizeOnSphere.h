@@ -10,7 +10,7 @@
 namespace optimization
 {
     template<typename FuncT, typename StopStrategy>
-    bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t iterLimit=5, size_t globalIter=0)
+    bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t iterLimit=5, size_t globalIter=0, bool needSingularTest=false)
     {
         auto const theta = makeConstantVect(func.nDims - 1, M_PI / 2);
         bool converged = false;
@@ -25,12 +25,14 @@ namespace optimization
                 auto grad = get<1>(valueGradHess);
                 auto hess = get<2>(valueGradHess);
 
-                auto sValues = singularValues(hess);
-                for (size_t j = 0; j < sValues.size(); j++) {
-                    if (sValues(j) < 0) {
-                        LOG_INFO("singular values converge break, stop strategy with zero delta: {}",
-                                 stopStrategy(globalIter + i, p, value, grad, hess, p - p));
-                        return false;
+                if (needSingularTest) {
+                    auto sValues = singularValues(hess);
+                    for (size_t j = 0; j < sValues.size(); j++) {
+                        if (sValues(j) < 0) {
+                            LOG_INFO("singular values converge break, stop strategy with zero delta: {}",
+                                     stopStrategy(globalIter + i, p, value, grad, hess, p - p));
+                            return false;
+                        }
                     }
                 }
 

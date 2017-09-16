@@ -18,24 +18,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/results/0.xyz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/results/1.xyz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/results/10.xyz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/results/2.xyz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/results/3.xyz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/results/4.xyz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/results/5.xyz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/results/6.xyz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/results/7.xyz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/results/8.xyz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/results/9.xyz" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" afterPath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/AffineTransformation.h" afterPath="$PROJECT_DIR$/src/producers/AffineTransformation.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/GaussianProducer.cpp" afterPath="$PROJECT_DIR$/src/producers/GaussianProducer.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/GaussianProducer.h" afterPath="$PROJECT_DIR$/src/producers/GaussianProducer.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/test.xyz" afterPath="$PROJECT_DIR$/work/test.xyz" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/framework.ipynb" afterPath="$PROJECT_DIR$/work/framework.ipynb" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,22 +40,33 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="836" column="48" lean-forward="false" selection-start-line="836" selection-start-column="48" selection-end-line="836" selection-end-column="48" />
+            <state relative-caret-position="450">
+              <caret line="883" column="68" lean-forward="false" selection-start-line="883" selection-start-column="68" selection-end-line="883" selection-end-column="68" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
-                <element signature="e#6224#6240#0" expanded="true" />
-                <element signature="e#7147#7163#0" expanded="true" />
-                <element signature="e#7678#9047#0" expanded="false" />
-                <element signature="e#9049#12008#0" expanded="false" />
-                <element signature="e#12010#13292#0" expanded="false" />
-                <element signature="e#13294#20756#0" expanded="false" />
-                <element signature="e#20758#24101#0" expanded="false" />
-                <element signature="e#24111#24127#0" expanded="true" />
-                <element signature="e#24553#24569#0" expanded="true" />
-                <element signature="e#26121#28181#0" expanded="false" />
+                <element signature="e#6226#6242#0" expanded="true" />
+                <element signature="e#7151#7167#0" expanded="true" />
+                <element signature="e#7682#9051#0" expanded="false" />
+                <element signature="e#12160#13426#0" expanded="false" />
+                <element signature="e#13428#20935#0" expanded="false" />
+                <element signature="e#22762#22778#0" expanded="true" />
+                <element signature="e#22754#25579#0" expanded="false" />
+                <element signature="e#25589#25605#0" expanded="true" />
+                <element signature="e#26031#26047#0" expanded="true" />
+                <element signature="e#26023#27642#0" expanded="false" />
+                <element signature="e#27644#29704#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HistoryStrategyWrapper.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/optimization/stop_strategies/HistoryStrategyWrapper.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="540">
+              <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -106,8 +104,8 @@
       <file leaf-file-name="AffineTransformation.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1224">
-              <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+            <state relative-caret-position="1386">
+              <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -116,8 +114,8 @@
       <file leaf-file-name="GaussianProducer.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2034">
-              <caret line="113" column="58" lean-forward="false" selection-start-line="113" selection-start-column="58" selection-end-line="113" selection-end-column="58" />
+            <state relative-caret-position="1764">
+              <caret line="98" column="39" lean-forward="false" selection-start-line="98" selection-start-column="23" selection-end-line="98" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -133,21 +131,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Matrix.h" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/include/eigen3/Eigen/src/Core/Matrix.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6804">
-              <caret line="378" column="0" lean-forward="false" selection-start-line="378" selection-start-column="0" selection-end-line="378" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="optimizeOnSphere.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="594">
-              <caret line="33" column="17" lean-forward="false" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
+            <state relative-caret-position="306">
+              <caret line="17" column="26" lean-forward="false" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -167,8 +155,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>initial polar Direction</find>
-      <find>boost::system</find>
       <find>boost</find>
       <find>prepareForPolar</find>
       <find>optimizeOn</find>
@@ -192,11 +178,13 @@
       <find>Distances from previous</find>
       <find>in path 6</find>
       <find>Path #6</find>
-      <find>Path #6 converged</find>
       <find>not co</find>
       <find>final</find>
       <find>Converged with r = 0.05</find>
       <find>nor</find>
+      <find>Path #6 c</find>
+      <find>Path #6 converged</find>
+      <find>minima</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -244,10 +232,10 @@
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/linearAlgebraUtils.cpp" />
         <option value="$PROJECT_DIR$/src/linearAlgebraUtils.h" />
-        <option value="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
-        <option value="$PROJECT_DIR$/src/producers/AffineTransformation.h" />
         <option value="$PROJECT_DIR$/src/producers/GaussianProducer.h" />
         <option value="$PROJECT_DIR$/src/producers/GaussianProducer.cpp" />
+        <option value="$PROJECT_DIR$/src/producers/AffineTransformation.h" />
+        <option value="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
         <option value="$PROJECT_DIR$/src/main.cpp" />
       </list>
     </option>
@@ -628,7 +616,8 @@
       <workItem from="1505234891916" duration="18432000" />
       <workItem from="1505331491789" duration="2291000" />
       <workItem from="1505418002600" duration="5536000" />
-      <workItem from="1505478472919" duration="11000" />
+      <workItem from="1505478472919" duration="9875000" />
+      <workItem from="1505565822172" duration="1451000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -763,7 +752,14 @@
       <option name="project" value="LOCAL" />
       <updated>1505331796182</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="in progress">
+      <created>1505478522817</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1505478522817</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -799,13 +795,13 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="320602000" />
+    <option name="totallyTimeSpent" value="331917000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19311064" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37331954" sideWeight="0.5020877" order="7" side_tool="true" content_ui="tabs" />
@@ -817,7 +813,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34229577" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28231645" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2812823" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -834,7 +830,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="in progress" />
     <MESSAGE value="FunctionProducer: remove cache, add multithreading support" />
     <MESSAGE value="banchmarks" />
     <MESSAGE value="CMake version" />
@@ -849,7 +844,8 @@
     <MESSAGE value="modified shs version, standard shs for server" />
     <MESSAGE value="fixed" />
     <MESSAGE value="fixed stop strategy" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed stop strategy" />
+    <MESSAGE value="in progress" />
+    <option name="LAST_COMMIT_MESSAGE" value="in progress" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -980,13 +976,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/optimization/stop_strategies/HistoryStrategyWrapper.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/include/boost/format/feed_args.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5022">
@@ -1040,6 +1029,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="496">
           <caret line="373" column="0" lean-forward="false" selection-start-line="373" selection-start-column="0" selection-end-line="373" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1068,6 +1058,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="193">
           <caret line="408" column="0" lean-forward="false" selection-start-line="408" selection-start-column="0" selection-end-line="408" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1083,6 +1074,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="828">
           <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1097,6 +1089,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="201">
           <caret line="46" column="0" lean-forward="true" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1125,7 +1118,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6804">
           <caret line="378" column="0" lean-forward="false" selection-start-line="378" selection-start-column="0" selection-end-line="378" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1153,34 +1145,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="33" column="17" lean-forward="false" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/producers/InPolar.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3258">
           <caret line="181" column="38" lean-forward="false" selection-start-line="181" selection-start-column="38" selection-end-line="181" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1224">
-          <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2034">
-          <caret line="113" column="58" lean-forward="false" selection-start-line="113" selection-start-column="58" selection-end-line="113" selection-end-column="58" />
           <folding />
         </state>
       </provider>
@@ -1193,23 +1161,56 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1386">
+          <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/optimization/stop_strategies/HistoryStrategyWrapper.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1764">
+          <caret line="98" column="39" lean-forward="false" selection-start-line="98" selection-start-column="23" selection-end-line="98" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" column="26" lean-forward="false" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="836" column="48" lean-forward="false" selection-start-line="836" selection-start-column="48" selection-end-line="836" selection-end-column="48" />
+        <state relative-caret-position="450">
+          <caret line="883" column="68" lean-forward="false" selection-start-line="883" selection-start-column="68" selection-end-line="883" selection-end-column="68" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />
-            <element signature="e#6224#6240#0" expanded="true" />
-            <element signature="e#7147#7163#0" expanded="true" />
-            <element signature="e#7678#9047#0" expanded="false" />
-            <element signature="e#9049#12008#0" expanded="false" />
-            <element signature="e#12010#13292#0" expanded="false" />
-            <element signature="e#13294#20756#0" expanded="false" />
-            <element signature="e#20758#24101#0" expanded="false" />
-            <element signature="e#24111#24127#0" expanded="true" />
-            <element signature="e#24553#24569#0" expanded="true" />
-            <element signature="e#26121#28181#0" expanded="false" />
+            <element signature="e#6226#6242#0" expanded="true" />
+            <element signature="e#7151#7167#0" expanded="true" />
+            <element signature="e#7682#9051#0" expanded="false" />
+            <element signature="e#12160#13426#0" expanded="false" />
+            <element signature="e#13428#20935#0" expanded="false" />
+            <element signature="e#22762#22778#0" expanded="true" />
+            <element signature="e#22754#25579#0" expanded="false" />
+            <element signature="e#25589#25605#0" expanded="true" />
+            <element signature="e#26031#26047#0" expanded="true" />
+            <element signature="e#26023#27642#0" expanded="false" />
+            <element signature="e#27644#29704#0" expanded="false" />
           </folding>
         </state>
       </provider>

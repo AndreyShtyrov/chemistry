@@ -198,19 +198,19 @@ void drawTrajectories()
 }
 
 template<typename FuncT>
-void logFunctionInfo(FuncT& func, vect const& p, string const& title="")
+void logFunctionInfo(FuncT& func, vect const& p, string const& title = "")
 {
     auto valueGradHess = func.valueGradHess(p);
     auto value = get<0>(valueGradHess);
     auto grad = get<1>(valueGradHess);
     auto hess = get<2>(valueGradHess);
 
-    LOG_INFO("{}\n\tposition: {}\n\tenergy: {}\n\tgradient: {} [{}]\n\thessian: {}\n\n",
-             title, p.transpose(), value, grad.norm(), grad.transpose(), singularValues(hess));
+    LOG_INFO("{}\n\tposition: {}\n\tenergy: {}\n\tgradient: {} [{}]\n\thessian: {}\n\n", title, p.transpose(), value,
+             grad.norm(), grad.transpose(), singularValues(hess));
 }
 
 template<typename FuncT>
-void logFunctionPolarInfo(FuncT&& func, vect const& p, double r, string const& title="")
+void logFunctionPolarInfo(FuncT&& func, vect const& p, double r, string const& title = "")
 {
     auto polar = makePolarWithDirection(func, r, p);
 
@@ -219,8 +219,8 @@ void logFunctionPolarInfo(FuncT&& func, vect const& p, double r, string const& t
     auto grad = get<1>(valueGradHess);
     auto hess = get<2>(valueGradHess);
 
-    LOG_INFO("{}\n\tposition: {}\n\tenergy: {}\n\tgradient: {} [{}]\n\thessian: {}\n\n",
-             title, p.transpose(), value, grad.norm(), grad.transpose(), singularValues(hess));
+    LOG_INFO("{}\n\tposition: {}\n\tenergy: {}\n\tgradient: {} [{}]\n\thessian: {}\n\n", title, p.transpose(), value,
+             grad.norm(), grad.transpose(), singularValues(hess));
 }
 
 vector<vect> filterByDistance(vector<vect> const& vs, double r)
@@ -305,9 +305,9 @@ void analizeMinsOnSphere()
 }
 
 template<typename FuncT>
-void shs(FuncT& func)
+void shs(FuncT&& func)
 {
-    func.getFullInnerFunction().setGaussianNProc(1);
+    func.getFullInnerFunction().setGaussianNProc(3);
     logFunctionInfo(func, makeConstantVect(func.nDims, 0), "normalized energy for equil structure");
 
     ifstream minsOnSphere("./mins_on_sphere");
@@ -323,7 +323,8 @@ void shs(FuncT& func)
     auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-4, 5e-4));
 
 #pragma omp parallel for
-    for (size_t i = 0; i < cnt; i++) {
+//    for (size_t i = 0; i < cnt; i++) {
+    for (size_t i = 6; i <= 6; i++) {
         vector<vect> trajectory;
 
         auto direction = vs[i];
@@ -343,27 +344,26 @@ void shs(FuncT& func)
             direction = direction / direction.norm() * r;
             try {
                 bool converged = false;
-                for (double curDeltaR = deltaR; ; curDeltaR *= .75) {
+                for (double curDeltaR = deltaR;; curDeltaR *= .75) {
                     vector<vect> path;
-                    if (tryToConverge(stopStrategy, func, direction, r + curDeltaR, path, 10)) {
+                    if (tryToConverge(stopStrategy, func, direction, r + curDeltaR, path, 10, 0, false) &&
+                        tryToConverge(stopStrategy, func, path.back(), r + curDeltaR, path, 1, path.size(), true)) {
                         LOG_INFO("Path #{} converged with delta r {}", i, curDeltaR);
                         r += curDeltaR;
                         direction = path.back();
-
                         break;
-                    }
-                    else {
+                    } else {
                         LOG_INFO("Path #{} did not converged with delta r {}", i, curDeltaR);
                     }
                 }
-            } catch (GaussianException const &exc) {
+            } catch (GaussianException const& exc) {
                 LOG_ERROR("Path #{} terminated with gaussian assert", i);
                 break;
             }
 
             double newValue = func(direction);
-            LOG_INFO("New {} point in path {}:\n\tvalue = {:.13f}\n\tdelta angle cosine = {:.13f}\n\tdirection: {}", j, i,
-                     newValue, angleCosine(direction, prev), direction.transpose());
+            LOG_INFO("New {} point in path {}:\n\tvalue = {:.13f}\n\tdelta angle cosine = {:.13f}\n\tdirection: {}", j,
+                     i, newValue, angleCosine(direction, prev), direction.transpose());
 
             trajectory.push_back(func.fullTransform(direction));
 
@@ -395,9 +395,8 @@ void findInitialPolarDirections(FuncT& func, double r)
     ofstream output("./C2H4/mins_on_sphere");
     output.precision(30);
 
-    #pragma omp parallel for
-    for (size_t i = 0; i < 2 * func.nDims; i++)
-    {
+#pragma omp parallel for
+    for (size_t i = 0; i < 2 * func.nDims; i++) {
         vect pos = r * eye(func.nDims, i / 2);
         if (i % 2)
             pos *= -1;
@@ -406,7 +405,7 @@ void findInitialPolarDirections(FuncT& func, double r)
         if (path.empty())
             continue;
 
-        #pragma omp critical
+#pragma omp critical
         {
             vect p = path.back();
             output << p.size() << endl << fixed << p << endl;
@@ -470,7 +469,8 @@ void minimaElimination(FuncT& func)
             double minAngle = 0;
             for (auto const& prevDir : directions) {
                 minAngle = max(minAngle, angleCosine(direction, prevDir));
-                distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+                distances
+                   << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
             }
             LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
                       distances.str(), minAngle);
@@ -489,7 +489,8 @@ void minimaElimination(FuncT& func)
             path.insert(path.end(), supplePath.begin(), supplePath.end());
             auto oldDirection = direction;
             direction = path.back();
-            LOG_ERROR("cos(oldDirection, direction) = {} after second optimization", angleCosine(oldDirection, direction));
+            LOG_ERROR("cos(oldDirection, direction) = {} after second optimization",
+                      angleCosine(oldDirection, direction));
 
             logFunctionPolarInfo(func, direction, r, "normalized after additional optimization");
 
@@ -497,7 +498,8 @@ void minimaElimination(FuncT& func)
             minAngle = 0;
             for (auto const& prevDir : directions) {
                 minAngle = max(minAngle, angleCosine(direction, prevDir));
-                distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+                distances
+                   << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
             }
             LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
                       distances.str(), minAngle);
@@ -582,8 +584,7 @@ void minimaElimination(FuncT& func)
         minAngle = 0;
         for (auto const& prevDir : directions) {
             minAngle = max(minAngle, angleCosine(direction, prevDir));
-            distances
-               << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+            distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
         }
         LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
                   distances.str(), minAngle);
@@ -606,29 +607,73 @@ void minimaElimination(FuncT& func)
     }
 }
 
-void researchTrajectories()
+
+template<typename FuncT>
+void minimaBruteForce(FuncT& func)
 {
-    ifstream C2H4("./C2H4");
-    auto _charges = readCharges(C2H4);
-    auto equilStruct = readVect(C2H4);
+    func.getFullInnerFunction().setGaussianNProc(3);
+    auto zeroEnergy = func(makeConstantVect(func.nDims, 0));
 
-    auto center = centerOfMass(_charges, fromCartesianToPositions(equilStruct));
-    for (size_t i = 0; i < equilStruct.size(); i += 3)
-        equilStruct.block(i, 0, 3, 1) -= center;
+    double const r = .05;
+    vector<double> values;
+    vector<vect> directions;
 
-    auto molecule = GaussianProducer(_charges, 1);
-    auto hess = molecule.hess(equilStruct);
-    auto A = linearizationNormalization(hess, 6);
-    size_t nDims = molecule.nDims;
-    vector<size_t> poss = {nDims - 6, nDims - 5, nDims - 4, nDims - 3, nDims - 2, nDims - 1};
-    vector<double> vals(poss.size(), 0.);
-    auto normalized = fix(makeAffineTransfomation(molecule, equilStruct, A), poss, vals);
+    auto const axis = framework.newPlot();
+    RandomProjection const projection(func.nDims);
+    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4 * r, 1e-4 * r));
+
+    ofstream allMins('./all_mins_on_sphere');
+    allMins.precision(21);
+
+    #pragma omp parallel
+    while (true) {
+        auto path = optimizeOnSphere(stopStrategy, func, randomVectOnSphere(func.nDims, r), r, 50, 5);
+        auto direction = path.back();
+
+        stringstream distances;
+        double minAngle = 0;
+        for (auto const& prevDir : directions) {
+            minAngle = max(minAngle, angleCosine(direction, prevDir));
+            distances
+               << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
+        }
+        LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
+                  distances.str(), minAngle);
+
+        #pragma omp critical
+        {
+            allMins << direction.size() << endl << fixed << direction.transpose() << endl;
+
+            if (minAngle < .975) {
+                directions.push_back(direction);
+
+                ofstream mins("./mins_on_sphere");
+                mins.precision(21);
+
+                mins << directions.size() << endl;
+                for (auto const& dir : directions) {
+                    mins << dir.size() << endl << fixed << dir.transpose() << endl;
+                }
+
+            } else {
+                LOG_ERROR("min angle is too large: {}", minAngle);
+            }
+        }
+    }
+}
+
+
+template<typename FuncT>
+void researchTrajectories(FuncT&& normalized)
+{
+    normalized.getFullInnerFunction().setGaussianNProc(1);
 
     RandomProjection projection(15);
     auto axis1 = framework.newPlot("true distance space");
     auto axis2 = framework.newPlot("false distance space");
 
-    for (size_t i = 0; i < 11; i++) {
+//    for (size_t i = 0; i < 11; i++) {
+    for (size_t i = 6; i <= 6; i++) {
         vector<vector<size_t>> charges;
         vector<vect> structures;
 
@@ -661,7 +706,8 @@ void researchTrajectories()
 
     LOG_INFO("trajectories were built");
 
-    for (size_t i = 0; i < 11; i++) {
+//    for (size_t i = 0; i < 11; i++) {
+    for (size_t i = 6; i <= 6; i++) {
         vector<vector<size_t>> charges;
         vector<vect> structures;
 
@@ -757,14 +803,13 @@ auto remove6LesserHessValues(FuncT&& func, vect structure)
         basis = horizontalStack(basis, normalized(v));
     }
 
-    auto transformed = makeAffineTransfomation(func, structure, basis.block(0, vs.size(), basis.rows(), basis.cols() - vs.size()));
+    auto transformed = makeAffineTransfomation(func, structure,
+                                               basis.block(0, vs.size(), basis.rows(), basis.cols() - vs.size()));
     auto hess = transformed.hess(makeConstantVect(transformed.nDims, 0.));
     auto A = linearizationNormalization(hess);
 
     return makeAffineTransfomation(transformed, A);
 }
-
-
 
 void optimizeTS()
 {
@@ -836,7 +881,12 @@ int main()
 
     auto molecule = GaussianProducer(_charges, 3);
 
+    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
 //    shs(remove6LesserHessValues(molecule, equilStruct));
+//    researchTrajectories(remove6LesserHessValues(molecule, equilStruct));
+
+    return 0;
+
 //    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 
     ifstream minsOnSphere("./mins_on_sphere");
@@ -884,15 +934,14 @@ int main()
 //            direction = optimizeOnSphere(stopStrategy, func, normalizedDir * deltaR, deltaR, 50, 10).back();
 
             bool converged = false;
-            for (double curR = deltaR; ; curR *= .75) {
+            for (double curR = deltaR;; curR *= .75) {
                 vector<vect> optimizationPath;
                 if (tryToConverge(stopStrategy, func, normalizedDir * curR, curR, optimizationPath, 10)) {
                     LOG_INFO("Converged with r = {}", curR);
                     direction = optimizationPath.back();
 
                     break;
-                }
-                else {
+                } else {
                     LOG_INFO("Did not converged with r = {}", curR);
                 }
             }

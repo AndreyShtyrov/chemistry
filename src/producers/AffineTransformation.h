@@ -75,6 +75,11 @@ public:
         return mFunc;
     }
 
+    auto& getFullInnerFunction()
+    {
+        return mFunc.getFullInnerFunction();
+    }
+
     auto const& getFullInnerFunction() const
     {
         return mFunc.getFullInnerFunction();
