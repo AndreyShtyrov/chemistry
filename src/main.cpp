@@ -611,7 +611,7 @@ void minimaElimination(FuncT& func)
 template<typename FuncT>
 void minimaBruteForce(FuncT&& func)
 {
-    func.getFullInnerFunction().setGaussianNProc(3);
+    func.getFullInnerFunction().setGaussianNProc(1);
     auto zeroEnergy = func(makeConstantVect(func.nDims, 0));
 
     double const r = .05;
