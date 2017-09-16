@@ -609,7 +609,7 @@ void minimaElimination(FuncT& func)
 
 
 template<typename FuncT>
-void minimaBruteForce(FuncT& func)
+void minimaBruteForce(FuncT&& func)
 {
     func.getFullInnerFunction().setGaussianNProc(3);
     auto zeroEnergy = func(makeConstantVect(func.nDims, 0));
@@ -622,7 +622,7 @@ void minimaBruteForce(FuncT& func)
     RandomProjection const projection(func.nDims);
     auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4 * r, 1e-4 * r));
 
-    ofstream allMins('./all_mins_on_sphere');
+    ofstream allMins("./all_mins_on_sphere");
     allMins.precision(21);
 
     #pragma omp parallel
