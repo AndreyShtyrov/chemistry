@@ -307,7 +307,7 @@ void analizeMinsOnSphere()
 template<typename FuncT>
 void shs(FuncT&& func)
 {
-    func.getFullInnerFunction().setGaussianNProc(3);
+    func.getFullInnerFunction().setGaussianNProc(1);
     logFunctionInfo(func, makeConstantVect(func.nDims, 0), "normalized energy for equil structure");
 
     ifstream minsOnSphere("./mins_on_sphere");
@@ -323,8 +323,8 @@ void shs(FuncT&& func)
     auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-4, 5e-4));
 
 #pragma omp parallel for
-//    for (size_t i = 0; i < cnt; i++) {
-    for (size_t i = 6; i <= 6; i++) {
+    for (size_t i = 0; i < cnt; i++) {
+//    for (size_t i = 6; i <= 6; i++) {
         vector<vect> trajectory;
 
         auto direction = vs[i];
@@ -881,8 +881,8 @@ int main()
 
     auto molecule = GaussianProducer(_charges, 3);
 
-    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-//    shs(remove6LesserHessValues(molecule, equilStruct));
+//    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
+    shs(remove6LesserHessValues(molecule, equilStruct));
 //    researchTrajectories(remove6LesserHessValues(molecule, equilStruct));
 
     return 0;

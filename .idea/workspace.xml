@@ -20,6 +20,7 @@
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/mins_on_sphere" afterPath="$PROJECT_DIR$/work/mins_on_sphere" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -37,8 +38,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="222">
-              <caret line="611" column="29" lean-forward="false" selection-start-line="611" selection-start-column="29" selection-end-line="611" selection-end-column="29" />
+            <state relative-caret-position="347">
+              <caret line="327" column="32" lean-forward="true" selection-start-line="327" selection-start-column="32" selection-end-line="327" selection-end-column="32" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
@@ -47,9 +48,11 @@
                 <element signature="e#7682#9051#0" expanded="false" />
                 <element signature="e#12160#13426#0" expanded="false" />
                 <element signature="e#13428#20935#0" expanded="false" />
+                <element signature="e#20938#22752#0" expanded="false" />
                 <element signature="e#22763#22779#0" expanded="true" />
                 <element signature="e#22755#25580#0" expanded="false" />
                 <element signature="e#25590#25606#0" expanded="true" />
+                <element signature="e#25582#26022#0" expanded="false" />
                 <element signature="e#26032#26048#0" expanded="true" />
                 <element signature="e#26024#27643#0" expanded="false" />
                 <element signature="e#27645#29705#0" expanded="false" />
@@ -152,7 +155,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>boost</find>
       <find>prepareForPolar</find>
       <find>optimizeOn</find>
       <find>makeHisto</find>
@@ -182,6 +184,7 @@
       <find>Path #6 c</find>
       <find>Path #6 converged</find>
       <find>minima</find>
+      <find>0.8</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -614,7 +617,7 @@
       <workItem from="1505331491789" duration="2291000" />
       <workItem from="1505418002600" duration="5536000" />
       <workItem from="1505478472919" duration="9875000" />
-      <workItem from="1505565822172" duration="1620000" />
+      <workItem from="1505565822172" duration="4798000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -763,7 +766,14 @@
       <option name="project" value="LOCAL" />
       <updated>1505567289727</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="bug fux">
+      <created>1505567449050</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1505567449050</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -799,7 +809,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="332086000" />
+    <option name="totallyTimeSpent" value="335264000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -850,7 +860,8 @@
     <MESSAGE value="fixed stop strategy" />
     <MESSAGE value="in progress" />
     <MESSAGE value="minima brute force for server" />
-    <option name="LAST_COMMIT_MESSAGE" value="minima brute force for server" />
+    <MESSAGE value="bug fux" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug fux" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1200,8 +1211,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="611" column="29" lean-forward="false" selection-start-line="611" selection-start-column="29" selection-end-line="611" selection-end-column="29" />
+        <state relative-caret-position="347">
+          <caret line="327" column="32" lean-forward="true" selection-start-line="327" selection-start-column="32" selection-end-line="327" selection-end-column="32" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />
@@ -1210,9 +1221,11 @@
             <element signature="e#7682#9051#0" expanded="false" />
             <element signature="e#12160#13426#0" expanded="false" />
             <element signature="e#13428#20935#0" expanded="false" />
+            <element signature="e#20938#22752#0" expanded="false" />
             <element signature="e#22763#22779#0" expanded="true" />
             <element signature="e#22755#25580#0" expanded="false" />
             <element signature="e#25590#25606#0" expanded="true" />
+            <element signature="e#25582#26022#0" expanded="false" />
             <element signature="e#26032#26048#0" expanded="true" />
             <element signature="e#26024#27643#0" expanded="false" />
             <element signature="e#27645#29705#0" expanded="false" />
