@@ -17,10 +17,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
+    <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="shs for server">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/george.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/mins_on_sphere" afterPath="$PROJECT_DIR$/work/mins_on_sphere" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" afterPath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,8 +39,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="347">
-              <caret line="327" column="32" lean-forward="true" selection-start-line="327" selection-start-column="32" selection-end-line="327" selection-end-column="32" />
+            <state relative-caret-position="267">
+              <caret line="886" column="0" lean-forward="true" selection-start-line="886" selection-start-column="0" selection-end-line="886" selection-end-column="0" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
@@ -48,7 +49,6 @@
                 <element signature="e#7682#9051#0" expanded="false" />
                 <element signature="e#12160#13426#0" expanded="false" />
                 <element signature="e#13428#20935#0" expanded="false" />
-                <element signature="e#20938#22752#0" expanded="false" />
                 <element signature="e#22763#22779#0" expanded="true" />
                 <element signature="e#22755#25580#0" expanded="false" />
                 <element signature="e#25590#25606#0" expanded="true" />
@@ -135,7 +135,7 @@
         <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="306">
-              <caret line="17" column="26" lean-forward="false" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="26" />
+              <caret line="82" column="60" lean-forward="true" selection-start-line="82" selection-start-column="60" selection-end-line="82" selection-end-column="60" />
               <folding />
             </state>
           </provider>
@@ -617,7 +617,7 @@
       <workItem from="1505331491789" duration="2291000" />
       <workItem from="1505418002600" duration="5536000" />
       <workItem from="1505478472919" duration="9875000" />
-      <workItem from="1505565822172" duration="4798000" />
+      <workItem from="1505565822172" duration="5394000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -773,7 +773,14 @@
       <option name="project" value="LOCAL" />
       <updated>1505567449050</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="shs for server">
+      <created>1505582254212</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1505582254212</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -809,7 +816,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="335264000" />
+    <option name="totallyTimeSpent" value="335860000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -861,7 +868,8 @@
     <MESSAGE value="in progress" />
     <MESSAGE value="minima brute force for server" />
     <MESSAGE value="bug fux" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug fux" />
+    <MESSAGE value="shs for server" />
+    <option name="LAST_COMMIT_MESSAGE" value="shs for server" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1204,15 +1212,15 @@
     <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
-          <caret line="17" column="26" lean-forward="false" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="26" />
+          <caret line="82" column="60" lean-forward="true" selection-start-line="82" selection-start-column="60" selection-end-line="82" selection-end-column="60" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="327" column="32" lean-forward="true" selection-start-line="327" selection-start-column="32" selection-end-line="327" selection-end-column="32" />
+        <state relative-caret-position="267">
+          <caret line="886" column="0" lean-forward="true" selection-start-line="886" selection-start-column="0" selection-end-line="886" selection-end-column="0" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />
@@ -1221,7 +1229,6 @@
             <element signature="e#7682#9051#0" expanded="false" />
             <element signature="e#12160#13426#0" expanded="false" />
             <element signature="e#13428#20935#0" expanded="false" />
-            <element signature="e#20938#22752#0" expanded="false" />
             <element signature="e#22763#22779#0" expanded="true" />
             <element signature="e#22755#25580#0" expanded="false" />
             <element signature="e#25590#25606#0" expanded="true" />

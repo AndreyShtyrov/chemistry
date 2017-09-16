@@ -10,7 +10,7 @@
 namespace optimization
 {
     template<typename FuncT, typename StopStrategy>
-    bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t iterLimit=5, size_t globalIter=0, bool needSingularTest=false)
+    bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t iterLimit=5, size_t globalIter=0, bool needSingularTest=true)
     {
         auto const theta = makeConstantVect(func.nDims - 1, M_PI / 2);
         bool converged = false;
@@ -76,7 +76,7 @@ namespace optimization
         }
 
         for (size_t iter = 0; ; iter++) {
-            if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, convergeIters, iter)) {
+            if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, convergeIters, iter, true)) {
                 break;
             }
 

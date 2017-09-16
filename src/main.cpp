@@ -881,9 +881,24 @@ int main()
 
     auto molecule = GaussianProducer(_charges, 3);
 
-//    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-    shs(remove6LesserHessValues(molecule, equilStruct));
+    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
+//    shs(remove6LesserHessValues(molecule, equilStruct));
 //    researchTrajectories(remove6LesserHessValues(molecule, equilStruct));
+
+//    {
+//        ifstream mins("./mins_on_sphere");
+//
+//        size_t cnt = 0;
+//        mins >> cnt;
+//
+//        auto normalized = remove6LesserHessValues(molecule, equilStruct);
+//
+//        for (size_t i = 0; i < cnt; i++) {
+//            auto direction = readVect(mins);
+//            LOG_INFO("{}", direction.norm());
+//            logFunctionPolarInfo(normalized, direction, direction.norm());
+//        }
+//    }
 
     return 0;
 
