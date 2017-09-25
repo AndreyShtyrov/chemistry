@@ -428,7 +428,7 @@ void findInitialPolarDirections(FuncT& func, double r)
 }
 
 template<typename FuncT>
-void minimaElimination(FuncT& func)
+void minimaElimination(FuncT&& func)
 {
     func.getFullInnerFunction().setGaussianNProc(3);
     auto zeroEnergy = func(makeConstantVect(func.nDims, 0));
@@ -526,21 +526,21 @@ void minimaElimination(FuncT& func)
         }
     }
 
-    {
-        ifstream mins("./data/mins_on_sphere");
-        size_t cnt;
-        mins >> cnt;
-
-        for (size_t i = 0; i < cnt; i++) {
-            auto direction = readVect(mins);
-
-            logFunctionPolarInfo(func, direction, r, "");
-
-            directions.push_back(direction);
-//            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
-            values.push_back(sqr(r) / 2 - (func(direction) - zeroEnergy));
-        }
-    }
+//    {
+//        ifstream mins("./data/mins_on_sphere");
+//        size_t cnt;
+//        mins >> cnt;
+//
+//        for (size_t i = 0; i < cnt; i++) {
+//            auto direction = readVect(mins);
+//
+//            logFunctionPolarInfo(func, direction, r, "");
+//
+//            directions.push_back(direction);
+////            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
+//            values.push_back(sqr(r) / 2 - (func(direction) - zeroEnergy));
+//        }
+//    }
 
     while (true) {
 //        Cosine3OnSphereInterpolation supplement(normalized.nDims, values, directions);
@@ -882,7 +882,8 @@ int main()
     auto molecule = GaussianProducer(_charges, 3);
 
 //    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-    shs(remove6LesserHessValues(molecule, equilStruct));
+//    shs(remove6LesserHessValues(molecule, equilStruct));
+    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchTrajectories(remove6LesserHessValues(molecule, equilStruct));
 
 //    {
