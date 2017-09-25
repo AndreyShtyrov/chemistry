@@ -882,8 +882,8 @@ int main()
     auto molecule = GaussianProducer(_charges, 3);
 
 //    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-//    shs(remove6LesserHessValues(molecule, equilStruct));
-    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
+    shs(remove6LesserHessValues(molecule, equilStruct));
+//    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchTrajectories(remove6LesserHessValues(molecule, equilStruct));
 
 //    {
