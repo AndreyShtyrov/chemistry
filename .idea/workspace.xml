@@ -19,9 +19,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="shs server">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/mins_on_sphere" afterPath="$PROJECT_DIR$/work/mins_on_sphere" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,7 +36,7 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
+            <state relative-caret-position="43">
               <caret line="757" column="4" lean-forward="false" selection-start-line="757" selection-start-column="4" selection-end-line="757" selection-end-column="4" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
@@ -618,7 +615,7 @@
       <workItem from="1505478472919" duration="9875000" />
       <workItem from="1505565822172" duration="12928000" />
       <workItem from="1506327413443" duration="68000" />
-      <workItem from="1506332037242" duration="2923000" />
+      <workItem from="1506332037242" duration="4047000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -831,7 +828,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="346385000" />
+    <option name="totallyTimeSpent" value="347509000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -1235,7 +1232,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
+        <state relative-caret-position="43">
           <caret line="757" column="4" lean-forward="false" selection-start-line="757" selection-start-column="4" selection-end-line="757" selection-end-column="4" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
