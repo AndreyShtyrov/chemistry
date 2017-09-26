@@ -664,7 +664,7 @@ void minimaBruteForce(FuncT&& func)
 
 
 template<typename FuncT>
-void researchTrajectories(FuncT&& normalized)
+void researchPaths(FuncT&& normalized)
 {
     normalized.getFullInnerFunction().setGaussianNProc(1);
 
@@ -673,7 +673,7 @@ void researchTrajectories(FuncT&& normalized)
     auto axis2 = framework.newPlot("false distance space");
 
 //    for (size_t i = 0; i < 11; i++) {
-    for (size_t i = 6; i <= 6; i++) {
+    for (size_t i = 9; i <= 9; i++) {
         vector<vector<size_t>> charges;
         vector<vect> structures;
 
@@ -707,7 +707,7 @@ void researchTrajectories(FuncT&& normalized)
     LOG_INFO("trajectories were built");
 
 //    for (size_t i = 0; i < 11; i++) {
-    for (size_t i = 6; i <= 6; i++) {
+    for (size_t i = 9; i <= 9; i++) {
         vector<vector<size_t>> charges;
         vector<vect> structures;
 
@@ -720,7 +720,7 @@ void researchTrajectories(FuncT&& normalized)
 
         vect prev_structure = structures[0];
 
-#pragma omp parallel for
+        #pragma omp parallel for
         for (size_t j = 0; j < charges.size(); j++) {
             auto structure = structures[j];
             auto curCharges = charges[j];
@@ -882,7 +882,7 @@ int main()
     auto molecule = GaussianProducer(_charges, 3);
 
 //    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-    shs(remove6LesserHessValues(molecule, equilStruct));
+//    shs(remove6LesserHessValues(molecule, equilStruct));
 //    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchTrajectories(remove6LesserHessValues(molecule, equilStruct));
 
