@@ -32,7 +32,6 @@ vect projection(vect wich, vect to);
 
 matrix singularValues(matrix m);
 
-
 vect toDistanceSpace(vect v, bool sorted=true);
 
 vect normalized(vect const& v);
