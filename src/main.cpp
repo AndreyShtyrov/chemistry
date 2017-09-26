@@ -307,7 +307,7 @@ void analizeMinsOnSphere()
 template<typename FuncT>
 void shs(FuncT&& func)
 {
-    func.getFullInnerFunction().setGaussianNProc(1);
+    func.getFullInnerFunction().setGaussianNProc(3);
     logFunctionInfo(func, makeConstantVect(func.nDims, 0), "normalized energy for equil structure");
 
     ifstream minsOnSphere("./mins_on_sphere");
@@ -323,8 +323,8 @@ void shs(FuncT&& func)
     auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-4, 5e-4));
 
 #pragma omp parallel for
-    for (size_t i = 0; i < cnt; i++) {
-//    for (size_t i = 6; i <= 6; i++) {
+//    for (size_t i = 0; i < cnt; i++) {
+    for (size_t i = 9; i <= 9; i++) {
         vector<vect> trajectory;
 
         auto direction = vs[i];
@@ -341,21 +341,32 @@ void shs(FuncT&& func)
             }
 
             vect prev = direction;
-            direction = direction / direction.norm() * r;
+            direction = direction / direction.norm() * (r + deltaR);
             try {
                 bool converged = false;
-                for (double curDeltaR = deltaR;; curDeltaR *= .75) {
-                    vector<vect> path;
-                    if (tryToConverge(stopStrategy, func, direction, r + curDeltaR, path, 10, 0, false) &&
-                        tryToConverge(stopStrategy, func, path.back(), r + curDeltaR, path, 1, path.size(), true)) {
-                        LOG_INFO("Path #{} converged with delta r {}", i, curDeltaR);
-                        r += curDeltaR;
-                        direction = path.back();
-                        break;
-                    } else {
-                        LOG_INFO("Path #{} did not converged with delta r {}", i, curDeltaR);
-                    }
+//                for (double curDeltaR = deltaR;; curDeltaR *= .75) {
+//                    vector<vect> path;
+//                    if (tryToConverge(stopStrategy, func, direction, r + curDeltaR, path, 10, 0, false) &&
+//                        tryToConverge(stopStrategy, func, path.back(), r + curDeltaR, path, 1, path.size(), true)) {
+//                        LOG_INFO("Path #{} converged with delta r {}", i, curDeltaR);
+//                        r += curDeltaR;
+//                        direction = path.back();
+//                        break;
+//                    } else {
+//                        LOG_INFO("Path #{} did not converged with delta r {}", i, curDeltaR);
+//                    }
+//                }
+
+                vector<vect> path;
+                if (!tryToConverge(stopStrategy, func, direction, r + deltaR, path, 10, 0, false) ||
+                    !tryToConverge(stopStrategy, func, path.back(), r + deltaR, path, 1, path.size(), true)) {
+                    path = optimizeOnSphere(stopStrategy, func, direction, r + deltaR, 50, 5);
                 }
+
+                LOG_INFO("Path #{} converged with delta r {}", i, deltaR);
+                r += deltaR;
+                direction = path.back();
+
             } catch (GaussianException const& exc) {
                 LOG_ERROR("Path #{} terminated with gaussian assert", i);
                 break;
@@ -704,7 +715,7 @@ void researchPaths(FuncT&& normalized)
     framework.legend(axis1);
     framework.legend(axis2);
 
-    LOG_INFO("trajectories were built");
+    LOG_INFO("paths were built");
 
 //    for (size_t i = 0; i < 11; i++) {
     for (size_t i = 9; i <= 9; i++) {
@@ -713,10 +724,9 @@ void researchPaths(FuncT&& normalized)
 
         tie(charges, structures) = readWholeChemcraft(ifstream(str(format("./results/%1%.xyz") % i)));
 
-        vector<double> vals(charges.size());
-        vector<double> grads(charges.size());
-        vector<double> coord_grads(charges.size());
-        vector<double> dists(charges.size());
+        vector<double> values(charges.size());
+        vector<vect> grads(charges.size());
+        vector<matrix> hess(charges.size());
 
         vect prev_structure = structures[0];
 
@@ -727,22 +737,32 @@ void researchPaths(FuncT&& normalized)
 
             GaussianProducer molecule(curCharges, 1);
 
-            auto valueGrad = molecule.valueGrad(structure);
-            vals[j] = get<0>(valueGrad);
-            grads[j] = get<1>(valueGrad).norm();
-            dists[j] = distance(prev_structure, structure);
-
-            auto firstStage = normalized.getInnerFunction().backTransform(structure);
-            auto secondStage = normalized.backTransform(firstStage);
-            coord_grads[j] = normalized.grad(secondStage).norm();
-
-            prev_structure = structure;
+            auto valueGradHess = molecule.valueGradHess(structure);
+            values[j] = get<0>(valueGradHess);
+            grads[j] = get<1>(valueGradHess);
+            hess[j] = get<2>(valueGradHess);
         }
 
-        framework.plot(framework.newPlot("values" + to_string(i)), vals);
-        framework.plot(framework.newPlot("grads" + to_string(i)), grads);
-        framework.plot(framework.newPlot("grads in coords" + to_string(i)), coord_grads);
+        vector<double> gradNorms(charges.size());
+        vector<double> dists(charges.size());
+        vector<double> angles(charges.size());
+
+        for (size_t j = 0; j < charges.size(); j++) {
+            gradNorms[j] = grads[j].norm();
+            dists[j] = j ? distance(structures[j - 1], structures[j]) : 0;
+            angles[j] = j ? angleCosine(structures[j - 1], structures[j]) : 0;
+
+            LOG_INFO("point #{}:\n\tpos = {}\n\tgrad = {} [{}]\n\thess = {}\n",
+                     j, structures[j].transpose(), grads[j].norm(), grads[j].transpose(), singularValues(hess[j]));
+        }
+
+        dists[0] = dists[1];
+        angles[0] = angles[1];
+
+        framework.plot(framework.newPlot("values" + to_string(i)), values);
+        framework.plot(framework.newPlot("grads" + to_string(i)), gradNorms);
         framework.plot(framework.newPlot("dists" + to_string(i)), dists);
+        framework.plot(framework.newPlot("angles " + to_string(i)), angles);
     }
 }
 
@@ -813,36 +833,13 @@ auto remove6LesserHessValues(FuncT&& func, vect structure)
 
 void optimizeTS()
 {
-    ifstream C2H4("./C2H4");
-    auto _charges = readCharges(C2H4);
-    auto equilStruct = readVect(C2H4);
-
-    auto center = centerOfMass(_charges, fromCartesianToPositions(equilStruct));
-    for (size_t i = 0; i < equilStruct.size(); i += 3)
-        equilStruct.block(i, 0, 3, 1) -= center;
-
-    auto molecule = GaussianProducer(_charges, 1);
-    auto hess = molecule.hess(equilStruct);
-    auto A = linearizationNormalization(hess, 6);
-    size_t nDims = molecule.nDims;
-    vector<size_t> poss = {nDims - 6, nDims - 5, nDims - 4, nDims - 3, nDims - 2, nDims - 1};
-    vector<double> vals(poss.size(), 0.);
-    auto normalized = fix(makeAffineTransfomation(molecule, equilStruct, A), poss, vals);
-
 //    vector<size_t> interesting = {127, 139, 159};
-    vector<size_t> interesting = {104};
+    vector<size_t> interesting = {103};
 //    vector<size_t> interesting = {139};
     vector<vector<size_t>> charges;
     vector<vect> structures;
 
-    tie(charges, structures) = readWholeChemcraft(ifstream("./results/6.xyz"));
-
-//    {
-//        for (size_t i = 0; i < charges.size(); i++) {
-//            LOG_INFO("{}\n{}\n{}", i, structures[i].transpose(), normalized.getInnerFunction().backTransform(structures[i]).transpose());
-//        }
-//        return 0;
-//    }
+    tie(charges, structures) = readWholeChemcraft(ifstream("./results/9.xyz"));
 
     for (size_t i : interesting) {
         auto structure = structures[i];
@@ -882,24 +879,9 @@ int main()
     auto molecule = GaussianProducer(_charges, 3);
 
 //    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-//    shs(remove6LesserHessValues(molecule, equilStruct));
+    shs(remove6LesserHessValues(molecule, equilStruct));
 //    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
-//    researchTrajectories(remove6LesserHessValues(molecule, equilStruct));
-
-//    {
-//        ifstream mins("./mins_on_sphere");
-//
-//        size_t cnt = 0;
-//        mins >> cnt;
-//
-//        auto normalized = remove6LesserHessValues(molecule, equilStruct);
-//
-//        for (size_t i = 0; i < cnt; i++) {
-//            auto direction = readVect(mins);
-//            LOG_INFO("{}", direction.norm());
-//            logFunctionPolarInfo(normalized, direction, direction.norm());
-//        }
-//    }
+//    researchPaths(remove6LesserHessValues(molecule, equilStruct));
 
     return 0;
 

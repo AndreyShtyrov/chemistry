@@ -60,7 +60,6 @@ namespace optimization
     template<typename FuncT, typename StopStrategy>
     vector<vect> optimizeOnSphere(StopStrategy stopStrategy, FuncT& func, vect p, double r, size_t preHessIters, size_t convergeIters)
     {
-        LOG_INFO("{} {}", r, p.norm());
         assert(abs(r - p.norm()) < 1e-7);
 
         auto const theta = makeConstantVect(func.nDims - 1, M_PI / 2);
