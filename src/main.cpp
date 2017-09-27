@@ -1019,6 +1019,7 @@ void shs(FuncT&& func)
                         converged = true;
                         break;
                     }
+                    //todo Bug here: trajectory contains cartesian coords, not normal coords
                     else if (shsTSTryRoutine(func, trajectory.back(), trajectory, j)) {
                         output << toChemcraftCoords(func.getFullInnerFunction().getCharges(), trajectory.back(), "final TS");
                         output.flush();
