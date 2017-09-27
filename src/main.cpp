@@ -592,7 +592,7 @@ void researchPaths(FuncT&& normalized)
     auto axis2 = framework.newPlot("false distance space");
 
 //    for (size_t i = 0; i < 11; i++) {
-    for (size_t i = 6; i <= 6; i++) {
+    for (size_t i = 9; i <= 9; i++) {
         vector<vector<size_t>> charges;
         vector<vect> structures;
 
@@ -626,7 +626,7 @@ void researchPaths(FuncT&& normalized)
     LOG_INFO("paths were built");
 
 //    for (size_t i = 0; i < 11; i++) {
-    for (size_t i = 6; i <= 6; i++) {
+    for (size_t i = 9; i <= 9; i++) {
         vector<vector<size_t>> charges;
         vector<vect> structures;
 
@@ -812,12 +812,12 @@ tuple<bool, vect> tryToOptimizeTS(vector<size_t> charges, vect structure)
 void optimizeTS()
 {
 //    vector<size_t> interesting = {127, 139, 159};
-    vector<size_t> interesting = {5, 10, 15, 20, 26};
+    vector<size_t> interesting = {27};
 //    vector<size_t> interesting = {139};
     vector<vector<size_t>> charges;
     vector<vect> structures;
 
-    tie(charges, structures) = readWholeChemcraft(ifstream("./results/6.xyz"));
+    tie(charges, structures) = readWholeChemcraft(ifstream("./results/9.xyz"));
 
     for (size_t i : interesting) {
         auto structure = structures[i];
@@ -827,7 +827,7 @@ void optimizeTS()
         logFunctionInfo(molecule, structures[i], "");
         LOG_INFO("\n{}", toChemcraftCoords(charges[i], structures[i]));
 
-        for (size_t j = 0; j < 5; j++) {
+        for (size_t j = 0; j < 10; j++) {
             auto transformed = remove6LesserHessValues2(molecule, structure);
             auto normalized = remove6LesserHessValues(molecule, structure);
             auto p = makeConstantVect(normalized.nDims, 0);
@@ -934,7 +934,7 @@ void shs(FuncT&& func)
 
 #pragma omp parallel for
 //    for (size_t i = 0; i < cnt; i++) {
-    for (size_t i = 6; i <= 6; i++) {
+    for (size_t i = 9; i <= 9; i++) {
         vector<vect> trajectory;
 
         auto direction = vs[i];
@@ -1047,10 +1047,10 @@ int main()
     auto molecule = GaussianProducer(_charges, 3);
 
 //    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-    shs(remove6LesserHessValues(molecule, equilStruct));
+//    shs(remove6LesserHessValues(molecule, equilStruct));
 //    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchPaths(remove6LesserHessValues(molecule, equilStruct));
-//    optimizeTS();
+    optimizeTS();
     return 0;
 
 
