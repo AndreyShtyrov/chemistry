@@ -936,8 +936,8 @@ bool shsTSTryRoutine(FuncT&& func, vect direction, vector<vect>& path, size_t sh
             auto grad = get<1>(valueGradHess);
             auto hess = get<2>(valueGradHess);
 
-            LOG_CRITICAL("TS FOUND on {} iteration!\nTS gradient: {} [{}]\nsingualr hess values: {}\n{}", shsStepNumber,
-                         print(grad), singularValues(hess), toChemcraftCoords(molecule.getCharges(), ts), grad.norm());
+            LOG_CRITICAL("TS FOUND on {} iteration.\nTS gradient: {} [{}]\nsingualr hess values: {}\n{}", shsStepNumber,
+                         grad.norm(), print(grad), singularValues(hess), toChemcraftCoords(molecule.getCharges(), ts), grad.norm());
 
             path.push_back(ts);
 
@@ -995,8 +995,9 @@ void shs(FuncT&& func)
 
             vect prev = direction;
             direction = direction / direction.norm() * (r + deltaR);
-            try {
+//            try {
                 bool converged = false;
+                bool tsFound = false;
                 double currentDr = deltaR;
 
                 for (size_t convIter = 0; convIter < CONV_ITER_LIMIT; convIter++, currentDr *= 0.5) {
@@ -1004,7 +1005,7 @@ void shs(FuncT&& func)
                     vector<vect> path;
                     if (experimentalTryToConverge(stopStrategy, func, direction, nextR, path, 30, 0, false)) {
                         if (angleCosine(direction, path.back()) < .9) {
-                            LOG_ERROR("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! {}", angleCosine(direction, path.back()));
+                            LOG_ERROR("Path {} did not converge (too large angle: {})", i, angleCosine(direction, path.back()));
                             continue;
                         }
 
@@ -1018,18 +1019,25 @@ void shs(FuncT&& func)
                         break;
                     }
                     else if (shsTSTryRoutine(func, direction, trajectory, j)) {
+                        tsFound = true;
+                        converged = true;
                         break;
                     }
                 }
 
-                if (!converged) {
-                    LOG_ERROR("Path #{} exceeded converge iteration limit ({}). Break", CONV_ITER_LIMIT);
+                if (tsFound) {
+                    LOG_INFO("Path #{} TS found. Break", i);
                     break;
                 }
-            } catch (GaussianException const& exc) {
-                LOG_ERROR("Path #{} terminated with gaussian assert", i);
-                break;
-            }
+
+                if (!converged) {
+                    LOG_ERROR("Path #{} exceeded converge iteration limit ({}). Break", i, CONV_ITER_LIMIT);
+                    break;
+                }
+//            } catch (GaussianException const& exc) {
+//                LOG_ERROR("Path #{} terminated with gaussian assert", i);
+//                break;
+//            }
 
             double newValue = func(direction);
             LOG_INFO("New {} point in path {}:\n\tvalue = {:.13f}\n\tdelta angle cosine = {:.13f}\n\tdirection: {}", j,
