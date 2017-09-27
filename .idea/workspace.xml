@@ -18,10 +18,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/linearAlgebraUtils.h" afterPath="$PROJECT_DIR$/src/linearAlgebraUtils.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/.ipynb_checkpoints/framework-checkpoint.ipynb" afterPath="$PROJECT_DIR$/work/.ipynb_checkpoints/framework-checkpoint.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/framework.ipynb" afterPath="$PROJECT_DIR$/work/framework.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/6.xyz" afterPath="$PROJECT_DIR$/work/results/6.xyz" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/9.xyz" afterPath="$PROJECT_DIR$/work/results/9.xyz" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
@@ -40,8 +41,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="969" column="0" lean-forward="true" selection-start-line="969" selection-start-column="0" selection-end-line="969" selection-end-column="0" />
+            <state relative-caret-position="968">
+              <caret line="988" column="1" lean-forward="true" selection-start-line="988" selection-start-column="1" selection-end-line="988" selection-end-column="1" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
@@ -52,11 +53,11 @@
                 <element signature="e#10321#17859#0" expanded="false" />
                 <element signature="e#17862#19676#0" expanded="false" />
                 <element signature="e#19687#19703#0" expanded="true" />
-                <element signature="e#19679#22836#0" expanded="false" />
                 <element signature="e#22846#22862#0" expanded="true" />
                 <element signature="e#23288#23304#0" expanded="true" />
-                <element signature="e#23280#24899#0" expanded="false" />
-                <element signature="e#24901#26015#0" expanded="false" />
+                <element signature="e#24909#24925#0" expanded="true" />
+                <element signature="e#27657#27984#0" expanded="false" />
+                <element signature="e#27986#29896#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -65,8 +66,8 @@
       <file leaf-file-name="helper.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/helper.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="23" column="1" lean-forward="true" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
+            <state relative-caret-position="414">
+              <caret line="23" column="1" lean-forward="false" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -85,8 +86,8 @@
       <file leaf-file-name="linearAlgebraUtils.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/linearAlgebraUtils.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1206">
-              <caret line="67" column="58" lean-forward="false" selection-start-line="67" selection-start-column="39" selection-end-line="67" selection-end-column="58" />
+            <state relative-caret-position="332">
+              <caret line="114" column="0" lean-forward="false" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -112,21 +113,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="InPolar.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/producers/InPolar.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3258">
-              <caret line="181" column="38" lean-forward="false" selection-start-line="181" selection-start-column="38" selection-end-line="181" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="AffineTransformation.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1386">
-              <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+            <state relative-caret-position="828">
+              <caret line="46" column="5" lean-forward="false" selection-start-line="46" selection-start-column="5" selection-end-line="46" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -135,7 +126,7 @@
       <file leaf-file-name="GaussianProducer.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1314">
+            <state relative-caret-position="-1504">
               <caret line="73" column="0" lean-forward="false" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
               <folding />
             </state>
@@ -231,12 +222,12 @@
         <option value="$PROJECT_DIR$/src/producers/Difference.h" />
         <option value="$PROJECT_DIR$/src/testing/coordinateSystemChange.cpp" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/linearAlgebraUtils.cpp" />
         <option value="$PROJECT_DIR$/src/producers/GaussianProducer.h" />
         <option value="$PROJECT_DIR$/src/producers/GaussianProducer.cpp" />
         <option value="$PROJECT_DIR$/src/producers/AffineTransformation.h" />
         <option value="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
         <option value="$PROJECT_DIR$/src/linearAlgebraUtils.h" />
+        <option value="$PROJECT_DIR$/src/linearAlgebraUtils.cpp" />
         <option value="$PROJECT_DIR$/src/main.cpp" />
       </list>
     </option>
@@ -314,7 +305,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.chemistry">
+  <component name="RunManager" selected="Application.Unnamed">
     <configuration name="Benchmark.ScfParallel" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" WORKING_DIR="file://$PROJECT_DIR$/work" PASS_PARENT_ENVS_2="true" PROJECT_NAME="chemistry" TARGET_NAME="modules" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="chemistry" RUN_TARGET_NAME="modules" TEST_CLASS="Benchmark" TEST_METHOD="ScfParallel" TEST_MODE="SUITE_TEST">
       <envs />
     </configuration>
@@ -334,6 +325,9 @@
       <envs />
     </configuration>
     <configuration name="FunctionProducer.OnSphereCosineSupplement2" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" WORKING_DIR="file://$PROJECT_DIR$/work" PASS_PARENT_ENVS_2="true" PROJECT_NAME="chemistry" TARGET_NAME="run_tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="chemistry" RUN_TARGET_NAME="run_tests" TEST_CLASS="FunctionProducer" TEST_METHOD="OnSphereCosineSupplement2" TEST_MODE="SUITE_TEST">
+      <envs />
+    </configuration>
+    <configuration name="Unnamed" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$/work" PASS_PARENT_ENVS_2="true" PROJECT_NAME="chemistry" TARGET_NAME="chemistry" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="chemistry" RUN_TARGET_NAME="chemistry">
       <envs />
     </configuration>
     <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$/work" PASS_PARENT_ENVS_2="true" PROJECT_NAME="chemistry" TARGET_NAME="chemistry" CONFIG_NAME="Debug">
@@ -500,9 +494,6 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
-    <configuration name="chemistry" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$/work" PASS_PARENT_ENVS_2="true" PROJECT_NAME="chemistry" TARGET_NAME="chemistry" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="chemistry" RUN_TARGET_NAME="chemistry">
-      <envs />
-    </configuration>
     <configuration name="gmock" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="chemistry" TARGET_NAME="gmock" CONFIG_NAME="Debug">
       <envs />
       <method>
@@ -540,7 +531,7 @@
       </method>
     </configuration>
     <list size="13">
-      <item index="0" class="java.lang.String" itemvalue="Application.chemistry" />
+      <item index="0" class="java.lang.String" itemvalue="Application.Unnamed" />
       <item index="1" class="java.lang.String" itemvalue="Application.Build All" />
       <item index="2" class="java.lang.String" itemvalue="Application.gmock" />
       <item index="3" class="java.lang.String" itemvalue="Application.gmock_main" />
@@ -622,7 +613,8 @@
       <workItem from="1506327413443" duration="68000" />
       <workItem from="1506332037242" duration="14106000" />
       <workItem from="1506427524682" duration="14832000" />
-      <workItem from="1506447873978" duration="3905000" />
+      <workItem from="1506447873978" duration="12885000" />
+      <workItem from="1506498492947" duration="3930000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -827,7 +819,14 @@
       <option name="project" value="LOCAL" />
       <updated>1506444918695</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="experimentalTryToConverge">
+      <created>1506452277624</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1506452277624</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -863,13 +862,13 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="376305000" />
+    <option name="totallyTimeSpent" value="389215000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17536534" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2812823" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -879,7 +878,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3991727" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36814892" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -919,7 +918,8 @@
     <MESSAGE value="bug fix" />
     <MESSAGE value="shs server" />
     <MESSAGE value="exploration of path #9 in progress" />
-    <option name="LAST_COMMIT_MESSAGE" value="exploration of path #9 in progress" />
+    <MESSAGE value="experimentalTryToConverge" />
+    <option name="LAST_COMMIT_MESSAGE" value="experimentalTryToConverge" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1211,42 +1211,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1386">
-          <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/optimization/stop_strategies/HistoryStrategyWrapper.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1314">
-          <caret line="73" column="0" lean-forward="false" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="10" column="1" lean-forward="false" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/linearAlgebraUtils.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1206">
-          <caret line="67" column="58" lean-forward="false" selection-start-line="67" selection-start-column="39" selection-end-line="67" selection-end-column="58" />
           <folding />
         </state>
       </provider>
@@ -1261,16 +1229,48 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/helper.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="23" column="1" lean-forward="true" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
+        <state relative-caret-position="414">
+          <caret line="23" column="1" lean-forward="false" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/optimization/stop_strategies/HistoryStrategyWrapper.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="828">
+          <caret line="46" column="5" lean-forward="false" selection-start-line="46" selection-start-column="5" selection-end-line="46" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1504">
+          <caret line="73" column="0" lean-forward="false" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/linearAlgebraUtils.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="332">
+          <caret line="114" column="0" lean-forward="false" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="969" column="0" lean-forward="true" selection-start-line="969" selection-start-column="0" selection-end-line="969" selection-end-column="0" />
+        <state relative-caret-position="968">
+          <caret line="988" column="1" lean-forward="true" selection-start-line="988" selection-start-column="1" selection-end-line="988" selection-end-column="1" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />
@@ -1281,11 +1281,11 @@
             <element signature="e#10321#17859#0" expanded="false" />
             <element signature="e#17862#19676#0" expanded="false" />
             <element signature="e#19687#19703#0" expanded="true" />
-            <element signature="e#19679#22836#0" expanded="false" />
             <element signature="e#22846#22862#0" expanded="true" />
             <element signature="e#23288#23304#0" expanded="true" />
-            <element signature="e#23280#24899#0" expanded="false" />
-            <element signature="e#24901#26015#0" expanded="false" />
+            <element signature="e#24909#24925#0" expanded="true" />
+            <element signature="e#27657#27984#0" expanded="false" />
+            <element signature="e#27986#29896#0" expanded="false" />
           </folding>
         </state>
       </provider>
