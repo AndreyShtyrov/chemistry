@@ -975,6 +975,7 @@ void shs(FuncT&& func)
     for (size_t i = 0; i < cnt; i++) {
 //    for (size_t i = 9; i <= 9; i++) {
         vector<vect> trajectory;
+        ofstream output(str(format("./results/%1%.xyz") % i));
 
         auto direction = vs[i];
         LOG_INFO("Path #{}. Initial direction: {}", i, direction.transpose());
@@ -1019,6 +1020,9 @@ void shs(FuncT&& func)
                         break;
                     }
                     else if (shsTSTryRoutine(func, direction, trajectory, j)) {
+                        output << toChemcraftCoords(func.getFullInnerFunction().getCharges(), trajectory.back(), "final TS");
+                        output.flush();
+
                         tsFound = true;
                         converged = true;
                         break;
@@ -1044,19 +1048,13 @@ void shs(FuncT&& func)
                      i, newValue, angleCosine(direction, prev), direction.transpose());
 
             trajectory.push_back(func.fullTransform(direction));
+            output << toChemcraftCoords(func.getFullInnerFunction().getCharges(), trajectory.back(), to_string(j));
+            output.flush();
 
             if (newValue < value) {
                 LOG_ERROR("newValue < value [{:.13f} < {:.13f}]. Stopping", newValue, value);
-                //break;
             }
-
             value = newValue;
-
-            {
-                ofstream output(str(format("./results/%1%.xyz") % i));
-                for (size_t j = 0; j < trajectory.size(); j++)
-                    output << toChemcraftCoords(func.getFullInnerFunction().getCharges(), trajectory[j], to_string(j));
-            }
         }
 
         LOG_INFO("Path #{} finished with {} iterations", i, trajectory.size());
