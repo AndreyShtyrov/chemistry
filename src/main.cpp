@@ -787,11 +787,32 @@ auto remove6LesserHessValues2(FuncT&& func, vect structure)
     return makeAffineTransfomation(func, structure, basis.block(0, vs.size(), basis.rows(), basis.cols() - vs.size()));
 }
 
+tuple<bool, vect> tryToOptimizeTS(vector<size_t> charges, vect structure)
+{
+    assert(false);
+
+    GaussianProducer molecule(charges, 3);
+
+    try {
+        for (size_t j = 0; j < 5; j++) {
+            auto transformed = remove6LesserHessValues2(molecule, structure);
+
+            auto valueGradHess = transformed.valueGradHess(makeConstantVect(transformed.nDims, 0));
+            structure = transformed.fullTransform(-get<2>(valueGradHess).inverse() * get<1>(valueGradHess));
+        }
+
+        logFunctionInfo(molecule, structure, "final structure");
+        LOG_INFO("final xyz\n{}\n", toChemcraftCoords(charges, structure));
+    }
+    catch (GaussianException exc) {
+
+    }
+}
 
 void optimizeTS()
 {
 //    vector<size_t> interesting = {127, 139, 159};
-    vector<size_t> interesting = {116};
+    vector<size_t> interesting = {5, 10, 15, 20, 26};
 //    vector<size_t> interesting = {139};
     vector<vector<size_t>> charges;
     vector<vect> structures;
@@ -812,11 +833,12 @@ void optimizeTS()
             auto p = makeConstantVect(normalized.nDims, 0);
 
 //            logFunctionInfo(molecule, structure, "molecule");
-            logFunctionInfo(transformed, makeConstantVect(transformed.nDims, 0), "transformed");
-//            logFunctionInfo(normalized, p, "normalized");
+//            logFunctionInfo(transformed, makeConstantVect(transformed.nDims, 0), "transformed");
 
-            auto valueGradHess = normalized.valueGradHess(p);
-            structure = normalized.fullTransform(-get<2>(valueGradHess).inverse() * get<1>(valueGradHess));
+//            auto valueGradHess = normalized.valueGradHess(p);
+//            structure = normalized.fullTransform(-get<2>(valueGradHess).inverse() * get<1>(valueGradHess));
+            auto valueGradHess = transformed.valueGradHess(makeConstantVect(transformed.nDims, 0));
+            structure = transformed.fullTransform(-get<2>(valueGradHess).inverse() * get<1>(valueGradHess));
         }
 
         logFunctionInfo(molecule, structure, "final structure");
@@ -864,10 +886,11 @@ bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, d
                 }
             }
 
-            cout.precision(13);
+            stringstream point;
+            point.precision(13);
             for (size_t i = 0; i < p.size(); i++)
-                cout << fixed << p(i) << ", ";
-            cout << endl;
+                point << fixed << p(i) << ", ";
+            LOG_INFO("{}", point.str());
 
             auto lastP = p;
             p = polar.getInnerFunction().transform(polar.transform(theta - experimentalInverse(hess) * grad));
@@ -905,7 +928,7 @@ void shs(FuncT&& func)
         vs.push_back(readVect(minsOnSphere));
 
     double const firstR = 0.05;
-    double const deltaR = 0.003;
+    double const deltaR = 0.04;
 
     auto const stopStrategy = makeHistoryStrategy(StopStrategy(1e-8, 1e-5));
 
@@ -944,21 +967,41 @@ void shs(FuncT&& func)
 //                    }
 //                }
 
-                for (double curDeltaR = deltaR;; curDeltaR *= .75) {
-                    vector<vect> path;
-                    if (experimentalTryToConverge(stopStrategy, func, direction, r + deltaR, path, 30, 0, false)) {
-                        LOG_INFO("Path #{} converged with delta r {}", i, deltaR);
-                        r += curDeltaR;
-                        direction = path.back();
-                        break;
-                    } else {
-                        assert(false);
-                    }
-//                if (!tryToConverge(stopStrategy, func, direction, r + deltaR, path, 10, 0, false) ||
-//                    !tryToConverge(stopStrategy, func, path.back(), r + deltaR, path, 1, path.size(), true)) {
-//                    path = optimizeOnSphere(stopStrategy, func, direction, r + deltaR, 50, 5);
+//                for (double curDeltaR = deltaR;; curDeltaR *= .75) {
+//                    vector<vect> path;
+//                    if (experimentalTryToConverge(stopStrategy, func, direction, r + deltaR, path, 30, 0, false)) {
+//                        LOG_INFO("Path #{} converged with delta r {}", i, deltaR);
+//                        r += curDeltaR;
+//                        direction = path.back();
+//                        break;
+//                    } else {
+//                        assert(false);
+//                    }
+////                if (!tryToConverge(stopStrategy, func, direction, r + deltaR, path, 10, 0, false) ||
+////                    !tryToConverge(stopStrategy, func, path.back(), r + deltaR, path, 1, path.size(), true)) {
+////                    path = optimizeOnSphere(stopStrategy, func, direction, r + deltaR, 50, 5);
+////                }
 //                }
+
+                for (double currentDr = deltaR; ; currentDr *= 0.5){
+                    double nextR = r + currentDr;
+                    vector<vect> path;
+                    if (experimentalTryToConverge(stopStrategy, func, direction, nextR, path, 30, 0, false)) {
+                        if (angleCosine(direction, path.back()) < .9) {
+                            LOG_ERROR("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! {}", angleCosine(direction, path.back()));
+                            continue;
+                        }
+
+                        LOG_ERROR("CONVERGED with dr = {}\nnew direction = {}\nangle = {}", currentDr, print(path.back(), 17), angleCosine(direction, path.back()));
+                        LOG_INFO("Path #{} converged with delta r {}", i, deltaR);
+
+                        r += currentDr;
+                        direction = path.back();
+
+                        break;
+                    }
                 }
+
             } catch (GaussianException const& exc) {
                 LOG_ERROR("Path #{} terminated with gaussian assert", i);
                 break;
@@ -1008,6 +1051,41 @@ int main()
 //    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchPaths(remove6LesserHessValues(molecule, equilStruct));
 //    optimizeTS();
+    return 0;
 
+
+    auto normalized = remove6LesserHessValues(molecule, equilStruct);
+
+    double const r0 = 0.05;
+    double const dr = 0.04;
+    size_t const iter = 9;
+
+    double r = r0 + dr * iter;
+    auto direction = makeVect(-0.122392, -0.0308972, -0.153579, -0.0103385, -0.239886, -3.49647e-06, -0.00944182, 0.0222269, -3.90199e-07, -0.124332, -5.89678e-06, -0.234276);
+    logFunctionPolarInfo(normalized, direction, r);
+
+    ofstream output("./results/__.xyz");
+
+    for (size_t i = 0; ; i++) {
+        for (double currentDr = dr; ; currentDr *= 0.5){
+            double nextR = r + currentDr;
+            vector<vect> path;
+            if (experimentalTryToConverge(stopStrategy, normalized, direction, nextR, path, 30, 0, false)) {
+                if (angleCosine(direction, path.back()) < .9) {
+                    LOG_ERROR("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! {}", angleCosine(direction, path.back()));
+                    continue;
+                }
+
+                LOG_ERROR("CONVERGED with dr = {}\nnew direction = {}\nangle = {}", currentDr, print(path.back(), 17), angleCosine(direction, path.back()));
+                r += currentDr;
+                direction = path.back();
+
+                output << toChemcraftCoords(_charges, normalized.fullTransform(direction), to_string(i));
+                output.flush();
+
+                break;
+            }
+        }
+    }
     return 0;
 }

@@ -82,6 +82,6 @@ tuple<vector<vector<size_t>>, vector<vect>> readWholeChemcraft(StreamT&& stream)
     return make_tuple(charges, structures);
 }
 
-
 string toChemcraftCoords(vector<size_t> const& charges, vect p, string comment="");
 
+string print(vect const& v, size_t precision=7);
