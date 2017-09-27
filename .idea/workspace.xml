@@ -20,7 +20,8 @@
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/framework.ipynb" afterPath="$PROJECT_DIR$/work/framework.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/0.xyz" afterPath="$PROJECT_DIR$/work/results/0.xyz" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/3.xyz" afterPath="$PROJECT_DIR$/work/results/3.xyz" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/6.xyz" afterPath="$PROJECT_DIR$/work/results/6.xyz" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
@@ -39,8 +40,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="434">
-              <caret line="984" column="0" lean-forward="true" selection-start-line="984" selection-start-column="0" selection-end-line="984" selection-end-column="0" />
+            <state relative-caret-position="194">
+              <caret line="939" column="24" lean-forward="true" selection-start-line="939" selection-start-column="24" selection-end-line="939" selection-end-column="24" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
@@ -54,9 +55,9 @@
                 <element signature="e#22846#22862#0" expanded="true" />
                 <element signature="e#23288#23304#0" expanded="true" />
                 <element signature="e#24909#24925#0" expanded="true" />
-                <element signature="e#26972#28492#0" expanded="false" />
-                <element signature="e#28494#28821#0" expanded="false" />
-                <element signature="e#28823#30782#0" expanded="false" />
+                <element signature="e#28212#28539#0" expanded="false" />
+                <element signature="e#28541#30500#0" expanded="false" />
+                <element signature="e#30511#30527#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -112,21 +113,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GaussianProducer.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
+      <file leaf-file-name="AffineTransformation.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
-              <caret line="73" column="0" lean-forward="false" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
+            <state relative-caret-position="90">
+              <caret line="74" column="6" lean-forward="false" selection-start-line="74" selection-start-column="6" selection-end-line="74" selection-end-column="6" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fmt.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/thirdparty/spdlog/include/spdlog/fmt/fmt.h">
+      <file leaf-file-name="GaussianProducer.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="20" column="32" lean-forward="false" selection-start-line="20" selection-start-column="32" selection-end-line="20" selection-end-column="32" />
+            <state relative-caret-position="146">
+              <caret line="73" column="0" lean-forward="false" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -146,7 +147,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Random</find>
       <find>toDis</find>
       <find>findIni</find>
       <find>error</find>
@@ -176,6 +176,7 @@
       <find>!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</find>
       <find>angle</find>
       <find>CONVERGED</find>
+      <find>TS</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -613,7 +614,7 @@
       <workItem from="1506332037242" duration="14106000" />
       <workItem from="1506427524682" duration="14832000" />
       <workItem from="1506447873978" duration="12885000" />
-      <workItem from="1506498492947" duration="20053000" />
+      <workItem from="1506498492947" duration="26854000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -839,7 +840,14 @@
       <option name="project" value="LOCAL" />
       <updated>1506516979096</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="completing of shs stop in progress">
+      <created>1506521486729</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1506521486730</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -875,11 +883,10 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="405338000" />
+    <option name="totallyTimeSpent" value="412139000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17536534" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -891,7 +898,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35677353" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36814892" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -934,7 +941,8 @@
     <MESSAGE value="experimentalTryToConverge" />
     <MESSAGE value="shs path #6 fix in progress" />
     <MESSAGE value="new shs step approach" />
-    <option name="LAST_COMMIT_MESSAGE" value="new shs step approach" />
+    <MESSAGE value="completing of shs stop in progress" />
+    <option name="LAST_COMMIT_MESSAGE" value="completing of shs stop in progress" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1169,14 +1177,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="828">
-          <caret line="46" column="5" lean-forward="false" selection-start-line="46" selection-start-column="5" selection-end-line="46" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/linearAlgebraUtils.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="332">
@@ -1307,10 +1307,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="74" column="6" lean-forward="false" selection-start-line="74" selection-start-column="6" selection-end-line="74" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="434">
-          <caret line="984" column="0" lean-forward="true" selection-start-line="984" selection-start-column="0" selection-end-line="984" selection-end-column="0" />
+        <state relative-caret-position="194">
+          <caret line="939" column="24" lean-forward="true" selection-start-line="939" selection-start-column="24" selection-end-line="939" selection-end-column="24" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />
@@ -1324,9 +1332,9 @@
             <element signature="e#22846#22862#0" expanded="true" />
             <element signature="e#23288#23304#0" expanded="true" />
             <element signature="e#24909#24925#0" expanded="true" />
-            <element signature="e#26972#28492#0" expanded="false" />
-            <element signature="e#28494#28821#0" expanded="false" />
-            <element signature="e#28823#30782#0" expanded="false" />
+            <element signature="e#28212#28539#0" expanded="false" />
+            <element signature="e#28541#30500#0" expanded="false" />
+            <element signature="e#30511#30527#0" expanded="true" />
           </folding>
         </state>
       </provider>
