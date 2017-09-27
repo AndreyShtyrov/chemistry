@@ -17,7 +17,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="shs bug fix">
+    <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
     </list>
@@ -37,8 +37,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="955" column="50" lean-forward="false" selection-start-line="955" selection-start-column="50" selection-end-line="955" selection-end-column="50" />
+            <state relative-caret-position="464">
+              <caret line="1018" column="41" lean-forward="true" selection-start-line="1018" selection-start-column="41" selection-end-line="1018" selection-end-column="41" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
@@ -53,7 +53,6 @@
                 <element signature="e#23288#23304#0" expanded="true" />
                 <element signature="e#24909#24925#0" expanded="true" />
                 <element signature="e#28212#28539#0" expanded="false" />
-                <element signature="e#28541#30500#0" expanded="false" />
                 <element signature="e#30511#30527#0" expanded="true" />
               </folding>
             </state>
@@ -123,8 +122,8 @@
       <file leaf-file-name="AffineTransformation.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1332">
-              <caret line="74" column="6" lean-forward="false" selection-start-line="74" selection-start-column="6" selection-end-line="74" selection-end-column="6" />
+            <state relative-caret-position="194">
+              <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -144,8 +143,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>toDis</find>
-      <find>findIni</find>
       <find>error</find>
       <find>ifstream</find>
       <find>create</find>
@@ -174,6 +171,8 @@
       <find>angle</find>
       <find>CONVERGED</find>
       <find>TS</find>
+      <find>Trying to optimize TS from current state</find>
+      <find>23612</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -613,7 +612,7 @@
       <workItem from="1506447873978" duration="12885000" />
       <workItem from="1506498492947" duration="26854000" />
       <workItem from="1506536465561" duration="34000" />
-      <workItem from="1506540507204" duration="4458000" />
+      <workItem from="1506540507204" duration="7690000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -853,7 +852,14 @@
       <option name="project" value="LOCAL" />
       <updated>1506543470528</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="shs small improvement">
+      <created>1506545001468</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1506545001468</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -889,7 +895,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="416631000" />
+    <option name="totallyTimeSpent" value="419863000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -924,7 +930,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="banchmarks" />
     <MESSAGE value="CMake version" />
     <MESSAGE value="benchmarks" />
     <MESSAGE value="some architecture changes. Removed a lot of classes (Sum, Product, Models, etc). Multithreading" />
@@ -949,7 +954,8 @@
     <MESSAGE value="new shs step approach" />
     <MESSAGE value="completing of shs stop in progress" />
     <MESSAGE value="shs bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="shs bug fix" />
+    <MESSAGE value="shs small improvement" />
+    <option name="LAST_COMMIT_MESSAGE" value="shs small improvement" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1289,14 +1295,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1332">
-          <caret line="74" column="6" lean-forward="false" selection-start-line="74" selection-start-column="6" selection-end-line="74" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/work/np-complete/study/au/chemistry/thirdparty/spdlog/include/spdlog/details/logger_impl.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
@@ -1305,10 +1303,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="955" column="50" lean-forward="false" selection-start-line="955" selection-start-column="50" selection-end-line="955" selection-end-column="50" />
+        <state relative-caret-position="464">
+          <caret line="1018" column="41" lean-forward="true" selection-start-line="1018" selection-start-column="41" selection-end-line="1018" selection-end-column="41" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />
@@ -1323,7 +1329,6 @@
             <element signature="e#23288#23304#0" expanded="true" />
             <element signature="e#24909#24925#0" expanded="true" />
             <element signature="e#28212#28539#0" expanded="false" />
-            <element signature="e#28541#30500#0" expanded="false" />
             <element signature="e#30511#30527#0" expanded="true" />
           </folding>
         </state>

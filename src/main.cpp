@@ -1019,7 +1019,7 @@ void shs(FuncT&& func)
                         converged = true;
                         break;
                     }
-                    else if (shsTSTryRoutine(func, direction, trajectory, j)) {
+                    else if (shsTSTryRoutine(func, trajectory.back(), trajectory, j)) {
                         output << toChemcraftCoords(func.getFullInnerFunction().getCharges(), trajectory.back(), "final TS");
                         output.flush();
 
