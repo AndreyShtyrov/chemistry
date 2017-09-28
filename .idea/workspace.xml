@@ -18,7 +18,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/george.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/george.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
     </list>
@@ -38,8 +37,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="222">
-              <caret line="964" column="13" lean-forward="true" selection-start-line="964" selection-start-column="13" selection-end-line="964" selection-end-column="13" />
+            <state relative-caret-position="150">
+              <caret line="945" column="31" lean-forward="false" selection-start-line="945" selection-start-column="31" selection-end-line="945" selection-end-column="31" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
@@ -616,7 +615,7 @@
       <workItem from="1506536465561" duration="34000" />
       <workItem from="1506540507204" duration="8522000" />
       <workItem from="1506586549215" duration="68000" />
-      <workItem from="1506630862593" duration="3817000" />
+      <workItem from="1506630862593" duration="3832000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -877,7 +876,14 @@
       <option name="project" value="LOCAL" />
       <updated>1506550696292</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="shs bug fix">
+      <created>1506635176607</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1506635176607</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -913,7 +919,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="424580000" />
+    <option name="totallyTimeSpent" value="424595000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -971,9 +977,9 @@
     <MESSAGE value="new shs step approach" />
     <MESSAGE value="completing of shs stop in progress" />
     <MESSAGE value="shs small improvement" />
-    <MESSAGE value="shs bug fix" />
     <MESSAGE value="bug fix todo" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug fix todo" />
+    <MESSAGE value="shs bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="shs bug fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1330,8 +1336,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="964" column="13" lean-forward="true" selection-start-line="964" selection-start-column="13" selection-end-line="964" selection-end-column="13" />
+        <state relative-caret-position="150">
+          <caret line="945" column="31" lean-forward="false" selection-start-line="945" selection-start-column="31" selection-end-line="945" selection-end-column="31" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />

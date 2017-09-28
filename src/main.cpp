@@ -943,7 +943,7 @@ template<typename FuncT>
 void shs(FuncT&& func)
 {
     auto& molecule = func.getFullInnerFunction();
-    molecule.setGaussianNProc(3);
+    molecule.setGaussianNProc(1);
     logFunctionInfo(func, makeConstantVect(func.nDims, 0), "normalized energy for equil structure");
 
     ifstream minsOnSphere("./mins_on_sphere");
