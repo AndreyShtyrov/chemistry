@@ -791,24 +791,28 @@ tuple<bool, vect> tryToOptimizeTS(GaussianProducer& molecule, vect structure, si
 {
     try {
         for (size_t j = 0; j < iters; j++) {
+            //todo: double hessian calculation
             auto transformed = remove6LesserHessValues2(molecule, structure);
             auto valueGradHess = transformed.valueGradHess(makeConstantVect(transformed.nDims, 0));
+            auto grad = get<1>(valueGradHess);
+            auto hess = get<2>(valueGradHess);
+
+            auto sValues = singularValues(hess);
+            bool hasNegative;
+            for (size_t i = 0; i < sValues.size(); i++)
+                if (sValues(i) < 0)
+                    hasNegative = true;
+
+            if (!hasNegative) {
+                LOG_INFO("TS structure condidat has no negative singular values");
+                return make_tuple(false, vect());
+            }
+
             structure = transformed.fullTransform(-get<2>(valueGradHess).inverse() * get<1>(valueGradHess));
         }
 
-
         auto transformed = remove6LesserHessValues2(molecule, structure);
         auto sValues = singularValues(transformed.hess(makeConstantVect(transformed.nDims, 0)));
-
-        bool hasNegative;
-        for (size_t i = 0; i < sValues.size(); i++)
-            if (sValues(i) < 0)
-                hasNegative = true;
-
-        if (!hasNegative) {
-            LOG_INFO("TS result has no negative singular values");
-            return make_tuple(false, vect());
-        }
 
         logFunctionInfo(molecule, structure, "final structure");
         LOG_INFO("final TS result xyz\n{}\n", toChemcraftCoords(molecule.getCharges(), structure));
@@ -911,41 +915,26 @@ bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, d
     return false;
 };
 
-template<typename FuncT>
-bool shsTSTryRoutine(FuncT&& func, vect direction, vector<vect>& path, size_t shsStepNumber)
+bool shsTSTryRoutine(GaussianProducer& molecule, vect structure, ostream& output)
 {
-    auto& molecule = func.getFullInnerFunction();
+    vect ts;
+    bool optimized;
+    tie(optimized, ts) = tryToOptimizeTS(molecule, structure);
 
-    LOG_INFO("Trying to optimize TS from current state");
-    auto hess = func.hess(direction);
-    auto sValues = singularValues(hess);
-    LOG_INFO("singular values: {}", sValues);
+    if (optimized) {
+        auto valueGradHess = molecule.valueGradHess(ts);
+        auto grad = get<1>(valueGradHess);
+        auto hess = get<2>(valueGradHess);
 
-    bool hasNegative = false;
-    for (size_t i = 0; i < sValues.size(); i++)
-        if (sValues(i) < 0)
-            hasNegative = true;
+        LOG_CRITICAL("TS FOUND.\nTS gradient: {} [{}]\nsingularr hess values: {}\n{}", grad.norm(), print(grad),
+                     singularValues(hess), toChemcraftCoords(molecule.getCharges(), ts), grad.norm());
 
-    if (hasNegative) {
-        bool optimized;
-        vect ts;
-        tie(optimized, ts) = tryToOptimizeTS(molecule, func.fullTransform(direction));
+        output << toChemcraftCoords(molecule.getCharges(), ts, "final TS");
+        output.flush();
 
-        if (optimized) {
-            auto valueGradHess = molecule.valueGradHess(ts);
-            auto grad = get<1>(valueGradHess);
-            auto hess = get<2>(valueGradHess);
 
-            LOG_CRITICAL("TS FOUND on {} iteration.\nTS gradient: {} [{}]\nsingualr hess values: {}\n{}", shsStepNumber,
-                         grad.norm(), print(grad), singularValues(hess), toChemcraftCoords(molecule.getCharges(), ts), grad.norm());
-
-            path.push_back(ts);
-
-            return true;
-        }
+        return true;
     }
-    else
-        LOG_INFO("no negative singular value");
 
     return false;
 }
@@ -953,10 +942,9 @@ bool shsTSTryRoutine(FuncT&& func, vect direction, vector<vect>& path, size_t sh
 template<typename FuncT>
 void shs(FuncT&& func)
 {
-    func.getFullInnerFunction().setGaussianNProc(1);
-    logFunctionInfo(func, makeConstantVect(func.nDims, 0), "normalized energy for equil structure");
-
     auto& molecule = func.getFullInnerFunction();
+    molecule.setGaussianNProc(3);
+    logFunctionInfo(func, makeConstantVect(func.nDims, 0), "normalized energy for equil structure");
 
     ifstream minsOnSphere("./mins_on_sphere");
     size_t cnt;
@@ -980,76 +968,70 @@ void shs(FuncT&& func)
         auto direction = vs[i];
         LOG_INFO("Path #{}. Initial direction: {}", i, direction.transpose());
 
+        vect lastPoint = func.fullTransform(makeConstantVect(func.nDims, 0));
         double value = func(direction);
         double r = firstR;
 
-        for (size_t j = 0; j < 600; j++) {
-            if (!j) {
+        for (size_t step = 0; step < 600; step++) {
+            if (!step) {
                 auto polar = makePolarWithDirection(func, .1, direction);
                 logFunctionInfo(polar, makeConstantVect(polar.nDims, M_PI / 2),
                                 str(boost::format("Paht %1% initial direction info") % i));
             }
 
-            if (j && j % 7 == 0 && shsTSTryRoutine(func, direction, trajectory, j)) {
+            if (step && step % 7 == 0 && shsTSTryRoutine(molecule, lastPoint, output)) {
+                LOG_INFO("Path #{} TS found. Break", i);
                 break;
             }
 
             vect prev = direction;
             direction = direction / direction.norm() * (r + deltaR);
-//            try {
-                bool converged = false;
-                bool tsFound = false;
-                double currentDr = deltaR;
 
-                for (size_t convIter = 0; convIter < CONV_ITER_LIMIT; convIter++, currentDr *= 0.5) {
-                    double nextR = r + currentDr;
-                    vector<vect> path;
-                    if (experimentalTryToConverge(stopStrategy, func, direction, nextR, path, 30, 0, false)) {
-                        if (angleCosine(direction, path.back()) < .9) {
-                            LOG_ERROR("Path {} did not converge (too large angle: {})", i, angleCosine(direction, path.back()));
-                            continue;
-                        }
+            bool converged = false;
+            bool tsFound = false;
+            double currentDr = deltaR;
 
-                        LOG_ERROR("CONVERGED with dr = {}\nnew direction = {}\nangle = {}", currentDr, print(path.back(), 17), angleCosine(direction, path.back()));
-                        LOG_INFO("Path #{} converged with delta r {}", i, deltaR);
-
-                        r += currentDr;
-                        direction = path.back();
-
-                        converged = true;
-                        break;
+            for (size_t convIter = 0; convIter < CONV_ITER_LIMIT; convIter++, currentDr *= 0.5) {
+                double nextR = r + currentDr;
+                vector<vect> path;
+                if (experimentalTryToConverge(stopStrategy, func, direction, nextR, path, 30, 0, false)) {
+                    if (angleCosine(direction, path.back()) < .9) {
+                        LOG_ERROR("Path {} did not converge (too large angle: {})", i, angleCosine(direction, path.back()));
+                        continue;
                     }
-                    //todo Bug here: trajectory contains cartesian coords, not normal coords
-                    else if (shsTSTryRoutine(func, trajectory.back(), trajectory, j)) {
-                        output << toChemcraftCoords(func.getFullInnerFunction().getCharges(), trajectory.back(), "final TS");
-                        output.flush();
 
-                        tsFound = true;
-                        converged = true;
-                        break;
-                    }
-                }
+                    LOG_ERROR("CONVERGED with dr = {}\nnew direction = {}\nangle = {}", currentDr, print(path.back(), 17), angleCosine(direction, path.back()));
+                    LOG_INFO("Path #{} converged with delta r {}", i, deltaR);
 
-                if (tsFound) {
-                    LOG_INFO("Path #{} TS found. Break", i);
+                    r += currentDr;
+                    direction = path.back();
+
+                    converged = true;
                     break;
                 }
-
-                if (!converged) {
-                    LOG_ERROR("Path #{} exceeded converge iteration limit ({}). Break", i, CONV_ITER_LIMIT);
+                else if (shsTSTryRoutine(molecule, lastPoint, output)) {
+                    tsFound = true;
+                    converged = true;
                     break;
                 }
-//            } catch (GaussianException const& exc) {
-//                LOG_ERROR("Path #{} terminated with gaussian assert", i);
-//                break;
-//            }
+            }
+
+            if (tsFound) {
+                LOG_INFO("Path #{} TS found. Break", i);
+                break;
+            }
+
+            if (!converged) {
+                LOG_ERROR("Path #{} exceeded converge iteration limit ({}). Break", i, CONV_ITER_LIMIT);
+                break;
+            }
 
             double newValue = func(direction);
-            LOG_INFO("New {} point in path {}:\n\tvalue = {:.13f}\n\tdelta angle cosine = {:.13f}\n\tdirection: {}", j,
+            LOG_INFO("New {} point in path {}:\n\tvalue = {:.13f}\n\tdelta angle cosine = {:.13f}\n\tdirection: {}", step,
                      i, newValue, angleCosine(direction, prev), direction.transpose());
 
-            trajectory.push_back(func.fullTransform(direction));
-            output << toChemcraftCoords(func.getFullInnerFunction().getCharges(), trajectory.back(), to_string(j));
+            lastPoint = func.fullTransform(direction);
+            output << toChemcraftCoords(molecule.getCharges(), lastPoint, to_string(step));
             output.flush();
 
             if (newValue < value) {
@@ -1057,8 +1039,6 @@ void shs(FuncT&& func)
             }
             value = newValue;
         }
-
-        LOG_INFO("Path #{} finished with {} iterations", i, trajectory.size());
     }
 }
 
