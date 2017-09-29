@@ -1046,58 +1046,51 @@ int main()
 {
     initializeLogger();
 
-    ifstream C2H4("./C2H4");
-    auto _charges = readCharges(C2H4);
-    auto equilStruct = readVect(C2H4);
-
-    auto center = centerOfMass(_charges, fromCartesianToPositions(equilStruct));
-    for (size_t i = 0; i < equilStruct.size(); i += 3)
-        equilStruct.block(i, 0, 3, 1) -= center;
-    auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-8, 5e-8));
-
-    auto molecule = GaussianProducer(_charges, 3);
+//    ifstream C2H4("./C2H4");
+//    auto _charges = readCharges(C2H4);
+//    auto equilStruct = readVect(C2H4);
+//
+//    auto center = centerOfMass(_charges, fromCartesianToPositions(equilStruct));
+//    for (size_t i = 0; i < equilStruct.size(); i += 3)
+//        equilStruct.block(i, 0, 3, 1) -= center;
+//    auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-8, 5e-8));
+//
+//    auto molecule = GaussianProducer(_charges, 3);
 
 //    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-    shs(remove6LesserHessValues(molecule, equilStruct));
+//    shs(remove6LesserHessValues(molecule, equilStruct));
 //    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchPaths(remove6LesserHessValues(molecule, equilStruct));
 //    optimizeInterestingTSs();
-    return 0;
+//    return 0;
 
+    vector<vect> structures;
+    vector<vector<size_t>> _charges;
+    tie(_charges, structures) = readWholeChemcraft(ifstream("./results/6.xyz"));
 
-    auto normalized = remove6LesserHessValues(molecule, equilStruct);
+    auto charges = _charges.back();
+    auto structure = structures.back();
 
-    double const r0 = 0.05;
-    double const dr = 0.04;
-    size_t const iter = 9;
+    GaussianProducer molecule(charges, 3);
+    auto fixed = remove6LesserHessValues2(molecule, structure);
 
-    double r = r0 + dr * iter;
-    auto direction = makeVect(-0.122392, -0.0308972, -0.153579, -0.0103385, -0.239886, -3.49647e-06, -0.00944182, 0.0222269, -3.90199e-07, -0.124332, -5.89678e-06, -0.234276);
-    logFunctionPolarInfo(normalized, direction, r);
+    auto hess = fixed.hess(makeConstantVect(fixed.nDims, 0));
+    auto A = linearization(hess);
 
-    ofstream output("./results/__.xyz");
+    for (size_t i = 0; i < A.cols(); i++) {
+        vect v = A.col(i);
 
-    for (size_t i = 0; ; i++) {
-        for (double currentDr = dr; ; currentDr *= 0.5) {
-            double nextR = r + currentDr;
-            vector<vect> path;
-            if (experimentalTryToConverge(stopStrategy, normalized, direction, nextR, path, 30, 0, false)) {
-                if (angleCosine(direction, path.back()) < .9) {
-                    LOG_ERROR("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! {}", angleCosine(direction, path.back()));
-                    continue;
-                }
-
-                LOG_ERROR("CONVERGED with dr = {}\nnew direction = {}\nangle = {}", currentDr, print(path.back(), 17), angleCosine(direction, path.back()));
-                r += currentDr;
-                direction = path.back();
-
-                output << toChemcraftCoords(_charges, normalized.fullTransform(direction), to_string(i));
-                output.flush();
-
-                break;
-            }
+        double value = v.transpose() * hess * v;
+        if (value < 0) {
+            LOG_INFO("{} < 0:\n{}\n\n{}\n\n", value,
+                     toChemcraftCoords(charges, fixed.fullTransform(-v * .3), "first"),
+                     toChemcraftCoords(charges, fixed.fullTransform(v * .3), "second"));
+            ofstream output("current.xyz");
+            output << toChemcraftCoords(charges, fixed.fullTransform(-v * .3), "first")
+                   << toChemcraftCoords(charges, fixed.fullTransform(v * .3), "second");
         }
     }
+
 
     return 0;
 }

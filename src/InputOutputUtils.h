@@ -66,7 +66,8 @@ tuple<vector<vector<size_t>>, vector<vect>> readWholeChemcraft(StreamT&& stream)
 
     while (stream >> cnt) {
         string comment;
-        stream >> comment;
+        getline(stream, comment);
+        getline(stream, comment);
 
         vector<size_t> currentCharges(cnt);
         vect structure(cnt * 3);
