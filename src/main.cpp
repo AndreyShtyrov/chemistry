@@ -445,22 +445,6 @@ void minimaElimination(FuncT&& func)
         }
     }
 
-//    {
-//        ifstream mins("./data/mins_on_sphere");
-//        size_t cnt;
-//        mins >> cnt;
-//
-//        for (size_t i = 0; i < cnt; i++) {
-//            auto direction = readVect(mins);
-//
-//            logFunctionPolarInfo(func, direction, r, "");
-//
-//            directions.push_back(direction);
-////            values.push_back((sqr(r) / 2 - (normalized(direction) - zeroEnergy)) / r / r / r);
-//            values.push_back(sqr(r) / 2 - (func(direction) - zeroEnergy));
-//        }
-//    }
-
     while (true) {
 //        Cosine3OnSphereInterpolation supplement(normalized.nDims, values, directions);
         CleverCosine3OnSphereInterpolation supplement(func.nDims, values, directions);
@@ -1122,9 +1106,9 @@ int main()
 
     auto molecule = GaussianProducer(charges, 3);
 
-//    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
+    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
 //    shs(remove6LesserHessValues(molecule, equilStruct));
-    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
+//    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchPaths(remove6LesserHessValues(molecule, equilStruct));
 //    optimizeInterestingTSs();
 //    return 0;

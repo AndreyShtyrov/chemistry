@@ -20,6 +20,8 @@
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/mins_on_sphere" afterPath="$PROJECT_DIR$/work/mins_on_sphere" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -37,8 +39,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="426">
-              <caret line="1123" column="0" lean-forward="true" selection-start-line="1123" selection-start-column="0" selection-end-line="1123" selection-end-column="0" />
+            <state relative-caret-position="506">
+              <caret line="546" column="9" lean-forward="true" selection-start-line="546" selection-start-column="9" selection-end-line="546" selection-end-column="9" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
@@ -46,16 +48,17 @@
                 <element signature="e#7151#7167#0" expanded="true" />
                 <element signature="e#7682#9051#0" expanded="false" />
                 <element signature="e#9053#10319#0" expanded="false" />
-                <element signature="e#10321#17859#0" expanded="false" />
-                <element signature="e#17862#19676#0" expanded="false" />
-                <element signature="e#19687#19703#0" expanded="true" />
-                <element signature="e#22846#22862#0" expanded="true" />
-                <element signature="e#23288#23304#0" expanded="true" />
-                <element signature="e#24909#24925#0" expanded="true" />
-                <element signature="e#27821#28444#0" expanded="false" />
-                <element signature="e#28446#28773#0" expanded="false" />
-                <element signature="e#28775#30734#0" expanded="false" />
-                <element signature="e#36248#37476#0" expanded="false" />
+                <element signature="e#10321#17351#0" expanded="false" />
+                <element signature="e#19179#19195#0" expanded="true" />
+                <element signature="e#22338#22354#0" expanded="true" />
+                <element signature="e#22780#22796#0" expanded="true" />
+                <element signature="e#24401#24417#0" expanded="true" />
+                <element signature="e#27313#27936#0" expanded="false" />
+                <element signature="e#27938#28265#0" expanded="false" />
+                <element signature="e#28267#30226#0" expanded="false" />
+                <element signature="e#30943#34820#0" expanded="false" />
+                <element signature="e#34822#35738#0" expanded="false" />
+                <element signature="e#35740#36968#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -592,7 +595,7 @@
       <workItem from="1506630862593" duration="5895000" />
       <workItem from="1506670575152" duration="11354000" />
       <workItem from="1506688856334" duration="1135000" />
-      <workItem from="1506713427277" duration="2291000" />
+      <workItem from="1506713427277" duration="6520000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -881,7 +884,14 @@
       <option name="project" value="LOCAL" />
       <updated>1506716077864</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="pre C2H4_2 execution">
+      <created>1506716336752</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1506716336752</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -917,7 +927,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="441438000" />
+    <option name="totallyTimeSpent" value="445667000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -933,7 +943,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36814892" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18200621" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -952,7 +962,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="constants change" />
     <MESSAGE value="testing of deviation values" />
     <MESSAGE value="minima elimination technique implemented" />
     <MESSAGE value="minima elimination technique in progress" />
@@ -977,11 +986,12 @@
     <MESSAGE value="small fix" />
     <MESSAGE value="trying to go both ways from ts" />
     <MESSAGE value="both directions" />
-    <option name="LAST_COMMIT_MESSAGE" value="both directions" />
+    <MESSAGE value="pre C2H4_2 execution" />
+    <option name="LAST_COMMIT_MESSAGE" value="pre C2H4_2 execution" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="8" />
+      <option name="time" value="9" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1340,8 +1350,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="426">
-          <caret line="1123" column="0" lean-forward="true" selection-start-line="1123" selection-start-column="0" selection-end-line="1123" selection-end-column="0" />
+        <state relative-caret-position="506">
+          <caret line="546" column="9" lean-forward="true" selection-start-line="546" selection-start-column="9" selection-end-line="546" selection-end-column="9" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />
@@ -1349,16 +1359,17 @@
             <element signature="e#7151#7167#0" expanded="true" />
             <element signature="e#7682#9051#0" expanded="false" />
             <element signature="e#9053#10319#0" expanded="false" />
-            <element signature="e#10321#17859#0" expanded="false" />
-            <element signature="e#17862#19676#0" expanded="false" />
-            <element signature="e#19687#19703#0" expanded="true" />
-            <element signature="e#22846#22862#0" expanded="true" />
-            <element signature="e#23288#23304#0" expanded="true" />
-            <element signature="e#24909#24925#0" expanded="true" />
-            <element signature="e#27821#28444#0" expanded="false" />
-            <element signature="e#28446#28773#0" expanded="false" />
-            <element signature="e#28775#30734#0" expanded="false" />
-            <element signature="e#36248#37476#0" expanded="false" />
+            <element signature="e#10321#17351#0" expanded="false" />
+            <element signature="e#19179#19195#0" expanded="true" />
+            <element signature="e#22338#22354#0" expanded="true" />
+            <element signature="e#22780#22796#0" expanded="true" />
+            <element signature="e#24401#24417#0" expanded="true" />
+            <element signature="e#27313#27936#0" expanded="false" />
+            <element signature="e#27938#28265#0" expanded="false" />
+            <element signature="e#28267#30226#0" expanded="false" />
+            <element signature="e#30943#34820#0" expanded="false" />
+            <element signature="e#34822#35738#0" expanded="false" />
+            <element signature="e#35740#36968#0" expanded="false" />
           </folding>
         </state>
       </provider>
