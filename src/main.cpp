@@ -1120,8 +1120,8 @@ int main()
             output << toChemcraftCoords(charges, first, "first")
                    << toChemcraftCoords(charges, second, "second");
 
-            goDown(molecule, first, "first");
-            goDown(molecule, second, "second");
+            goDown(molecule, first, "first.xyz");
+            goDown(molecule, second, "second.xyz");
         }
     }
 
