@@ -18,12 +18,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/first" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/work/second" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/current.xyz" afterPath="$PROJECT_DIR$/work/current.xyz" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,8 +37,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="318">
-              <caret line="1121" column="0" lean-forward="true" selection-start-line="1121" selection-start-column="0" selection-end-line="1121" selection-end-column="0" />
+            <state relative-caret-position="426">
+              <caret line="1123" column="0" lean-forward="true" selection-start-line="1123" selection-start-column="0" selection-end-line="1123" selection-end-column="0" />
               <folding>
                 <element signature="e#1106#1118#0" expanded="true" />
                 <element signature="e#5769#5785#0" expanded="true" />
@@ -59,6 +55,7 @@
                 <element signature="e#27821#28444#0" expanded="false" />
                 <element signature="e#28446#28773#0" expanded="false" />
                 <element signature="e#28775#30734#0" expanded="false" />
+                <element signature="e#36248#37476#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -595,7 +592,7 @@
       <workItem from="1506630862593" duration="5895000" />
       <workItem from="1506670575152" duration="11354000" />
       <workItem from="1506688856334" duration="1135000" />
-      <workItem from="1506713427277" duration="2024000" />
+      <workItem from="1506713427277" duration="2291000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -877,7 +874,14 @@
       <option name="project" value="LOCAL" />
       <updated>1506683405835</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="both directions">
+      <created>1506716077864</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1506716077864</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -913,7 +917,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="441171000" />
+    <option name="totallyTimeSpent" value="441438000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -948,7 +952,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="converge tests" />
     <MESSAGE value="constants change" />
     <MESSAGE value="testing of deviation values" />
     <MESSAGE value="minima elimination technique implemented" />
@@ -973,7 +976,8 @@
     <MESSAGE value="shs bug fix" />
     <MESSAGE value="small fix" />
     <MESSAGE value="trying to go both ways from ts" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to go both ways from ts" />
+    <MESSAGE value="both directions" />
+    <option name="LAST_COMMIT_MESSAGE" value="both directions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1336,8 +1340,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="1121" column="0" lean-forward="true" selection-start-line="1121" selection-start-column="0" selection-end-line="1121" selection-end-column="0" />
+        <state relative-caret-position="426">
+          <caret line="1123" column="0" lean-forward="true" selection-start-line="1123" selection-start-column="0" selection-end-line="1123" selection-end-column="0" />
           <folding>
             <element signature="e#1106#1118#0" expanded="true" />
             <element signature="e#5769#5785#0" expanded="true" />
@@ -1354,6 +1358,7 @@
             <element signature="e#27821#28444#0" expanded="false" />
             <element signature="e#28446#28773#0" expanded="false" />
             <element signature="e#28775#30734#0" expanded="false" />
+            <element signature="e#36248#37476#0" expanded="false" />
           </folding>
         </state>
       </provider>

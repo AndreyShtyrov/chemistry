@@ -1068,28 +1068,8 @@ void goDown(GaussianProducer& molecule, vect structure, string const& filename) 
     framework.plot(framework.newPlot("gradient norms"), gradNorms);
 }
 
-int main()
+void twoWayTS()
 {
-    initializeLogger();
-
-//    ifstream C2H4("./C2H4");
-//    auto _charges = readCharges(C2H4);
-//    auto equilStruct = readVect(C2H4);
-//
-//    auto center = centerOfMass(_charges, fromCartesianToPositions(equilStruct));
-//    for (size_t i = 0; i < equilStruct.size(); i += 3)
-//        equilStruct.block(i, 0, 3, 1) -= center;
-//    auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-8, 5e-8));
-//
-//    auto molecule = GaussianProducer(_charges, 3);
-
-//    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-//    shs(remove6LesserHessValues(molecule, equilStruct));
-//    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
-//    researchPaths(remove6LesserHessValues(molecule, equilStruct));
-//    optimizeInterestingTSs();
-//    return 0;
-
     vector<vect> structures;
     vector<vector<size_t>> _charges;
     tie(_charges, structures) = readWholeChemcraft(ifstream("./results/6.xyz"));
@@ -1124,6 +1104,30 @@ int main()
             goDown(molecule, second, "second.xyz");
         }
     }
+}
+
+int main()
+{
+    initializeLogger();
+
+    ifstream C2H4("./C2H4_2");
+    vector<size_t> charges;
+    vect equilStruct;
+    tie(charges, equilStruct) = readChemcraft(ifstream("./C2H4_2"));
+
+    auto center = centerOfMass(charges, fromCartesianToPositions(equilStruct));
+    for (size_t i = 0; i < equilStruct.size(); i += 3)
+        equilStruct.block(i, 0, 3, 1) -= center;
+    auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-8, 5e-8));
+
+    auto molecule = GaussianProducer(charges, 3);
+
+//    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
+//    shs(remove6LesserHessValues(molecule, equilStruct));
+    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
+//    researchPaths(remove6LesserHessValues(molecule, equilStruct));
+//    optimizeInterestingTSs();
+//    return 0;
 
 
     return 0;
