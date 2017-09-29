@@ -60,7 +60,7 @@ public:
 
     vect fullTransform(vect const& x) const
     {
-        assert((size_t) x.rows() == nDims);
+        assert((size_t) x.size() == nDims);
         return mFunc.fullTransform(transform(x));
     }
 

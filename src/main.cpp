@@ -1042,6 +1042,32 @@ void shs(FuncT&& func)
     }
 }
 
+void goDown(GaussianProducer& molecule, vect structure, string const& filename) {
+    ofstream output(filename);
+
+    vector<double> values;
+    vector<double> gradNorms;
+
+    for (size_t step = 0; step < 200; step++){
+        auto fixed = remove6LesserHessValues2(molecule, structure);
+        auto valueGrad = fixed.valueGrad(makeConstantVect(fixed.nDims, 0.));
+        auto value = get<0>(valueGrad);
+        auto grad = get<1>(valueGrad);
+
+        values.push_back(value);
+        gradNorms.push_back(grad.norm());
+
+        LOG_INFO("step #{}\nvalue = {}\ngrad = {} [{}]", step, value, grad.norm(), print(grad));
+
+        structure = fixed.fullTransform(-grad * .3);
+        output << toChemcraftCoords(molecule.getCharges(), structure, to_string(step));
+        output.flush();
+    }
+
+    framework.plot(framework.newPlot("values"), values);
+    framework.plot(framework.newPlot("gradient norms"), gradNorms);
+}
+
 int main()
 {
     initializeLogger();
@@ -1077,17 +1103,25 @@ int main()
     auto hess = fixed.hess(makeConstantVect(fixed.nDims, 0));
     auto A = linearization(hess);
 
+    double const FACTOR = .01;
+
     for (size_t i = 0; i < A.cols(); i++) {
         vect v = A.col(i);
 
         double value = v.transpose() * hess * v;
         if (value < 0) {
+            auto first = fixed.fullTransform(-FACTOR * v);
+            auto second = fixed.fullTransform(FACTOR * v);
+
             LOG_INFO("{} < 0:\n{}\n\n{}\n\n", value,
-                     toChemcraftCoords(charges, fixed.fullTransform(-v * .3), "first"),
-                     toChemcraftCoords(charges, fixed.fullTransform(v * .3), "second"));
+                     toChemcraftCoords(charges, first, "first"),
+                     toChemcraftCoords(charges, second, "second"));
             ofstream output("current.xyz");
-            output << toChemcraftCoords(charges, fixed.fullTransform(-v * .3), "first")
-                   << toChemcraftCoords(charges, fixed.fullTransform(v * .3), "second");
+            output << toChemcraftCoords(charges, first, "first")
+                   << toChemcraftCoords(charges, second, "second");
+
+            goDown(molecule, first, "first");
+            goDown(molecule, second, "second");
         }
     }
 
