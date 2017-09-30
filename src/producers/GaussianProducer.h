@@ -3,7 +3,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 
 #include "FunctionProducer.h"
-#include "InputOutputUtils.h"
+#include "inputOutputUtils.h"
 
 extern string const GAUSSIAN_HEADER;
 extern string const SCF_METHOD;

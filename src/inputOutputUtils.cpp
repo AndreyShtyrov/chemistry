@@ -1,4 +1,4 @@
-#include "InputOutputUtils.h"
+#include "inputOutputUtils.h"
 
 string toChemcraftCoords(vector<size_t> const& charges, vect p, string comment)
 {

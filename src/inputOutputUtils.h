@@ -44,7 +44,8 @@ tuple<vector<size_t>, vect> readChemcraft(StreamT&& stream)
     stream >> cnt;
 
     string comment;
-    stream >> comment;
+    getline(stream, comment);
+    getline(stream, comment);
 
     vector<size_t> charges(cnt);
     vect structure(cnt * 3);

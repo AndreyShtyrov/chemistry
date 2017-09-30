@@ -10,8 +10,11 @@
 
 #include "optimization/optimizations.h"
 #include "optimization/optimizeOnSphere.h"
-#include "InputOutputUtils.h"
+#include "inputOutputUtils.h"
 #include "constants.h"
+#include "functionLoggers.h"
+#include "normalCoordinates.h"
+#include "shsWorkflow.h"
 
 using namespace std;
 using namespace boost;
@@ -195,32 +198,6 @@ void drawTrajectories()
 
         framework.plot(axis, xs, ys);
     }
-}
-
-template<typename FuncT>
-void logFunctionInfo(FuncT& func, vect const& p, string const& title = "")
-{
-    auto valueGradHess = func.valueGradHess(p);
-    auto value = get<0>(valueGradHess);
-    auto grad = get<1>(valueGradHess);
-    auto hess = get<2>(valueGradHess);
-
-    LOG_INFO("{}\n\tposition: {}\n\tenergy: {}\n\tgradient: {} [{}]\n\thessian: {}\n\n", title, p.transpose(), value,
-             grad.norm(), grad.transpose(), singularValues(hess));
-}
-
-template<typename FuncT>
-void logFunctionPolarInfo(FuncT&& func, vect const& p, double r, string const& title = "")
-{
-    auto polar = makePolarWithDirection(func, r, p);
-
-    auto valueGradHess = polar.valueGradHess(makeConstantVect(polar.nDims, M_PI / 2));
-    auto value = get<0>(valueGradHess);
-    auto grad = get<1>(valueGradHess);
-    auto hess = get<2>(valueGradHess);
-
-    LOG_INFO("{}\n\tposition: {}\n\tenergy: {}\n\tgradient: {} [{}]\n\thessian: {}\n\n", title, p.transpose(), value,
-             grad.norm(), grad.transpose(), singularValues(hess));
 }
 
 vector<vect> filterByDistance(vector<vect> const& vs, double r)
@@ -658,157 +635,6 @@ void researchPaths(FuncT&& normalized)
     }
 }
 
-template<typename FuncT>
-auto remove6LesserHessValuesOld(FuncT&& func, vect structure)
-{
-    auto hess = func.hess(structure);
-    auto A = linearizationNormalization(hess, 6);
-
-    size_t nDims = func.nDims;
-    vector<size_t> poss = {nDims - 6, nDims - 5, nDims - 4, nDims - 3, nDims - 2, nDims - 1};
-    vector<double> vals(poss.size(), 0.);
-    return fix(makeAffineTransfomation(std::forward<FuncT>(func), structure, A), poss, vals);
-}
-
-template<typename FuncT>
-auto remove6LesserHessValues(FuncT&& func, vect structure)
-{
-    size_t n = func.nDims / 3;
-    vector<vect> vs;
-    for (size_t i = 0; i < 3; i++) {
-        vect v(structure.size());
-
-        for (size_t j = 0; j < n; j++)
-            v.block(j * 3, 0, 3, 1) = eye(3, i);
-        vs.push_back(normalized(v));
-    }
-
-    for (size_t i = 0; i < 3; i++) {
-        vect v(structure.size());
-
-        for (size_t j = 0; j < n; j++) {
-            vect block = structure.block(j * 3, 0, 3, 1);
-
-            block(i) = 0;
-            if (i == 0)
-                swap(block(1), block(2)), block(1) *= -1;
-            else if (i == 1)
-                swap(block(0), block(2)), block(0) *= -1;
-            else
-                swap(block(0), block(1)), block(0) *= -1;
-
-            v.block(j * 3, 0, 3, 1) = block;
-        }
-
-        vs.push_back(normalized(v));
-    }
-
-    matrix basis(func.nDims, vs.size());
-    for (size_t i = 0; i < vs.size(); i++)
-        basis.block(0, i, func.nDims, 1) = vs[i];
-
-    for (size_t i = vs.size(); i < func.nDims; i++) {
-        auto v = makeRandomVect(func.nDims);
-        vect x = basis.colPivHouseholderQr().solve(v);
-
-        v = v - basis * x;
-        basis = horizontalStack(basis, normalized(v));
-    }
-
-    auto transformed = makeAffineTransfomation(func, structure,
-                                               basis.block(0, vs.size(), basis.rows(), basis.cols() - vs.size()));
-    auto hess = transformed.hess(makeConstantVect(transformed.nDims, 0.));
-    auto A = linearizationNormalization(hess);
-
-    return makeAffineTransfomation(transformed, A);
-}
-
-template<typename FuncT>
-auto remove6LesserHessValues2(FuncT&& func, vect structure)
-{
-    size_t n = func.nDims / 3;
-    vector<vect> vs;
-    for (size_t i = 0; i < 3; i++) {
-        vect v(structure.size());
-
-        for (size_t j = 0; j < n; j++)
-            v.block(j * 3, 0, 3, 1) = eye(3, i);
-        vs.push_back(normalized(v));
-    }
-
-    for (size_t i = 0; i < 3; i++) {
-        vect v(structure.size());
-
-        for (size_t j = 0; j < n; j++) {
-            vect block = structure.block(j * 3, 0, 3, 1);
-
-            block(i) = 0;
-            if (i == 0)
-                swap(block(1), block(2)), block(1) *= -1;
-            else if (i == 1)
-                swap(block(0), block(2)), block(0) *= -1;
-            else
-                swap(block(0), block(1)), block(0) *= -1;
-
-            v.block(j * 3, 0, 3, 1) = block;
-        }
-
-        vs.push_back(normalized(v));
-    }
-
-    matrix basis(func.nDims, vs.size());
-    for (size_t i = 0; i < vs.size(); i++)
-        basis.block(0, i, func.nDims, 1) = vs[i];
-
-    for (size_t i = vs.size(); i < func.nDims; i++) {
-        auto v = makeRandomVect(func.nDims);
-        vect x = basis.colPivHouseholderQr().solve(v);
-
-        v = v - basis * x;
-        basis = horizontalStack(basis, normalized(v));
-    }
-
-    return makeAffineTransfomation(func, structure, basis.block(0, vs.size(), basis.rows(), basis.cols() - vs.size()));
-}
-
-tuple<bool, vect> tryToOptimizeTS(GaussianProducer& molecule, vect structure, size_t iters = 10)
-{
-    try {
-        for (size_t j = 0; j < iters; j++) {
-            //todo: double hessian calculation
-            auto transformed = remove6LesserHessValues2(molecule, structure);
-            auto valueGradHess = transformed.valueGradHess(makeConstantVect(transformed.nDims, 0));
-            auto grad = get<1>(valueGradHess);
-            auto hess = get<2>(valueGradHess);
-
-            auto sValues = singularValues(hess);
-            bool hasNegative;
-            for (size_t i = 0; i < sValues.size(); i++)
-                if (sValues(i) < 0)
-                    hasNegative = true;
-
-            if (!hasNegative) {
-                LOG_INFO("TS structure condidat has no negative singular values");
-                return make_tuple(false, vect());
-            }
-
-            structure = transformed.fullTransform(-get<2>(valueGradHess).inverse() * get<1>(valueGradHess));
-        }
-
-        auto transformed = remove6LesserHessValues2(molecule, structure);
-        auto sValues = singularValues(transformed.hess(makeConstantVect(transformed.nDims, 0)));
-
-        logFunctionInfo(molecule, structure, "final structure");
-        LOG_INFO("final TS result xyz\n{}\n", toChemcraftCoords(molecule.getCharges(), structure));
-
-        return make_tuple(true, structure);
-    }
-    catch (GaussianException const& exc) {
-        LOG_INFO("ts optimization try breaked with exception");
-        return make_tuple(false, vect());
-    }
-}
-
 void optimizeInterestingTSs()
 {
 //    vector<size_t> interesting = {127, 139, 159};
@@ -831,243 +657,33 @@ void optimizeInterestingTSs()
     }
 }
 
-matrix experimentalInverse(matrix const& m) {
-    auto A = linearization(m);
-    matrix diag = A.transpose() * m * A;
-
-    for (size_t i = 0; i < diag.rows(); i++)
-        if (diag(i, i) < 0 && false)
-            diag(i, i) = 1;
-        else
-            diag(i, i) = 1 / abs(diag(i, i));
-
-    return A * diag * A.transpose();
-}
-
-template<typename FuncT, typename StopStrategy>
-bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t iterLimit=5, size_t globalIter=0, bool needSingularTest=true)
-{
-    auto const theta = makeConstantVect(func.nDims - 1, M_PI / 2);
-    bool converged = false;
-
-    vector<vect> newPath;
-    try {
-        for (size_t i = 0; i < iterLimit; i++) {
-            auto polar = makePolarWithDirection(func, r, p);
-
-            auto valueGradHess = polar.valueGradHess(theta);
-            auto value = get<0>(valueGradHess);
-            auto grad = get<1>(valueGradHess);
-            auto hess = get<2>(valueGradHess);
-
-            if (needSingularTest) {
-                auto sValues = singularValues(hess);
-                for (size_t j = 0; j < sValues.size(); j++) {
-                    if (sValues(j) < 0) {
-                        LOG_INFO("singular values converge break, stop strategy with zero delta: {}",
-                                 stopStrategy(globalIter + i, p, value, grad, hess, p - p));
-                        return false;
-                    }
-                }
-            }
-
-            stringstream point;
-            point.precision(13);
-            for (size_t i = 0; i < p.size(); i++)
-                point << fixed << p(i) << ", ";
-            LOG_INFO("{}", point.str());
-
-            auto lastP = p;
-            p = polar.getInnerFunction().transform(polar.transform(theta - experimentalInverse(hess) * grad));
-            newPath.push_back(p);
-
-            if (stopStrategy(globalIter + i, p, value, grad, hess, p - lastP)) {
-                converged = true;
-                break;
-            }
-        }
-    } catch (GaussianException const& exc) {
-        LOG_ERROR("GaussianException converge break");
-        return false;
-    }
-
-    if (converged) {
-        path.insert(path.end(), newPath.begin(), newPath.end());
-        return true;
-    }
-
-    return false;
-};
-
-bool shsTSTryRoutine(GaussianProducer& molecule, vect structure, ostream& output)
-{
-    vect ts;
-    bool optimized;
-    tie(optimized, ts) = tryToOptimizeTS(molecule, structure);
-
-    if (optimized) {
-        auto valueGradHess = molecule.valueGradHess(ts);
-        auto grad = get<1>(valueGradHess);
-        auto hess = get<2>(valueGradHess);
-
-        LOG_CRITICAL("TS FOUND.\nTS gradient: {} [{}]\nsingularr hess values: {}\n{}", grad.norm(), print(grad),
-                     singularValues(hess), toChemcraftCoords(molecule.getCharges(), ts), grad.norm());
-
-        output << toChemcraftCoords(molecule.getCharges(), ts, "final TS");
-        output.flush();
-
-
-        return true;
-    }
-
-    return false;
-}
-
-template<typename FuncT>
-void shs(FuncT&& func)
-{
-    auto& molecule = func.getFullInnerFunction();
-    molecule.setGaussianNProc(1);
-    logFunctionInfo(func, makeConstantVect(func.nDims, 0), "normalized energy for equil structure");
-
-    ifstream minsOnSphere("./mins_on_sphere");
-    size_t cnt;
-    minsOnSphere >> cnt;
-    vector<vect> vs;
-    for (size_t i = 0; i < cnt; i++)
-        vs.push_back(readVect(minsOnSphere));
-
-    double const firstR = 0.05;
-    double const deltaR = 0.04;
-    size_t const CONV_ITER_LIMIT = 10;
-
-    auto const stopStrategy = makeHistoryStrategy(StopStrategy(1e-8, 1e-5));
-
-#pragma omp parallel for
-    for (size_t i = 0; i < cnt; i++) {
-//    for (size_t i = 9; i <= 9; i++) {
-        vector<vect> trajectory;
-        ofstream output(str(format("./results/%1%.xyz") % i));
-
-        auto direction = vs[i];
-        LOG_INFO("Path #{}. Initial direction: {}", i, direction.transpose());
-
-        vect lastPoint = func.fullTransform(makeConstantVect(func.nDims, 0));
-        double value = func(direction);
-        double r = firstR;
-
-        for (size_t step = 0; step < 600; step++) {
-            if (!step) {
-                auto polar = makePolarWithDirection(func, .1, direction);
-                logFunctionInfo(polar, makeConstantVect(polar.nDims, M_PI / 2),
-                                str(boost::format("Paht %1% initial direction info") % i));
-            }
-
-            if (step && step % 7 == 0 && shsTSTryRoutine(molecule, lastPoint, output)) {
-                LOG_INFO("Path #{} TS found. Break", i);
-                break;
-            }
-
-            vect prev = direction;
-            direction = direction / direction.norm() * (r + deltaR);
-
-            bool converged = false;
-            bool tsFound = false;
-            double currentDr = deltaR;
-
-            for (size_t convIter = 0; convIter < CONV_ITER_LIMIT; convIter++, currentDr *= 0.5) {
-                double nextR = r + currentDr;
-                vector<vect> path;
-                if (experimentalTryToConverge(stopStrategy, func, direction, nextR, path, 30, 0, false)) {
-                    if (angleCosine(direction, path.back()) < .9) {
-                        LOG_ERROR("Path {} did not converge (too large angle: {})", i, angleCosine(direction, path.back()));
-                        continue;
-                    }
-
-                    LOG_ERROR("CONVERGED with dr = {}\nnew direction = {}\nangle = {}", currentDr, print(path.back(), 17), angleCosine(direction, path.back()));
-                    LOG_INFO("Path #{} converged with delta r {}", i, deltaR);
-
-                    r += currentDr;
-                    direction = path.back();
-
-                    converged = true;
-                    break;
-                }
-                else if (shsTSTryRoutine(molecule, lastPoint, output)) {
-                    tsFound = true;
-                    converged = true;
-                    break;
-                }
-            }
-
-            if (tsFound) {
-                LOG_INFO("Path #{} TS found. Break", i);
-                break;
-            }
-
-            if (!converged) {
-                LOG_ERROR("Path #{} exceeded converge iteration limit ({}). Break", i, CONV_ITER_LIMIT);
-                break;
-            }
-
-            double newValue = func(direction);
-            LOG_INFO("New {} point in path {}:\n\tvalue = {:.13f}\n\tdelta angle cosine = {:.13f}\n\tdirection: {}", step,
-                     i, newValue, angleCosine(direction, prev), direction.transpose());
-
-            lastPoint = func.fullTransform(direction);
-            output << toChemcraftCoords(molecule.getCharges(), lastPoint, to_string(step));
-            output.flush();
-
-            if (newValue < value) {
-                LOG_ERROR("newValue < value [{:.13f} < {:.13f}]. Stopping", newValue, value);
-            }
-            value = newValue;
-        }
-    }
-}
-
-void goDown(GaussianProducer& molecule, vect structure, string const& filename) {
-    ofstream output(filename);
-
-    vector<double> values;
-    vector<double> gradNorms;
-
+vect goDown(GaussianProducer& molecule, vect structure) {
     for (size_t step = 0; step < 200; step++){
         auto fixed = remove6LesserHessValues2(molecule, structure);
         auto valueGrad = fixed.valueGrad(makeConstantVect(fixed.nDims, 0.));
         auto value = get<0>(valueGrad);
         auto grad = get<1>(valueGrad);
 
-        values.push_back(value);
-        gradNorms.push_back(grad.norm());
-
         LOG_INFO("step #{}\nvalue = {}\ngrad = {} [{}]", step, value, grad.norm(), print(grad));
 
         structure = fixed.fullTransform(-grad * .3);
-        output << toChemcraftCoords(molecule.getCharges(), structure, to_string(step));
-        output.flush();
     }
 
-    framework.plot(framework.newPlot("values"), values);
-    framework.plot(framework.newPlot("gradient norms"), gradNorms);
+    logFunctionInfo(molecule, structure, "final struct");
+
+    return structure;
 }
 
-void twoWayTS()
+vector<vect> twoWayTS(GaussianProducer& molecule, vect const& structure)
 {
-    vector<vect> structures;
-    vector<vector<size_t>> _charges;
-    tie(_charges, structures) = readWholeChemcraft(ifstream("./results/6.xyz"));
-
-    auto charges = _charges.back();
-    auto structure = structures.back();
-
-    GaussianProducer molecule(charges, 3);
     auto fixed = remove6LesserHessValues2(molecule, structure);
 
     auto hess = fixed.hess(makeConstantVect(fixed.nDims, 0));
     auto A = linearization(hess);
 
     double const FACTOR = .01;
+
+    vector<vect> results;
 
     for (size_t i = 0; i < A.cols(); i++) {
         vect v = A.col(i);
@@ -1077,22 +693,64 @@ void twoWayTS()
             auto first = fixed.fullTransform(-FACTOR * v);
             auto second = fixed.fullTransform(FACTOR * v);
 
-            LOG_INFO("{} < 0:\n{}\n\n{}\n\n", value,
-                     toChemcraftCoords(charges, first, "first"),
-                     toChemcraftCoords(charges, second, "second"));
-            ofstream output("current.xyz");
-            output << toChemcraftCoords(charges, first, "first")
-                   << toChemcraftCoords(charges, second, "second");
-
-            goDown(molecule, first, "first.xyz");
-            goDown(molecule, second, "second.xyz");
+            results.push_back(goDown(molecule, first));
+            results.push_back(goDown(molecule, second));
         }
     }
+
+    return results;
 }
+
+void explorPathTS(vector<size_t> numbers)
+{
+    vector<size_t> memCharges;
+    vector<vect> equilStructures;
+
+    for (size_t i : numbers) {
+        vector<vect> structures;
+        vector<vector<size_t>> _charges;
+        tie(_charges, structures) = readWholeChemcraft(ifstream(str(format("./results/%1%.xyz") % i)));
+
+        auto charges = _charges.back();
+        auto structure = structures.back();
+
+        GaussianProducer molecule(charges, 3);
+        auto currentStructures = twoWayTS(molecule, structure);
+        equilStructures.insert(equilStructures.end(), currentStructures.begin(), currentStructures.end());
+
+        memCharges = molecule.getCharges();
+    }
+
+    stringstream dists1;
+    dists1.precision(5);
+    for (auto const& struct1 : equilStructures) {
+        for (auto const& struct2 : equilStructures)
+            dists1 << fixed << distance(struct1, struct2) << ' ';
+        dists1 << endl;
+    }
+
+    stringstream dists2;
+    dists2.precision(5);
+    for (auto const& struct1 : equilStructures) {
+        for (auto const& struct2 : equilStructures)
+            dists2 << fixed << distance(toDistanceSpace(struct1), toDistanceSpace(struct2)) << ' ';
+        dists2 << endl;
+    }
+
+    LOG_INFO("\ndists1:\n{}\n\ndits2:\n{}\n", dists1.str(), dists2.str());
+
+    for (auto const& equilStructure : equilStructures)
+        LOG_INFO("\n{}", toChemcraftCoords(memCharges, equilStructure));
+}
+
 
 int main()
 {
     initializeLogger();
+
+//    explorPathTS({9, 8, 7, 6, 5, 10});
+//    explorPathTS({6});
+//    return 0;
 
     ifstream C2H4("./C2H4_2");
     vector<size_t> charges;
@@ -1106,9 +764,9 @@ int main()
 
     auto molecule = GaussianProducer(charges, 3);
 
-    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
+//    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
 //    shs(remove6LesserHessValues(molecule, equilStruct));
-//    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
+    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchPaths(remove6LesserHessValues(molecule, equilStruct));
 //    optimizeInterestingTSs();
 //    return 0;

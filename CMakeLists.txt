@@ -42,7 +42,7 @@ include_directories(${CMAKE_BINARY_DIR}/googletest-src/googletest/include)
 #include_directories(${SRC)
 SET(SOURCE_FILES
         src/helper.cpp
-        src/InputOutputUtils.cpp
+        src/inputOutputUtils.cpp
         src/linearAlgebraUtils.cpp
         src/producers/FixValues.cpp
         src/producers/FunctionProducer.cpp
