@@ -517,7 +517,7 @@ void minimaBruteForce(FuncT&& func)
     func.getFullInnerFunction().setGaussianNProc(1);
     auto zeroEnergy = func(makeConstantVect(func.nDims, 0));
 
-    double const r = .05;
+    double const r = .01;
     vector<double> values;
     vector<vect> directions;
 
