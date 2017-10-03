@@ -21,4 +21,6 @@ void initializeLogger()
     logger = make_shared<spdlog::logger>("logger", sinks.begin(), sinks.end());
     logger->set_pattern("[%H:%M:%S %t] %v");
     logger->set_error_handler([](string const& msg) { throw spdlog::spdlog_ex(msg); });
+
+    spdlog::set_level(spdlog::level::debug);
 }

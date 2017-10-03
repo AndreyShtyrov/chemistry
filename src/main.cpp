@@ -657,8 +657,30 @@ void optimizeInterestingTSs()
     }
 }
 
-vect goDown(GaussianProducer& molecule, vect structure) {
-    for (size_t step = 0; step < 200; step++){
+template<typename StopStrategyT, typename FuncT>
+vect secondOrderStructureOptimization(StopStrategyT stopStrategy, GaussianProducer& molecule, vect structure, size_t iterLimit)
+{
+    for (size_t iter = 0; iter != iterLimit; ++iter) {
+        auto fixed = remove6LesserHessValues2(molecule, structure);
+        auto valueGradHess = fixed.valueGradHess(makeConstantVect(fixed.nDims, 0.));
+
+        auto value = get<0>(valueGradHess);
+        auto grad = get<1>(valueGradHess);
+        auto hess = get<2>(valueGradHess);
+
+        auto memStruct = structure;
+        structure = fixed.fullTransform(-hess.inverse() * grad);
+
+        if (stopStrategy(iter, structure, value, grad, hess, structure - memStruct))
+            return structure;
+    }
+
+    return vect();
+}
+
+tuple<vector<vect>, vect> goDown(GaussianProducer& molecule, vect structure) {
+    vector<vect> path;
+    for (size_t step = 0; step < 100; step++){
         auto fixed = remove6LesserHessValues2(molecule, structure);
         auto valueGrad = fixed.valueGrad(makeConstantVect(fixed.nDims, 0.));
         auto value = get<0>(valueGrad);
@@ -667,14 +689,20 @@ vect goDown(GaussianProducer& molecule, vect structure) {
         LOG_INFO("step #{}\nvalue = {}\ngrad = {} [{}]", step, value, grad.norm(), print(grad));
 
         structure = fixed.fullTransform(-grad * .3);
+        path.push_back(structure);
     }
 
-    logFunctionInfo(molecule, structure, "final struct");
+    bool converged = false;
+    try {
+        auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4, 1e-4));
+        structure = secondOrderStructureOptimization(stopStrategy, molecule, structure, 10);
+    }
+    catch (GaussianException const& exc) { }
 
-    return structure;
+    return make_tuple(path, structure);
 }
 
-vector<vect> twoWayTS(GaussianProducer& molecule, vect const& structure)
+tuple<vector<vect>, vect, vect> twoWayTS(GaussianProducer& molecule, vect const& structure)
 {
     auto fixed = remove6LesserHessValues2(molecule, structure);
 
@@ -682,8 +710,6 @@ vector<vect> twoWayTS(GaussianProducer& molecule, vect const& structure)
     auto A = linearization(hess);
 
     double const FACTOR = .01;
-
-    vector<vect> results;
 
     for (size_t i = 0; i < A.cols(); i++) {
         vect v = A.col(i);
@@ -693,12 +719,18 @@ vector<vect> twoWayTS(GaussianProducer& molecule, vect const& structure)
             auto first = fixed.fullTransform(-FACTOR * v);
             auto second = fixed.fullTransform(FACTOR * v);
 
-            results.push_back(goDown(molecule, first));
-            results.push_back(goDown(molecule, second));
+            vect firstES, secondES;
+            vector<vect> firstPath, secondPath;
+
+            tie(firstPath, firstES) = goDown(molecule, first);
+            tie(secondPath, secondES) = goDown(molecule, second);
+
+            reverse(firstPath.begin(), firstPath.end());
+            firstPath.insert(firstPath.end(), secondPath.begin(), secondPath.end());
+
+            return make_tuple(firstPath, firstES, secondES);
         }
     }
-
-    return results;
 }
 
 void explorPathTS(vector<size_t> numbers)
@@ -709,14 +741,29 @@ void explorPathTS(vector<size_t> numbers)
     for (size_t i : numbers) {
         vector<vect> structures;
         vector<vector<size_t>> _charges;
-        tie(_charges, structures) = readWholeChemcraft(ifstream(str(format("./results/%1%.xyz") % i)));
+        tie(_charges, structures) = readWholeChemcraft(ifstream(str(format("./result_C2H4/%1%.xyz") % i)));
 
         auto charges = _charges.back();
         auto structure = structures.back();
 
         GaussianProducer molecule(charges, 3);
-        auto currentStructures = twoWayTS(molecule, structure);
-        equilStructures.insert(equilStructures.end(), currentStructures.begin(), currentStructures.end());
+
+        vector<vect> path;
+        vect startES, endES;
+
+        tie(path, startES, endES) = twoWayTS(molecule, structure);
+        if (startES.size())
+            equilStructures.push_back(startES);
+        if (endES.size())
+            equilStructures.push_back(endES);
+
+        ofstream output(str(format("./result_paths/%1%.xyz") % i));
+        if (startES.size())
+            output << toChemcraftCoords(charges, startES, "start ES");
+        for (size_t j = 0; j < path.size(); j++)
+            output << toChemcraftCoords(charges, path[j], to_string(j));
+        if (endES.size())
+            output << toChemcraftCoords(charges, endES, "end ES");
 
         memCharges = molecule.getCharges();
     }
@@ -743,14 +790,14 @@ void explorPathTS(vector<size_t> numbers)
         LOG_INFO("\n{}", toChemcraftCoords(memCharges, equilStructure));
 }
 
-
 int main()
 {
     initializeLogger();
 
-//    explorPathTS({9, 8, 7, 6, 5, 10});
+    explorPathTS({0, 9, 8, 7, 6, 5, 10});
 //    explorPathTS({6});
 //    return 0;
+    return 0;
 
     ifstream C2H4("./C2H4_2");
     vector<size_t> charges;
@@ -766,7 +813,7 @@ int main()
 
 //    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
 //    shs(remove6LesserHessValues(molecule, equilStruct));
-    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
+//    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchPaths(remove6LesserHessValues(molecule, equilStruct));
 //    optimizeInterestingTSs();
 //    return 0;

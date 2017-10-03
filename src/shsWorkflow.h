@@ -27,6 +27,9 @@ inline matrix experimentalInverse(matrix const& m) {
     return A * diag * A.transpose();
 }
 
+void
+
+
 template<typename FuncT, typename StopStrategy>
 bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t iterLimit=5, size_t globalIter=0, bool needSingularTest=true)
 {
@@ -138,7 +141,6 @@ bool shsTSTryRoutine(GaussianProducer& molecule, vect structure, ostream& output
         output << toChemcraftCoords(molecule.getCharges(), ts, "final TS");
         output.flush();
 
-
         return true;
     }
 
@@ -228,6 +230,8 @@ tuple<vector<vect>, vect> shsPath(FuncT&& func, vect direction, size_t pathNumbe
         }
         value = newValue;
     }
+
+    return make_tuple(trajectory, vect());
 };
 
 template<typename FuncT>
@@ -249,7 +253,6 @@ void shs(FuncT&& func)
 
 #pragma omp parallel for
     for (size_t i = 0; i < cnt; i++) {
-//    for (size_t i = 9; i <= 9; i++) {
         shsPath(func, directions[i], i, DELTA_R, CONV_ITER_LIMIT);
     }
 }
