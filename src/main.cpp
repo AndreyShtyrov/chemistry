@@ -657,26 +657,6 @@ void optimizeInterestingTSs()
     }
 }
 
-template<typename StopStrategyT, typename FuncT>
-vect secondOrderStructureOptimization(StopStrategyT stopStrategy, GaussianProducer& molecule, vect structure, size_t iterLimit)
-{
-    for (size_t iter = 0; iter != iterLimit; ++iter) {
-        auto fixed = remove6LesserHessValues2(molecule, structure);
-        auto valueGradHess = fixed.valueGradHess(makeConstantVect(fixed.nDims, 0.));
-
-        auto value = get<0>(valueGradHess);
-        auto grad = get<1>(valueGradHess);
-        auto hess = get<2>(valueGradHess);
-
-        auto memStruct = structure;
-        structure = fixed.fullTransform(-hess.inverse() * grad);
-
-        if (stopStrategy(iter, structure, value, grad, hess, structure - memStruct))
-            return structure;
-    }
-
-    return vect();
-}
 
 tuple<vector<vect>, vect> goDown(GaussianProducer& molecule, vect structure) {
     vector<vect> path;
@@ -697,7 +677,9 @@ tuple<vector<vect>, vect> goDown(GaussianProducer& molecule, vect structure) {
         auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4, 1e-4));
         structure = secondOrderStructureOptimization(stopStrategy, molecule, structure, 10);
     }
-    catch (GaussianException const& exc) { }
+    catch (GaussianException const& exc) {
+        structure = vect();
+    }
 
     return make_tuple(path, structure);
 }
@@ -794,15 +776,15 @@ int main()
 {
     initializeLogger();
 
-    explorPathTS({0, 9, 8, 7, 6, 5, 10});
+//    explorPathTS({0, 9, 8, 7, 6, 5, 10});
 //    explorPathTS({6});
 //    return 0;
-    return 0;
+//    return 0;
 
-    ifstream C2H4("./C2H4_2");
-    vector<size_t> charges;
-    vect equilStruct;
-    tie(charges, equilStruct) = readChemcraft(ifstream("./C2H4_2"));
+    ifstream C2H4("./C2H4");
+    vector<size_t> charges = readCharges(C2H4);
+    vect equilStruct = readVect(C2H4);
+//    tie(charges, equilStruct) = readChemcraft(ifstream("./C2H4"));
 
     auto center = centerOfMass(charges, fromCartesianToPositions(equilStruct));
     for (size_t i = 0; i < equilStruct.size(); i += 3)
@@ -812,7 +794,7 @@ int main()
     auto molecule = GaussianProducer(charges, 3);
 
 //    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-//    shs(remove6LesserHessValues(molecule, equilStruct));
+    shs(remove6LesserHessValues(molecule, equilStruct));
 //    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchPaths(remove6LesserHessValues(molecule, equilStruct));
 //    optimizeInterestingTSs();

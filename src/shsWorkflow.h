@@ -27,8 +27,26 @@ inline matrix experimentalInverse(matrix const& m) {
     return A * diag * A.transpose();
 }
 
-void
+template<typename StopStrategyT>
+vect secondOrderStructureOptimization(StopStrategyT stopStrategy, GaussianProducer& molecule, vect structure, size_t iterLimit)
+{
+    for (size_t iter = 0; iter != iterLimit; ++iter) {
+        auto fixed = remove6LesserHessValues2(molecule, structure);
+        auto valueGradHess = fixed.valueGradHess(makeConstantVect(fixed.nDims, 0.));
 
+        auto value = get<0>(valueGradHess);
+        auto grad = get<1>(valueGradHess);
+        auto hess = get<2>(valueGradHess);
+
+        auto memStruct = structure;
+        structure = fixed.fullTransform(-hess.inverse() * grad);
+
+        if (stopStrategy(iter, structure, value, grad, hess, structure - memStruct))
+            return structure;
+    }
+
+    return vect();
+}
 
 template<typename FuncT, typename StopStrategy>
 bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t iterLimit=5, size_t globalIter=0, bool needSingularTest=true)
@@ -64,7 +82,7 @@ bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, d
             LOG_INFO("{}", point.str());
 
             auto lastP = p;
-            p = polar.getInnerFunction().transform(polar.transform(theta - experimentalInverse(hess) * grad));
+            p = polar.getInnerFunction().transform(polar.transform(theta - .9 * experimentalInverse(hess) * grad));
             newPath.push_back(p);
 
             if (stopStrategy(globalIter + i, p, value, grad, hess, p - lastP)) {
@@ -88,31 +106,26 @@ bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, d
 tuple<bool, vect> tryToOptimizeTS(GaussianProducer& molecule, vect structure, size_t iters = 10)
 {
     try {
-        for (size_t j = 0; j < iters; j++) {
-            //todo: double hessian calculation
-            auto transformed = remove6LesserHessValues2(molecule, structure);
-            auto valueGradHess = transformed.valueGradHess(makeConstantVect(transformed.nDims, 0));
-            auto grad = get<1>(valueGradHess);
-            auto hess = get<2>(valueGradHess);
+        auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4, 1e-4));
+        //todo: think about singular values check on each iteration of optimization
+        structure = secondOrderStructureOptimization(stopStrategy, molecule, structure, 10);
 
-            auto sValues = singularValues(hess);
-            bool hasNegative;
-            for (size_t i = 0; i < sValues.size(); i++)
-                if (sValues(i) < 0)
-                    hasNegative = true;
-
-            if (!hasNegative) {
-                LOG_INFO("TS structure condidat has no negative singular values");
-                return make_tuple(false, vect());
-            }
-
-            structure = transformed.fullTransform(-get<2>(valueGradHess).inverse() * get<1>(valueGradHess));
-        }
+        if (!structure.size())
+            return make_tuple(false, vect());
 
         auto transformed = remove6LesserHessValues2(molecule, structure);
         auto sValues = singularValues(transformed.hess(makeConstantVect(transformed.nDims, 0)));
+        bool hasNegative = false;
+        for (size_t i = 0; i < sValues.size(); i++)
+            if (sValues(i) < 0)
+                hasNegative = true;
 
-        logFunctionInfo(molecule, structure, "final structure");
+        if (!hasNegative) {
+            LOG_INFO("no negative singular values after ts optimization");
+            return make_tuple(false, vect());
+        }
+
+        logFunctionInfo(molecule, structure, "final TS structure info");
         LOG_INFO("final TS result xyz\n{}\n", toChemcraftCoords(molecule.getCharges(), structure));
 
         return make_tuple(true, structure);
@@ -192,7 +205,7 @@ tuple<vector<vect>, vect> shsPath(FuncT&& func, vect direction, size_t pathNumbe
                 }
 
                 LOG_ERROR("CONVERGED with dr = {}\nnew direction = {}\nangle = {}", currentDr, print(path.back(), 17), angleCosine(direction, path.back()));
-                LOG_INFO("Path #{} converged with delta r {}", pathNumber, deltaR);
+                LOG_INFO("Path #{} converged with delta r {}", pathNumber, currentDr);
 
                 r += currentDr;
                 direction = path.back();
@@ -200,7 +213,7 @@ tuple<vector<vect>, vect> shsPath(FuncT&& func, vect direction, size_t pathNumbe
                 converged = true;
                 break;
             }
-            else if (shsTSTryRoutine(molecule, lastPoint, output)) {
+            else if (convIter == 0 && shsTSTryRoutine(molecule, lastPoint, output)) {
                 tsFound = true;
                 converged = true;
                 break;
@@ -238,7 +251,7 @@ template<typename FuncT>
 void shs(FuncT&& func)
 {
     auto& molecule = func.getFullInnerFunction();
-    molecule.setGaussianNProc(1);
+    molecule.setGaussianNProc(3);
     logFunctionInfo(func, makeConstantVect(func.nDims, 0), "normalized energy for equil structure");
 
     ifstream minsOnSphere("./mins_on_sphere");
@@ -252,7 +265,8 @@ void shs(FuncT&& func)
     size_t const CONV_ITER_LIMIT = 10;
 
 #pragma omp parallel for
-    for (size_t i = 0; i < cnt; i++) {
+//    for (size_t i = 0; i < cnt; i++) {
+    for (size_t i = 0; i <= 0; i++) {
         shsPath(func, directions[i], i, DELTA_R, CONV_ITER_LIMIT);
     }
 }
