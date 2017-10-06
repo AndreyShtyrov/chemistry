@@ -19,10 +19,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shsWorkflow.h" afterPath="$PROJECT_DIR$/src/shsWorkflow.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/framework.ipynb" afterPath="$PROJECT_DIR$/work/framework.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/results/0.xyz" afterPath="$PROJECT_DIR$/work/results/0.xyz" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,7 +37,7 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="13634">
+            <state relative-caret-position="736">
               <caret line="802" column="4" lean-forward="false" selection-start-line="802" selection-start-column="4" selection-end-line="802" selection-end-column="4" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -109,13 +106,13 @@
       <file leaf-file-name="shsWorkflow.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/shsWorkflow.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="549">
-              <caret line="257" column="100" lean-forward="true" selection-start-line="257" selection-start-column="100" selection-end-line="257" selection-end-column="100" />
+            <state relative-caret-position="602">
+              <caret line="84" column="75" lean-forward="false" selection-start-line="84" selection-start-column="75" selection-end-line="84" selection-end-column="75" />
               <folding>
                 <element signature="e#14#33#0" expanded="true" />
                 <element signature="e#298#660#0" expanded="false" />
                 <element signature="e#670#694#0" expanded="true" />
-                <element signature="e#5409#5425#0" expanded="true" />
+                <element signature="e#5404#5420#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -632,7 +629,7 @@
       <workItem from="1506953623451" duration="17325000" />
       <workItem from="1507034829685" duration="16376000" />
       <workItem from="1507117394170" duration="10854000" />
-      <workItem from="1507282171424" duration="2110000" />
+      <workItem from="1507282171424" duration="3091000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -956,7 +953,14 @@
       <option name="project" value="LOCAL" />
       <updated>1507042823374</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="zero C2H4 shs path for server">
+      <created>1507286833855</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1507286833855</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -992,7 +996,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="523014000" />
+    <option name="totallyTimeSpent" value="523995000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1061" extended-state="0" />
@@ -1027,7 +1031,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="modified shs version, standard shs for server" />
     <MESSAGE value="fixed" />
     <MESSAGE value="fixed stop strategy" />
     <MESSAGE value="in progress" />
@@ -1052,7 +1055,8 @@
     <MESSAGE value="server minima bruteforce new r" />
     <MESSAGE value="shs workflow, C2H4_2 fix" />
     <MESSAGE value="pre workflow" />
-    <option name="LAST_COMMIT_MESSAGE" value="pre workflow" />
+    <MESSAGE value="zero C2H4 shs path for server" />
+    <option name="LAST_COMMIT_MESSAGE" value="zero C2H4 shs path for server" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1307,21 +1311,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13634">
-          <caret line="802" column="4" lean-forward="false" selection-start-line="802" selection-start-column="4" selection-end-line="802" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#1191#1203#0" expanded="true" />
-            <element signature="e#6213#6229#0" expanded="true" />
-            <element signature="e#6744#8113#0" expanded="false" />
-            <element signature="e#8115#9381#0" expanded="false" />
-            <element signature="e#18241#18257#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/producers/AffineTransformation.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1224">
@@ -1380,15 +1369,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="736">
+          <caret line="802" column="4" lean-forward="false" selection-start-line="802" selection-start-column="4" selection-end-line="802" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#1191#1203#0" expanded="true" />
+            <element signature="e#6213#6229#0" expanded="true" />
+            <element signature="e#6744#8113#0" expanded="false" />
+            <element signature="e#8115#9381#0" expanded="false" />
+            <element signature="e#18241#18257#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/shsWorkflow.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="549">
-          <caret line="257" column="100" lean-forward="true" selection-start-line="257" selection-start-column="100" selection-end-line="257" selection-end-column="100" />
+        <state relative-caret-position="602">
+          <caret line="84" column="75" lean-forward="false" selection-start-line="84" selection-start-column="75" selection-end-line="84" selection-end-column="75" />
           <folding>
             <element signature="e#14#33#0" expanded="true" />
             <element signature="e#298#660#0" expanded="false" />
             <element signature="e#670#694#0" expanded="true" />
-            <element signature="e#5409#5425#0" expanded="true" />
+            <element signature="e#5404#5420#0" expanded="true" />
           </folding>
         </state>
       </provider>

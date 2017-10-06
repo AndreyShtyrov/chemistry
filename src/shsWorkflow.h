@@ -82,7 +82,7 @@ bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, d
             LOG_INFO("{}", point.str());
 
             auto lastP = p;
-            p = polar.getInnerFunction().transform(polar.transform(theta - .9 * experimentalInverse(hess) * grad));
+            p = polar.getInnerFunction().transform(polar.transform(theta - experimentalInverse(hess) * grad));
             newPath.push_back(p);
 
             if (stopStrategy(globalIter + i, p, value, grad, hess, p - lastP)) {
@@ -198,7 +198,7 @@ tuple<vector<vect>, vect> shsPath(FuncT&& func, vect direction, size_t pathNumbe
         for (size_t convIter = 0; convIter < convIterLimit; convIter++, currentDr *= 0.5) {
             double nextR = r + currentDr;
             vector<vect> path;
-            if (experimentalTryToConverge(stopStrategy, func, direction, nextR, path, 3000, 0, false)) {
+            if (experimentalTryToConverge(stopStrategy, func, direction, nextR, path, 30, 0, false)) {
                 if (angleCosine(direction, path.back()) < .9) {
                     LOG_ERROR("Path {} did not converge (too large angle: {})", pathNumber, angleCosine(direction, path.back()));
                     continue;
