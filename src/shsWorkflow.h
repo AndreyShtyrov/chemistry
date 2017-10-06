@@ -198,7 +198,7 @@ tuple<vector<vect>, vect> shsPath(FuncT&& func, vect direction, size_t pathNumbe
         for (size_t convIter = 0; convIter < convIterLimit; convIter++, currentDr *= 0.5) {
             double nextR = r + currentDr;
             vector<vect> path;
-            if (experimentalTryToConverge(stopStrategy, func, direction, nextR, path, 30, 0, false)) {
+            if (experimentalTryToConverge(stopStrategy, func, direction, nextR, path, 3000, 0, false)) {
                 if (angleCosine(direction, path.back()) < .9) {
                     LOG_ERROR("Path {} did not converge (too large angle: {})", pathNumber, angleCosine(direction, path.back()));
                     continue;
@@ -213,10 +213,13 @@ tuple<vector<vect>, vect> shsPath(FuncT&& func, vect direction, size_t pathNumbe
                 converged = true;
                 break;
             }
-            else if (convIter == 0 && shsTSTryRoutine(molecule, lastPoint, output)) {
-                tsFound = true;
-                converged = true;
-                break;
+            else  {
+                LOG_INFO("Path {} did not converged with", pathNumber);
+                if (convIter == 0 && shsTSTryRoutine(molecule, lastPoint, output)) {
+                    tsFound = true;
+                    converged = true;
+                    break;
+                }
             }
         }
 

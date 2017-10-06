@@ -553,7 +553,7 @@ void researchPaths(FuncT&& normalized)
     auto axis2 = framework.newPlot("false distance space");
 
 //    for (size_t i = 0; i < 11; i++) {
-    for (size_t i = 9; i <= 9; i++) {
+    for (size_t i = 0; i <= 0; i++) {
         vector<vector<size_t>> charges;
         vector<vect> structures;
 
@@ -587,7 +587,7 @@ void researchPaths(FuncT&& normalized)
     LOG_INFO("paths were built");
 
 //    for (size_t i = 0; i < 11; i++) {
-    for (size_t i = 9; i <= 9; i++) {
+    for (size_t i = 0; i <= 0; i++) {
         vector<vector<size_t>> charges;
         vector<vect> structures;
 
@@ -595,6 +595,7 @@ void researchPaths(FuncT&& normalized)
 
         vector<double> values(charges.size());
         vector<vect> grads(charges.size());
+        vector<vect> coordGrads(charges.size());
         vector<matrix> hess(charges.size());
 
         vect prev_structure = structures[0];
@@ -604,20 +605,24 @@ void researchPaths(FuncT&& normalized)
             auto structure = structures[j];
             auto curCharges = charges[j];
 
-            GaussianProducer molecule(curCharges, 1);
+            GaussianProducer molecule(curCharges, 3);
 
             auto valueGradHess = molecule.valueGradHess(structure);
             values[j] = get<0>(valueGradHess);
             grads[j] = get<1>(valueGradHess);
             hess[j] = get<2>(valueGradHess);
+
+            coordGrads[j] = normalized.getBasis().transpose() * normalized.getInnerFunction().getBasis().transpose() * get<1>(valueGradHess);
         }
 
         vector<double> gradNorms(charges.size());
+        vector<double> coordGradNorms(charges.size());
         vector<double> dists(charges.size());
         vector<double> angles(charges.size());
 
         for (size_t j = 0; j < charges.size(); j++) {
             gradNorms[j] = grads[j].norm();
+            coordGradNorms[j] = coordGrads[j].norm();
             dists[j] = j ? distance(structures[j - 1], structures[j]) : 0;
             angles[j] = j ? angleCosine(structures[j - 1], structures[j]) : 0;
 
@@ -630,6 +635,7 @@ void researchPaths(FuncT&& normalized)
 
         framework.plot(framework.newPlot("values" + to_string(i)), values);
         framework.plot(framework.newPlot("grads" + to_string(i)), gradNorms);
+        framework.plot(framework.newPlot("coord grads" + to_string(i)), coordGradNorms);
         framework.plot(framework.newPlot("dists" + to_string(i)), dists);
         framework.plot(framework.newPlot("angles " + to_string(i)), angles);
     }
@@ -798,8 +804,6 @@ int main()
 //    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchPaths(remove6LesserHessValues(molecule, equilStruct));
 //    optimizeInterestingTSs();
-//    return 0;
-
 
     return 0;
 }
