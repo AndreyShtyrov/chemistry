@@ -523,7 +523,7 @@ void addToSetAndQueu(StructureSet& set, queue<vect>& que, vect const& structure)
         que.push(structure);
 }
 
-void workflow(GaussianProducer& producer, vect const& initialStruct, double deltaR, size_t iterLimit)
+void workflow(GaussianProducer& molecule, vect const& initialStruct, double deltaR, size_t iterLimit)
 {
     system("mkdir -p info_logs");
     vector<spdlog::sink_ptr> sinks = {make_shared<spdlog::sinks::daily_file_sink_st>("info_logs/log", 0, 0)};
@@ -545,16 +545,16 @@ void workflow(GaussianProducer& producer, vect const& initialStruct, double delt
         auto equilStruct = que.front();
         que.pop();
 
-        auto valueGradHess = producer.valueGradHess(initialStruct);
+        auto valueGradHess = molecule.valueGradHess(initialStruct);
         auto value = get<0>(valueGradHess);
         auto grad = get<1>(valueGradHess);
         auto hess = get<2>(valueGradHess);
 
         infoLogger->info("Initial equilibrium structure:\n\tvalue = {}\n\tgrad = {} [{}]\n\thess values = {}\nchemcraft coords:\n{}",
-            value, grad.norm(), print(grad), singularValues(hess), toChemcraftCoords(producer.getCharges(), initialStruct));
+            value, grad.norm(), print(grad), singularValues(hess), toChemcraftCoords(molecule.getCharges(), initialStruct));
         infoLogger->flush();
 
-        auto inNormalCoords = remove6LesserHessValues(producer, equilStruct);
+        auto inNormalCoords = remove6LesserHessValues(molecule, equilStruct);
 
         auto minimaDirections = minimaElimination(inNormalCoords);
 
