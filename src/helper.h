@@ -9,11 +9,13 @@
 #include <cmath>
 #include <random>
 #include <type_traits>
+#include <queue>
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <boost/type_index.hpp>
 #include <boost/format.hpp>
+#include <boost/optional.hpp>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 
@@ -27,6 +29,9 @@
 #define LOG_CRITICAL(...) logger->critical("[" __FILE__ ":" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
 
 using namespace std;
+
+using boost::optional;
+using boost::make_optional;
 
 extern shared_ptr<spdlog::logger> logger;
 void initializeLogger();

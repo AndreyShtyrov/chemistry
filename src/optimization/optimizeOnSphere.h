@@ -89,7 +89,6 @@ namespace optimization
                 double was = momentum.norm();
                 double factor = sqrt(max(0., angleCosine(momentum, grad)));
                 momentum = factor * momentum + grad / r;
-                LOG_INFO("was: {}, factor: {}, now: {} [delta: {}]", was, factor, momentum.norm(), grad.norm());
             }
             else
                 momentum = grad / r;

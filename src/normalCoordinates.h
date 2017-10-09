@@ -6,7 +6,7 @@
 #include "producers/AffineTransformation.h"
 
 template<typename FuncT>
-auto remove6LesserHessValues(FuncT&& func, vect structure)
+auto remove6LesserHessValues(FuncT&& func, vect const& structure)
 {
     size_t n = func.nDims / 3;
     vector<vect> vs;

@@ -324,171 +324,6 @@ void findInitialPolarDirections(FuncT& func, double r)
 }
 
 template<typename FuncT>
-void minimaElimination(FuncT&& func)
-{
-    func.getFullInnerFunction().setGaussianNProc(3);
-    auto zeroEnergy = func(makeConstantVect(func.nDims, 0));
-
-    double const r = .05;
-    vector<double> values;
-    vector<vect> directions;
-
-    auto const axis = framework.newPlot();
-    RandomProjection const projection(func.nDims);
-    auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4 * r, 1e-4 * r));
-
-    bool firstEpochFinished = false;
-    auto lastSuccessIter = (size_t) -1;
-
-    while (!firstEpochFinished) {
-        for (size_t iter = 0; iter < (func.nDims - 2) * 2; iter++) {
-            if (iter == lastSuccessIter) {
-                firstEpochFinished = true;
-                break;
-            }
-
-//            Cosine3OnSPhereInterpolation supplement(normalized.nDims, values, directions);
-//            LargestCosine3OnSphere supplement(normalized.nDims, values, directions);
-//            Cosine3OnSphereInterpolation supplement(normalized.nDims, values, directions);
-            CleverCosine3OnSphereInterpolation supplement(func.nDims, values, directions);
-            auto withSupplement = func + supplement;
-
-            int sign = 2 * ((int) iter % 2) - 1;
-            vect startingDirection = r * sign * eye(func.nDims, iter / 2);
-            auto path = optimizeOnSphere(stopStrategy, withSupplement, startingDirection, r, 50, 5);
-            auto direction = path.back();
-
-            logFunctionPolarInfo(withSupplement, direction, r, "func in new direction");
-            logFunctionPolarInfo(func, direction, r, "normalized in new direction");
-
-            stringstream distances;
-            double minAngle = 0;
-            for (auto const& prevDir : directions) {
-                minAngle = max(minAngle, angleCosine(direction, prevDir));
-                distances
-                   << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
-            }
-            LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
-                      distances.str(), minAngle);
-
-            bool needToAssert = false;
-
-            vector<vect> supplePath;
-            if (tryToConverge(stopStrategy, func, direction, r, supplePath, 10)) {
-                LOG_ERROR("second optimization converged for {} steps", supplePath.size());
-            } else {
-                LOG_ERROR("second optimization did not converged with hessian update. Tryin standard optimization");
-                supplePath = optimizeOnSphere(stopStrategy, func, direction, r, 50, 5);
-                needToAssert = true;
-            }
-
-            path.insert(path.end(), supplePath.begin(), supplePath.end());
-            auto oldDirection = direction;
-            direction = path.back();
-            LOG_ERROR("cos(oldDirection, direction) = {} after second optimization",
-                      angleCosine(oldDirection, direction));
-
-            logFunctionPolarInfo(func, direction, r, "normalized after additional optimization");
-
-            distances = stringstream();
-            minAngle = 0;
-            for (auto const& prevDir : directions) {
-                minAngle = max(minAngle, angleCosine(direction, prevDir));
-                distances
-                   << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
-            }
-            LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
-                      distances.str(), minAngle);
-
-            if (minAngle < .975) {
-                values.push_back(sqr(r) / 2 - (func(direction) - zeroEnergy));
-
-                directions.push_back(direction);
-
-                ofstream mins("./mins_on_sphere");
-                mins.precision(21);
-
-                mins << directions.size() << endl;
-                for (auto const& dir : directions) {
-                    mins << dir.size() << endl << fixed << dir.transpose() << endl;
-                }
-
-                lastSuccessIter = iter;
-
-                assert(!needToAssert);
-            } else {
-                LOG_ERROR("min angle is too large: {}", minAngle);
-            }
-        }
-    }
-
-    while (true) {
-//        Cosine3OnSphereInterpolation supplement(normalized.nDims, values, directions);
-        CleverCosine3OnSphereInterpolation supplement(func.nDims, values, directions);
-        auto withSupplement = func + supplement;
-
-        auto path = optimizeOnSphere(stopStrategy, withSupplement, r * randomVectOnSphere(func.nDims), r, 50, 5);
-        auto direction = path.back();
-
-        logFunctionPolarInfo(withSupplement, direction, r, "func in new direction");
-        logFunctionPolarInfo(func, direction, r, "normalized in new direction");
-
-        stringstream distances;
-        double minAngle = 0;
-        for (auto const& prevDir : directions) {
-            minAngle = max(minAngle, angleCosine(direction, prevDir));
-            distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
-        }
-        LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
-                  distances.str(), minAngle);
-
-        size_t const N = 15;
-        auto directionMem = direction;
-
-        for (size_t i = 0; i < N; i++) {
-            double alpha = (double) (i + 1) / N;
-            auto linearComb = alpha * func + (1 - alpha) * withSupplement;
-
-            auto supplePath = optimizeOnSphere(stopStrategy, linearComb, direction, r, 50, 10);
-            LOG_ERROR("experimental iteration {}: converged for {} steps", i + 1, supplePath.size());
-
-            path.insert(path.end(), supplePath.begin(), supplePath.end());
-            direction = path.back();
-        }
-
-        LOG_ERROR("Experimental convergence result:cos(angle) = {}", angleCosine(direction, directionMem));
-
-        logFunctionPolarInfo(func, direction, r, "normalized after additional optimization");
-
-        distances = stringstream();
-        minAngle = 0;
-        for (auto const& prevDir : directions) {
-            minAngle = max(minAngle, angleCosine(direction, prevDir));
-            distances << boost::format("[%1%, %2%]") % distance(direction, prevDir) % angleCosine(direction, prevDir);
-        }
-        LOG_ERROR("Distances from previous {} directons [dist, cos(angle)]:\n{}\nmin angle = {}", directions.size(),
-                  distances.str(), minAngle);
-
-        if (minAngle < .975) {
-            values.push_back(sqr(r) / 2 - (func(direction) - zeroEnergy));
-            directions.push_back(direction);
-
-            ofstream mins("./mins_on_sphere");
-            mins.precision(21);
-
-            mins << directions.size() << endl;
-            for (auto const& dir : directions) {
-                mins << dir.size() << endl << fixed << dir.transpose() << endl;
-            }
-
-        } else {
-            LOG_ERROR("min angle is too large: {}", minAngle);
-        }
-    }
-}
-
-
-template<typename FuncT>
 void minimaBruteForce(FuncT&& func)
 {
     func.getFullInnerFunction().setGaussianNProc(1);
@@ -663,64 +498,6 @@ void optimizeInterestingTSs()
     }
 }
 
-
-tuple<vector<vect>, vect> goDown(GaussianProducer& molecule, vect structure) {
-    vector<vect> path;
-    for (size_t step = 0; step < 100; step++){
-        auto fixed = remove6LesserHessValues2(molecule, structure);
-        auto valueGrad = fixed.valueGrad(makeConstantVect(fixed.nDims, 0.));
-        auto value = get<0>(valueGrad);
-        auto grad = get<1>(valueGrad);
-
-        LOG_INFO("step #{}\nvalue = {}\ngrad = {} [{}]", step, value, grad.norm(), print(grad));
-
-        structure = fixed.fullTransform(-grad * .3);
-        path.push_back(structure);
-    }
-
-    bool converged = false;
-    try {
-        auto stopStrategy = makeHistoryStrategy(StopStrategy(1e-4, 1e-4));
-        structure = secondOrderStructureOptimization(stopStrategy, molecule, structure, 10);
-    }
-    catch (GaussianException const& exc) {
-        structure = vect();
-    }
-
-    return make_tuple(path, structure);
-}
-
-tuple<vector<vect>, vect, vect> twoWayTS(GaussianProducer& molecule, vect const& structure)
-{
-    auto fixed = remove6LesserHessValues2(molecule, structure);
-
-    auto hess = fixed.hess(makeConstantVect(fixed.nDims, 0));
-    auto A = linearization(hess);
-
-    double const FACTOR = .01;
-
-    for (size_t i = 0; i < A.cols(); i++) {
-        vect v = A.col(i);
-
-        double value = v.transpose() * hess * v;
-        if (value < 0) {
-            auto first = fixed.fullTransform(-FACTOR * v);
-            auto second = fixed.fullTransform(FACTOR * v);
-
-            vect firstES, secondES;
-            vector<vect> firstPath, secondPath;
-
-            tie(firstPath, firstES) = goDown(molecule, first);
-            tie(secondPath, secondES) = goDown(molecule, second);
-
-            reverse(firstPath.begin(), firstPath.end());
-            firstPath.insert(firstPath.end(), secondPath.begin(), secondPath.end());
-
-            return make_tuple(firstPath, firstES, secondES);
-        }
-    }
-}
-
 void explorPathTS(vector<size_t> numbers)
 {
     vector<size_t> memCharges;
@@ -782,25 +559,15 @@ int main()
 {
     initializeLogger();
 
-//    explorPathTS({0, 9, 8, 7, 6, 5, 10});
-//    explorPathTS({6});
-//    return 0;
-//    return 0;
-
     ifstream C2H4("./C2H4");
     vector<size_t> charges = readCharges(C2H4);
     vect equilStruct = readVect(C2H4);
-//    tie(charges, equilStruct) = readChemcraft(ifstream("./C2H4"));
 
-    auto center = centerOfMass(charges, fromCartesianToPositions(equilStruct));
-    for (size_t i = 0; i < equilStruct.size(); i += 3)
-        equilStruct.block(i, 0, 3, 1) -= center;
-    auto const stopStrategy = makeHistoryStrategy(StopStrategy(5e-8, 5e-8));
-
-    auto molecule = GaussianProducer(charges, 3);
+    GaussianProducer molecule(charges, 3);
+    workflow(molecule, equilStruct);
 
 //    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-    shs(remove6LesserHessValues(molecule, equilStruct));
+//    shs(remove6LesserHessValues(molecule, equilStruct));
 //    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
 //    researchPaths(remove6LesserHessValues(molecule, equilStruct));
 //    optimizeInterestingTSs();
