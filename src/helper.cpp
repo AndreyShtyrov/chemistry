@@ -24,4 +24,6 @@ void initializeLogger()
     logger->set_error_handler([](string const& msg) { throw spdlog::spdlog_ex(msg); });
 
     logger->set_level(spdlog::level::debug);
+    //todo: be careful with this flush strategy
+    logger->flush_on(spdlog::level::debug);
 }

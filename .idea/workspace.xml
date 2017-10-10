@@ -18,11 +18,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shsWorkflow.h" afterPath="$PROJECT_DIR$/src/shsWorkflow.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/mins_on_sphere" afterPath="$PROJECT_DIR$/work/mins_on_sphere" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/helper.cpp" afterPath="$PROJECT_DIR$/src/helper.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,8 +37,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="290">
-              <caret line="565" column="0" lean-forward="false" selection-start-line="565" selection-start-column="0" selection-end-line="565" selection-end-column="0" />
+            <state relative-caret-position="208">
+              <caret line="558" column="4" lean-forward="false" selection-start-line="558" selection-start-column="4" selection-end-line="558" selection-end-column="4" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <element signature="e#1168#1180#0" expanded="true" />
@@ -88,11 +85,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="helper.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="helper.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/helper.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="432">
+              <caret line="26" column="47" lean-forward="false" selection-start-line="26" selection-start-column="47" selection-end-line="26" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -120,11 +117,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="shsWorkflow.h" pinned="false" current-in-tab="true">
+      <file leaf-file-name="shsWorkflow.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/shsWorkflow.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-116">
-              <caret line="610" column="45" lean-forward="true" selection-start-line="610" selection-start-column="45" selection-end-line="610" selection-end-column="45" />
+            <state relative-caret-position="280">
+              <caret line="554" column="7" lean-forward="true" selection-start-line="554" selection-start-column="7" selection-end-line="554" selection-end-column="7" />
               <folding>
                 <element signature="e#14#33#0" expanded="true" />
                 <element signature="e#298#660#0" expanded="false" />
@@ -238,7 +235,6 @@
         <option value="$PROJECT_DIR$/src/inputOutputUtils.h" />
         <option value="$PROJECT_DIR$/src/optimization/stop_strategies/HistoryStrategyWrapper.h" />
         <option value="$PROJECT_DIR$/src/normalCoordinates.h" />
-        <option value="$PROJECT_DIR$/src/helper.cpp" />
         <option value="$PROJECT_DIR$/src/helper.h" />
         <option value="$PROJECT_DIR$/src/inputOutputUtils.cpp" />
         <option value="$PROJECT_DIR$/src/PythongraphicsFramework.h" />
@@ -246,6 +242,7 @@
         <option value="$PROJECT_DIR$/src/producers/GaussianProducer.cpp" />
         <option value="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
         <option value="$PROJECT_DIR$/src/shsWorkflow.h" />
+        <option value="$PROJECT_DIR$/src/helper.cpp" />
       </list>
     </option>
   </component>
@@ -650,14 +647,7 @@
       <workItem from="1507479984667" duration="4722000" />
       <workItem from="1507534892283" duration="17665000" />
       <workItem from="1507584075073" duration="358000" />
-      <workItem from="1507646196490" duration="4139000" />
-    </task>
-    <task id="LOCAL-00002" summary="FunctionProducer: remove cache, add multithreading support">
-      <created>1503220438089</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1503220438090</updated>
+      <workItem from="1507646196490" duration="4275000" />
     </task>
     <task id="LOCAL-00003" summary="banchmarks">
       <created>1503228710878</created>
@@ -995,7 +985,14 @@
       <option name="project" value="LOCAL" />
       <updated>1507649466258</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="ready for testing">
+      <created>1507650384081</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1507650384081</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1031,7 +1028,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="537913000" />
+    <option name="totallyTimeSpent" value="538049000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -1369,14 +1366,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/helper.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/include/c++/5/tuple">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="222">
@@ -1437,21 +1426,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="565" column="0" lean-forward="false" selection-start-line="565" selection-start-column="0" selection-end-line="565" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#1168#1180#0" expanded="true" />
-            <element signature="e#6181#6197#0" expanded="true" />
-            <element signature="e#6712#8081#0" expanded="false" />
-            <element signature="e#8083#9349#0" expanded="false" />
-            <element signature="e#11176#11192#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
@@ -1478,14 +1452,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/shsWorkflow.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-116">
-          <caret line="610" column="45" lean-forward="true" selection-start-line="610" selection-start-column="45" selection-end-line="610" selection-end-column="45" />
+        <state relative-caret-position="280">
+          <caret line="554" column="7" lean-forward="true" selection-start-line="554" selection-start-column="7" selection-end-line="554" selection-end-column="7" />
           <folding>
             <element signature="e#14#33#0" expanded="true" />
             <element signature="e#298#660#0" expanded="false" />
             <element signature="e#670#694#0" expanded="true" />
             <element signature="e#5448#5464#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="558" column="4" lean-forward="false" selection-start-line="558" selection-start-column="4" selection-end-line="558" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#1168#1180#0" expanded="true" />
+            <element signature="e#6181#6197#0" expanded="true" />
+            <element signature="e#6712#8081#0" expanded="false" />
+            <element signature="e#8083#9349#0" expanded="false" />
+            <element signature="e#11176#11192#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/helper.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="26" column="47" lean-forward="false" selection-start-line="26" selection-start-column="47" selection-end-line="26" selection-end-column="47" />
+          <folding />
         </state>
       </provider>
     </entry>
