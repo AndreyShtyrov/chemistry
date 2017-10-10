@@ -18,8 +18,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" afterPath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shsWorkflow.h" afterPath="$PROJECT_DIR$/src/shsWorkflow.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/mins_on_sphere" afterPath="$PROJECT_DIR$/work/mins_on_sphere" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -95,10 +98,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="optimizeOnSphere.h" pinned="false" current-in-tab="true">
+      <file leaf-file-name="optimizeOnSphere.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="344">
+            <state relative-caret-position="-3010">
               <caret line="31" column="37" lean-forward="false" selection-start-line="31" selection-start-column="37" selection-end-line="31" selection-end-column="37" />
               <folding />
             </state>
@@ -117,11 +120,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="shsWorkflow.h" pinned="false" current-in-tab="false">
+      <file leaf-file-name="shsWorkflow.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/shsWorkflow.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="524">
-              <caret line="375" column="14" lean-forward="false" selection-start-line="375" selection-start-column="14" selection-end-line="375" selection-end-column="14" />
+            <state relative-caret-position="-116">
+              <caret line="610" column="45" lean-forward="true" selection-start-line="610" selection-start-column="45" selection-end-line="610" selection-end-column="45" />
               <folding>
                 <element signature="e#14#33#0" expanded="true" />
                 <element signature="e#298#660#0" expanded="false" />
@@ -241,8 +244,8 @@
         <option value="$PROJECT_DIR$/src/PythongraphicsFramework.h" />
         <option value="$PROJECT_DIR$/src/main.cpp" />
         <option value="$PROJECT_DIR$/src/producers/GaussianProducer.cpp" />
-        <option value="$PROJECT_DIR$/src/shsWorkflow.h" />
         <option value="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
+        <option value="$PROJECT_DIR$/src/shsWorkflow.h" />
       </list>
     </option>
   </component>
@@ -306,7 +309,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="js.eslint.eslintPackage" value="" />
-    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -647,14 +650,7 @@
       <workItem from="1507479984667" duration="4722000" />
       <workItem from="1507534892283" duration="17665000" />
       <workItem from="1507584075073" duration="358000" />
-      <workItem from="1507646196490" duration="3222000" />
-    </task>
-    <task id="LOCAL-00001" summary="in progress">
-      <created>1503078428629</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1503078428629</updated>
+      <workItem from="1507646196490" duration="4139000" />
     </task>
     <task id="LOCAL-00002" summary="FunctionProducer: remove cache, add multithreading support">
       <created>1503220438089</created>
@@ -992,7 +988,14 @@
       <option name="project" value="LOCAL" />
       <updated>1507649433260</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="ready for testing">
+      <created>1507649466258</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1507649466258</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1028,7 +1031,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="536996000" />
+    <option name="totallyTimeSpent" value="537913000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -1044,7 +1047,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39296794" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34746638" sideWeight="0.49791232" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1457,19 +1460,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/shsWorkflow.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="524">
-          <caret line="375" column="14" lean-forward="false" selection-start-line="375" selection-start-column="14" selection-end-line="375" selection-end-column="14" />
-          <folding>
-            <element signature="e#14#33#0" expanded="true" />
-            <element signature="e#298#660#0" expanded="false" />
-            <element signature="e#670#694#0" expanded="true" />
-            <element signature="e#5448#5464#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/producers/CleverCosine3OnSphereInterpolation.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="186">
@@ -1480,9 +1470,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
+        <state relative-caret-position="-3010">
           <caret line="31" column="37" lean-forward="false" selection-start-line="31" selection-start-column="37" selection-end-line="31" selection-end-column="37" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/shsWorkflow.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-116">
+          <caret line="610" column="45" lean-forward="true" selection-start-line="610" selection-start-column="45" selection-end-line="610" selection-end-column="45" />
+          <folding>
+            <element signature="e#14#33#0" expanded="true" />
+            <element signature="e#298#660#0" expanded="false" />
+            <element signature="e#670#694#0" expanded="true" />
+            <element signature="e#5448#5464#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

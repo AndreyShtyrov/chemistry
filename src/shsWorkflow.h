@@ -558,8 +558,10 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
     vector<spdlog::sink_ptr> sinks = {make_shared<spdlog::sinks::daily_file_sink_st>("info_logs/log", 0, 0)};
     auto infoLogger = make_shared<spdlog::logger>("info_logger", sinks.begin(), sinks.end());
     infoLogger->set_pattern("[%H:%M:%S %t] %v");
-    infoLogger->set_error_handler([](string const& msg) { throw spdlog::spdlog_ex(msg); });
+    infoLogger->set_error_handler([](string const& msg)
+                                  { throw spdlog::spdlog_ex(msg); });
     infoLogger->set_level(spdlog::level::debug);
+    infoLogger->flush_on(spdlog::level::debug);
 
     auto const& charges = molecule.getCharges();
 
@@ -587,9 +589,7 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
 
         infoLogger->info(
            "Initial equilibrium structure:\n\tvalue = {}\n\tgrad = {} [{}]\n\thess values = {}\nchemcraft coords:\n{}",
-           value, grad.norm(), print(grad), singularValues(hess),
-           toChemcraftCoords(charges, initialStruct));
-        infoLogger->flush();
+           value, grad.norm(), print(grad), singularValues(hess), toChemcraftCoords(charges, initialStruct));
 
         auto inNormalCoords = remove6LesserHessValues(molecule, equilStruct);
 
@@ -601,35 +601,43 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
         }
         infoLogger->info("Found {} minima directions:\n{}", minimaDirections.size(), minimas.str());
 
+        #pragma omp parallel for
         for (size_t i = 0; i < minimaDirections.size(); i++) {
             vector<vect> path;
             optional<vect> ts;
             tie(path, ts) = shsPath(inNormalCoords, minimaDirections[i], shsPathCounter + i, deltaR, iterLimit);
 
-            if (ts && uniqueTSs.addStructure(*ts)) {
-                infoLogger->info("Found new TS:{}\nsingular values: {}\nchemcraft:\n{}", print(*ts),
-                                 singularValues(molecule.hess(*ts)), toChemcraftCoords(charges, *ts));
-                tsOutput << toChemcraftCoords(charges, *ts, to_string(uniqueTSs.size())) << flush;
+            #pragma omp critical
+            bool isUniqueTS = uniqueTSs.addStructure(*ts);
+
+            if (ts && isUniqueTS) {
+                #pragma omp critical
+                {
+                    infoLogger->info("Found new TS:{}\nsingular values: {}\nchemcraft:\n{}", print(*ts),
+                                     singularValues(molecule.hess(*ts)), toChemcraftCoords(charges, *ts));
+                    tsOutput << toChemcraftCoords(charges, *ts, to_string(uniqueTSs.size())) << flush;
+                }
 
                 vector<vect> pathFromTS;
                 optional<vect> firstES, secondES;
                 tie(pathFromTS, firstES, secondES) = twoWayTS(molecule, *ts);
 
-                printPathToFile(charges, pathFromTS, firstES, secondES, format("./paths/{}.xyz", pathCounter++));
+                #pragma omp critical
+                {
+                    printPathToFile(charges, pathFromTS, firstES, secondES, format("./paths/{}.xyz", pathCounter++));
 
-                if (firstES && addToSetAndQueu(uniqueESs, que, *firstES)) {
-                    infoLogger->info("Found new ES:{}\nchemcraft:\n{}", print(*firstES),
-                                     toChemcraftCoords(charges, *firstES));
+                    if (firstES && addToSetAndQueu(uniqueESs, que, *firstES)) {
+                        infoLogger->info("Found new ES:{}\nchemcraft:\n{}", print(*firstES),
+                                         toChemcraftCoords(charges, *firstES));
 
-                    esOutput << toChemcraftCoords(charges, *firstES, to_string(uniqueESs.size()))
-                             << flush;
-                }
-                if (secondES && addToSetAndQueu(uniqueESs, que, *secondES)) {
-                    infoLogger->info("Found new ES:{}\nchemcraft:\n{}", print(*secondES),
-                                     toChemcraftCoords(charges, *secondES));
+                        esOutput << toChemcraftCoords(charges, *firstES, to_string(uniqueESs.size())) << flush;
+                    }
+                    if (secondES && addToSetAndQueu(uniqueESs, que, *secondES)) {
+                        infoLogger->info("Found new ES:{}\nchemcraft:\n{}", print(*secondES),
+                                         toChemcraftCoords(charges, *secondES));
 
-                    esOutput << toChemcraftCoords(charges, *secondES, to_string(uniqueESs.size()))
-                             << flush;
+                        esOutput << toChemcraftCoords(charges, *secondES, to_string(uniqueESs.size())) << flush;
+                    }
                 }
             }
         }
