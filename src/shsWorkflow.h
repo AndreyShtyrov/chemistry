@@ -607,9 +607,9 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
             optional<vect> ts;
             tie(path, ts) = shsPath(inNormalCoords, minimaDirections[i], shsPathCounter + i, deltaR, iterLimit);
 
+            bool isUniqueTS;
             #pragma omp critical
-            bool isUniqueTS = uniqueTSs.addStructure(*ts);
-
+            isUniqueTS = uniqueTSs.addStructure(*ts);
             if (ts && isUniqueTS) {
                 #pragma omp critical
                 {
