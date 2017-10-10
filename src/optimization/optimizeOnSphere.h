@@ -29,7 +29,7 @@ namespace optimization
                     auto sValues = singularValues(hess);
                     for (size_t j = 0; j < sValues.size(); j++) {
                         if (sValues(j) < 0) {
-                            LOG_INFO("singular values converge break, stop strategy with zero delta: {}",
+                            LOG_DEBUG("singular values converge break, stop strategy with zero delta: {}",
                                      stopStrategy(globalIter + i, p, value, grad, hess, p - p));
                             return false;
                         }

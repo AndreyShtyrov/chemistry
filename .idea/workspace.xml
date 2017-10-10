@@ -19,9 +19,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shsWorkflow.h" afterPath="$PROJECT_DIR$/src/shsWorkflow.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/mins_on_sphere" afterPath="$PROJECT_DIR$/work/mins_on_sphere" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" afterPath="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -97,11 +95,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="optimizeOnSphere.h" pinned="false" current-in-tab="false">
+      <file leaf-file-name="optimizeOnSphere.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1638">
-              <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
+            <state relative-caret-position="344">
+              <caret line="31" column="37" lean-forward="false" selection-start-line="31" selection-start-column="37" selection-end-line="31" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -119,7 +117,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="shsWorkflow.h" pinned="false" current-in-tab="true">
+      <file leaf-file-name="shsWorkflow.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/shsWorkflow.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="524">
@@ -130,6 +128,16 @@
                 <element signature="e#670#694#0" expanded="true" />
                 <element signature="e#5448#5464#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CleverCosine3OnSphereInterpolation.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/producers/CleverCosine3OnSphereInterpolation.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="186">
+              <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -228,13 +236,13 @@
         <option value="$PROJECT_DIR$/src/optimization/stop_strategies/HistoryStrategyWrapper.h" />
         <option value="$PROJECT_DIR$/src/normalCoordinates.h" />
         <option value="$PROJECT_DIR$/src/helper.cpp" />
-        <option value="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
         <option value="$PROJECT_DIR$/src/helper.h" />
         <option value="$PROJECT_DIR$/src/inputOutputUtils.cpp" />
         <option value="$PROJECT_DIR$/src/PythongraphicsFramework.h" />
         <option value="$PROJECT_DIR$/src/main.cpp" />
         <option value="$PROJECT_DIR$/src/producers/GaussianProducer.cpp" />
         <option value="$PROJECT_DIR$/src/shsWorkflow.h" />
+        <option value="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
       </list>
     </option>
   </component>
@@ -639,7 +647,7 @@
       <workItem from="1507479984667" duration="4722000" />
       <workItem from="1507534892283" duration="17665000" />
       <workItem from="1507584075073" duration="358000" />
-      <workItem from="1507646196490" duration="3188000" />
+      <workItem from="1507646196490" duration="3222000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -977,7 +985,14 @@
       <option name="project" value="LOCAL" />
       <updated>1507649157679</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="ready for testing">
+      <created>1507649433260</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1507649433260</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1013,7 +1028,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="536962000" />
+    <option name="totallyTimeSpent" value="536996000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -1083,13 +1098,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/producers/SecondOrderFunction.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" column="18" lean-forward="false" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/producers/SecondOrderFunction.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="522">
@@ -1358,14 +1366,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1638">
-          <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/helper.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1467,6 +1467,22 @@
             <element signature="e#670#694#0" expanded="true" />
             <element signature="e#5448#5464#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/producers/CleverCosine3OnSphereInterpolation.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/optimization/optimizeOnSphere.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="31" column="37" lean-forward="false" selection-start-line="31" selection-start-column="37" selection-end-line="31" selection-end-column="37" />
+          <folding />
         </state>
       </provider>
     </entry>
