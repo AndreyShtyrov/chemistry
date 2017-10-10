@@ -17,7 +17,6 @@
 #include "shsWorkflow.h"
 
 using namespace std;
-using namespace boost;
 using namespace optimization;
 
 constexpr double EPS = 1e-7;
@@ -190,7 +189,7 @@ void drawTrajectories()
         for (size_t j = 0; j < quantities[i]; j++) {
             vector<size_t> charges;
             vect state;
-            tie(charges, state) = readChemcraft(ifstream(str(format("./%1%/%2%.xyz") % i % j)));
+            tie(charges, state) = readChemcraft(ifstream(format("./{}/{}.xyz", i, j)));
             auto cur = proj(toDistanceSpace(state, false));
             xs.push_back(cur(0));
             ys.push_back(cur(1));
@@ -392,7 +391,7 @@ void researchPaths(FuncT&& normalized)
         vector<vector<size_t>> charges;
         vector<vect> structures;
 
-        tie(charges, structures) = readWholeChemcraft(ifstream(str(format("./results/%1%.xyz") % i)));
+        tie(charges, structures) = readWholeChemcraft(ifstream(format("./results/{}.xyz", i)));
 
         {
             vector<double> xs, ys;
@@ -426,7 +425,7 @@ void researchPaths(FuncT&& normalized)
         vector<vector<size_t>> charges;
         vector<vect> structures;
 
-        tie(charges, structures) = readWholeChemcraft(ifstream(str(format("./results/%1%.xyz") % i)));
+        tie(charges, structures) = readWholeChemcraft(ifstream(format("./results/{}.xyz", i)));
 
         vector<double> values(charges.size());
         vector<vect> grads(charges.size());
@@ -506,7 +505,7 @@ void explorPathTS(vector<size_t> numbers)
     for (size_t i : numbers) {
         vector<vect> structures;
         vector<vector<size_t>> _charges;
-        tie(_charges, structures) = readWholeChemcraft(ifstream(str(format("./result_C2H4/%1%.xyz") % i)));
+        tie(_charges, structures) = readWholeChemcraft(ifstream(format("./result_C2H4/{}.xyz", i)));
 
         auto charges = _charges.back();
         auto structure = structures.back();
@@ -514,21 +513,21 @@ void explorPathTS(vector<size_t> numbers)
         GaussianProducer molecule(charges, 3);
 
         vector<vect> path;
-        vect startES, endES;
+        optional<vect> startES, endES;
 
         tie(path, startES, endES) = twoWayTS(molecule, structure);
-        if (startES.size())
-            equilStructures.push_back(startES);
-        if (endES.size())
-            equilStructures.push_back(endES);
+        if (startES)
+            equilStructures.push_back(*startES);
+        if (endES)
+            equilStructures.push_back(*endES);
 
-        ofstream output(str(format("./result_paths/%1%.xyz") % i));
-        if (startES.size())
-            output << toChemcraftCoords(charges, startES, "start ES");
+        ofstream output(format("./result_paths/{}.xyz", i));
+        if (startES)
+            output << toChemcraftCoords(charges, *startES, "start ES");
         for (size_t j = 0; j < path.size(); j++)
             output << toChemcraftCoords(charges, path[j], to_string(j));
-        if (endES.size())
-            output << toChemcraftCoords(charges, endES, "end ES");
+        if (endES)
+            output << toChemcraftCoords(charges, *endES, "end ES");
 
         memCharges = molecule.getCharges();
     }
@@ -564,7 +563,7 @@ int main()
     vect equilStruct = readVect(C2H4);
 
     GaussianProducer molecule(charges, 3);
-    workflow(molecule, equilStruct);
+    workflow(molecule, equilStruct, .04, 10);
 
 //    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
 //    shs(remove6LesserHessValues(molecule, equilStruct));

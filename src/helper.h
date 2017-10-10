@@ -14,7 +14,6 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <boost/type_index.hpp>
-#include <boost/format.hpp>
 #include <boost/optional.hpp>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
@@ -32,6 +31,8 @@ using namespace std;
 
 using boost::optional;
 using boost::make_optional;
+
+using fmt::format;
 
 extern shared_ptr<spdlog::logger> logger;
 void initializeLogger();

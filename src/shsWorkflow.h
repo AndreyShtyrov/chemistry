@@ -14,7 +14,8 @@
 using namespace optimization;
 
 //todo: maybe remove inline
-inline matrix experimentalInverse(matrix const& m) {
+inline matrix experimentalInverse(matrix const& m)
+{
     auto A = linearization(m);
     matrix diag = A.transpose() * m * A;
 
@@ -28,7 +29,8 @@ inline matrix experimentalInverse(matrix const& m) {
 }
 
 template<typename StopStrategyT>
-optional<vect> secondOrderStructureOptimization(StopStrategyT stopStrategy, GaussianProducer& molecule, vect structure, size_t iterLimit)
+optional<vect> secondOrderStructureOptimization(StopStrategyT stopStrategy, GaussianProducer& molecule, vect structure,
+                                                size_t iterLimit)
 {
     for (size_t iter = 0; iter != iterLimit; ++iter) {
         auto fixed = remove6LesserHessValues2(molecule, structure);
@@ -49,7 +51,8 @@ optional<vect> secondOrderStructureOptimization(StopStrategyT stopStrategy, Gaus
 }
 
 template<typename FuncT, typename StopStrategy>
-bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t iterLimit=5, size_t globalIter=0, bool needSingularTest=true)
+bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path,
+                               size_t iterLimit = 5, size_t globalIter = 0, bool needSingularTest = true)
 {
     auto const theta = makeConstantVect(func.nDims - 1, M_PI / 2);
     bool converged = false;
@@ -131,8 +134,7 @@ optional<vect> tryToOptimizeTS(GaussianProducer& molecule, vect structure, size_
         LOG_INFO("final TS result xyz\n{}\n", toChemcraftCoords(molecule.getCharges(), structure));
 
         return make_optional(structure);
-    }
-    catch (GaussianException const& exc) {
+    } catch (GaussianException const& exc) {
         LOG_INFO("ts optimization try breaked with exception");
         return boost::none;
     }
@@ -160,14 +162,15 @@ bool shsTSTryRoutine(GaussianProducer& molecule, vect const& structure, ostream&
 
 
 template<typename FuncT>
-tuple<vector<vect>, optional<vect>> shsPath(FuncT&& func, vect direction, size_t pathNumber, double deltaR, size_t convIterLimit)
+tuple<vector<vect>, optional<vect>>
+shsPath(FuncT&& func, vect direction, size_t pathNumber, double deltaR, size_t convIterLimit)
 {
     auto& molecule = func.getFullInnerFunction();
     LOG_INFO("Path #{}. R0 = {}. Initial direction: {}", pathNumber, direction.norm(), direction.transpose());
 
     vect transitionState;
     vector<vect> trajectory;
-    ofstream output(boost::str(boost::format("./results/%1%.xyz") % pathNumber));
+    ofstream output(boost::str(boost::format("./shs_intermediate_log/%1%.xyz") % pathNumber));
 
     vect lastPoint = func.fullTransform(makeConstantVect(func.nDims, 0));
     trajectory.push_back(lastPoint);
@@ -179,7 +182,8 @@ tuple<vector<vect>, optional<vect>> shsPath(FuncT&& func, vect direction, size_t
 
     for (size_t step = 0; step < 600; step++) {
         if (!step) {
-            logFunctionPolarInfo(func, direction, r, boost::str(boost::format("Paht %1% initial direction info") % pathNumber));
+            logFunctionPolarInfo(func, direction, r,
+                                 boost::str(boost::format("Paht %1% initial direction info") % pathNumber));
         }
 
         if (step && step % 7 == 0 && shsTSTryRoutine(molecule, lastPoint, output)) {
@@ -199,11 +203,13 @@ tuple<vector<vect>, optional<vect>> shsPath(FuncT&& func, vect direction, size_t
             vector<vect> path;
             if (experimentalTryToConverge(stopStrategy, func, direction, nextR, path, 30, 0, false)) {
                 if (angleCosine(direction, path.back()) < .9) {
-                    LOG_ERROR("Path {} did not converge (too large angle: {})", pathNumber, angleCosine(direction, path.back()));
+                    LOG_ERROR("Path {} did not converge (too large angle: {})", pathNumber,
+                              angleCosine(direction, path.back()));
                     continue;
                 }
 
-                LOG_ERROR("CONVERGED with dr = {}\nnew direction = {}\nangle = {}", currentDr, print(path.back(), 17), angleCosine(direction, path.back()));
+                LOG_ERROR("CONVERGED with dr = {}\nnew direction = {}\nangle = {}", currentDr, print(path.back(), 17),
+                          angleCosine(direction, path.back()));
                 LOG_INFO("Path #{} converged with delta r {}", pathNumber, currentDr);
 
                 r += currentDr;
@@ -211,8 +217,7 @@ tuple<vector<vect>, optional<vect>> shsPath(FuncT&& func, vect direction, size_t
 
                 converged = true;
                 break;
-            }
-            else  {
+            } else {
                 LOG_INFO("Path {} did not converged with", pathNumber);
                 if (convIter == 0 && shsTSTryRoutine(molecule, lastPoint, output)) {
                     tsFound = true;
@@ -435,9 +440,10 @@ vector<vect> minimaElimination(FuncT&& func)
     }
 }
 
-tuple<vector<vect>, optional<vect>> goDown(GaussianProducer& molecule, vect structure) {
+tuple<vector<vect>, optional<vect>> goDown(GaussianProducer& molecule, vect structure)
+{
     vector<vect> path;
-    for (size_t step = 0; step < 100; step++){
+    for (size_t step = 0; step < 100; step++) {
         auto fixed = remove6LesserHessValues2(molecule, structure);
         auto valueGrad = fixed.valueGrad(makeConstantVect(fixed.nDims, 0.));
         auto value = get<0>(valueGrad);
@@ -455,8 +461,7 @@ tuple<vector<vect>, optional<vect>> goDown(GaussianProducer& molecule, vect stru
         auto optimized = secondOrderStructureOptimization(stopStrategy, molecule, structure, 10);
 
         return make_tuple(path, optimized);
-    }
-    catch (GaussianException const& exc) {
+    } catch (GaussianException const& exc) {
         return make_tuple(path, vect());
     }
 }
@@ -498,7 +503,7 @@ struct StructureSet
 {
 public:
     explicit StructureSet(double distSpaceEps) : mDistSpaceEps(distSpaceEps)
-    {  }
+    {}
 
     bool addStructure(vect const& structure)
     {
@@ -512,15 +517,37 @@ public:
         return true;
     }
 
+    size_t size() const
+    {
+        return mStructs.size();
+    }
+
 private:
     double mDistSpaceEps;
     vector<vect> mStructs;
 };
 
-void addToSetAndQueu(StructureSet& set, queue<vect>& que, vect const& structure)
+bool addToSetAndQueu(StructureSet& set, queue<vect>& que, vect const& structure)
 {
-    if (set.addStructure(structure))
+    if (set.addStructure(structure)) {
         que.push(structure);
+        return true;
+    }
+
+    return false;
+}
+
+void printPathToFile(vector<size_t> const& charges, vector<vect> const& path, optional<vect> const& startES,
+                     optional<vect> const& endES, string output_path)
+{
+    ofstream output(output_path);
+    if (startES)
+        output << toChemcraftCoords(charges, *startES, "start ES");
+    for (size_t j = 0; j < path.size(); j++)
+        output << toChemcraftCoords(charges, path[j], to_string(j));
+    if (endES)
+        output << toChemcraftCoords(charges, *endES, "end ES");
+
 }
 
 void workflow(GaussianProducer& molecule, vect const& initialStruct, double deltaR, size_t iterLimit)
@@ -532,6 +559,7 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
     infoLogger->set_error_handler([](string const& msg) { throw spdlog::spdlog_ex(msg); });
     infoLogger->set_level(spdlog::level::debug);
 
+    auto const& charges = molecule.getCharges();
 
     StructureSet uniqueESs(1e-3);
     StructureSet uniqueTSs(1e-3);
@@ -540,7 +568,12 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
 
     addToSetAndQueu(uniqueESs, que, initialStruct);
 
+    size_t pathCounter = 0;
     size_t shsPathCounter = 0;
+
+    ofstream esOutput("./equilibrium_structures");
+    ofstream tsOutput("./transition_state_structures");
+
     while (!que.empty()) {
         auto equilStruct = que.front();
         que.pop();
@@ -550,8 +583,10 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
         auto grad = get<1>(valueGradHess);
         auto hess = get<2>(valueGradHess);
 
-        infoLogger->info("Initial equilibrium structure:\n\tvalue = {}\n\tgrad = {} [{}]\n\thess values = {}\nchemcraft coords:\n{}",
-            value, grad.norm(), print(grad), singularValues(hess), toChemcraftCoords(molecule.getCharges(), initialStruct));
+        infoLogger->info(
+           "Initial equilibrium structure:\n\tvalue = {}\n\tgrad = {} [{}]\n\thess values = {}\nchemcraft coords:\n{}",
+           value, grad.norm(), print(grad), singularValues(hess),
+           toChemcraftCoords(charges, initialStruct));
         infoLogger->flush();
 
         auto inNormalCoords = remove6LesserHessValues(molecule, equilStruct);
@@ -569,21 +604,31 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
             optional<vect> ts;
             tie(path, ts) = shsPath(inNormalCoords, minimaDirections[i], shsPathCounter + i, deltaR, iterLimit);
 
-            if (ts) {
-                uniqueTSs.addStructure(*ts);
+            if (ts && uniqueTSs.addStructure(*ts)) {
+                infoLogger->info("Found new TS:{}\nsingular values: {}\nchemcraft:\n{}", print(*ts),
+                                 singularValues(molecule.hess(*ts)), toChemcraftCoords(charges, *ts));
+                tsOutput << toChemcraftCoords(charges, *ts, to_string(uniqueTSs.size())) << flush;
 
                 vector<vect> pathFromTS;
-                optional<vect> firstEQ, secondEQ;
-                tie(pathFromTS, firstEQ, secondEQ) = twoWayTS(molecule, *ts);
+                optional<vect> firstES, secondES;
+                tie(pathFromTS, firstES, secondES) = twoWayTS(molecule, *ts);
 
-                if (firstEQ) {
-                    addToSetAndQueu(uniqueESs, que, *firstES);
-                    infoLogger->info("Found new ES:{}\nchemcraft:\n{}", print(*firstES), toChemcraftCoords(molecule.getCharges(), *firstES));
+                printPathToFile(charges, pathFromTS, firstES, secondES, format("./paths/{}.xyz", pathCounter++));
 
+                if (firstES && addToSetAndQueu(uniqueESs, que, *firstES)) {
+                    infoLogger->info("Found new ES:{}\nchemcraft:\n{}", print(*firstES),
+                                     toChemcraftCoords(charges, *firstES));
 
+                    esOutput << toChemcraftCoords(charges, *firstES, to_string(uniqueESs.size()))
+                             << flush;
                 }
-                if (secondEQ)
-                    addToSetAndQueu(uniqueESs, que, *secondES);
+                if (secondES && addToSetAndQueu(uniqueESs, que, *secondES)) {
+                    infoLogger->info("Found new ES:{}\nchemcraft:\n{}", print(*secondES),
+                                     toChemcraftCoords(charges, *secondES));
+
+                    esOutput << toChemcraftCoords(charges, *secondES, to_string(uniqueESs.size()))
+                             << flush;
+                }
             }
         }
     }

@@ -44,7 +44,7 @@ public:
     {
         auto vxs = createArray(xs);
         auto vys = createArray(ys);
-        mOutput << boost::format("%1%.plot(%2%, %3%, label=%4%)") % axis % vxs % vys % label << endl;
+        mOutput << format("{}.plot({}, {}, label={})", axis, vxs, vys, label);
     }
 
     template<typename MatrixT>
@@ -120,7 +120,7 @@ public:
     void legend(string axis)
     {
 //        mOutput << boost::format("%1%.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)") % axis << endl;
-        mOutput << boost::format("%1%.legend()") % axis << endl;
+        mOutput << format("{}.legend()",  axis) << endl;
     }
 
 
