@@ -19,13 +19,9 @@
   <component name="ChangeListManager">
     <list default="true" id="4b8d2464-abff-4ed4-9d97-b9aa5c403c6d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/PythongraphicsFramework.h" afterPath="$PROJECT_DIR$/src/PythongraphicsFramework.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/helper.h" afterPath="$PROJECT_DIR$/src/helper.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/inputOutputUtils.cpp" afterPath="$PROJECT_DIR$/src/inputOutputUtils.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/producers/GaussianProducer.cpp" afterPath="$PROJECT_DIR$/src/producers/GaussianProducer.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shsWorkflow.h" afterPath="$PROJECT_DIR$/src/shsWorkflow.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/func.out" afterPath="$PROJECT_DIR$/work/func.out" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/work/mins_on_sphere" afterPath="$PROJECT_DIR$/work/mins_on_sphere" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -123,23 +119,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="shsWorkflow.h" pinned="false" current-in-tab="false">
+      <file leaf-file-name="shsWorkflow.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/shsWorkflow.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="580" column="0" lean-forward="false" selection-start-line="580" selection-start-column="0" selection-end-line="580" selection-end-column="0" />
+            <state relative-caret-position="524">
+              <caret line="375" column="14" lean-forward="false" selection-start-line="375" selection-start-column="14" selection-end-line="375" selection-end-column="14" />
               <folding>
                 <element signature="e#14#33#0" expanded="true" />
                 <element signature="e#298#660#0" expanded="false" />
                 <element signature="e#670#694#0" expanded="true" />
                 <element signature="e#5448#5464#0" expanded="true" />
-                <element signature="e#9681#16381#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GaussianProducer.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GaussianProducer.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="416">
@@ -234,12 +229,12 @@
         <option value="$PROJECT_DIR$/src/normalCoordinates.h" />
         <option value="$PROJECT_DIR$/src/helper.cpp" />
         <option value="$PROJECT_DIR$/src/optimization/optimizeOnSphere.h" />
-        <option value="$PROJECT_DIR$/src/shsWorkflow.h" />
         <option value="$PROJECT_DIR$/src/helper.h" />
         <option value="$PROJECT_DIR$/src/inputOutputUtils.cpp" />
         <option value="$PROJECT_DIR$/src/PythongraphicsFramework.h" />
         <option value="$PROJECT_DIR$/src/main.cpp" />
         <option value="$PROJECT_DIR$/src/producers/GaussianProducer.cpp" />
+        <option value="$PROJECT_DIR$/src/shsWorkflow.h" />
       </list>
     </option>
   </component>
@@ -644,7 +639,7 @@
       <workItem from="1507479984667" duration="4722000" />
       <workItem from="1507534892283" duration="17665000" />
       <workItem from="1507584075073" duration="358000" />
-      <workItem from="1507646196490" duration="2908000" />
+      <workItem from="1507646196490" duration="3188000" />
     </task>
     <task id="LOCAL-00001" summary="in progress">
       <created>1503078428629</created>
@@ -975,7 +970,14 @@
       <option name="project" value="LOCAL" />
       <updated>1507584424119</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="ready for testing">
+      <created>1507649157679</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1507649157679</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1011,7 +1013,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="536682000" />
+    <option name="totallyTimeSpent" value="536962000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1063" extended-state="0" />
@@ -1047,7 +1049,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="modified shs version, standard shs for server" />
     <MESSAGE value="fixed" />
     <MESSAGE value="fixed stop strategy" />
     <MESSAGE value="bug fux" />
@@ -1072,7 +1073,8 @@
     <MESSAGE value="shs workflow, C2H4_2 fix" />
     <MESSAGE value="pre workflow" />
     <MESSAGE value="in progress" />
-    <option name="LAST_COMMIT_MESSAGE" value="in progress" />
+    <MESSAGE value="ready for testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="ready for testing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1447,25 +1449,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/shsWorkflow.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="580" column="0" lean-forward="false" selection-start-line="580" selection-start-column="0" selection-end-line="580" selection-end-column="0" />
-          <folding>
-            <element signature="e#14#33#0" expanded="true" />
-            <element signature="e#298#660#0" expanded="false" />
-            <element signature="e#670#694#0" expanded="true" />
-            <element signature="e#5448#5464#0" expanded="true" />
-            <element signature="e#9681#16381#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/producers/GaussianProducer.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
           <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/shsWorkflow.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="524">
+          <caret line="375" column="14" lean-forward="false" selection-start-line="375" selection-start-column="14" selection-end-line="375" selection-end-column="14" />
+          <folding>
+            <element signature="e#14#33#0" expanded="true" />
+            <element signature="e#298#660#0" expanded="false" />
+            <element signature="e#670#694#0" expanded="true" />
+            <element signature="e#5448#5464#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

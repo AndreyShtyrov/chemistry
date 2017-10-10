@@ -372,6 +372,8 @@ vector<vect> minimaElimination(FuncT&& func)
                 LOG_ERROR("min angle is too large: {}", minAngle);
             }
         }
+
+        break;
     }
 
     return directions;
