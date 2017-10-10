@@ -578,7 +578,7 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
     ofstream esOutput("./equilibrium_structures");
     ofstream tsOutput("./transition_state_structures");
 
-    while (!que.empty()) {
+    for (size_t esId = 0; !que.empty(); esId++) {
         auto equilStruct = que.front();
         que.pop();
 
@@ -600,6 +600,11 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
             minimas << print(direction) << endl;
         }
         infoLogger->info("Found {} minima directions:\n{}", minimaDirections.size(), minimas.str());
+
+        ofstream esDirsOutput("./es_directions/{}", esId);
+        esDirsOutput << toChemcraftCoords(charges, equilStruct, "ES");
+        for (auto const& direction : minimaDirections)
+            esDirsOutput << print(direction, 17) << endl;
 
         #pragma omp parallel for
         for (size_t i = 0; i < minimaDirections.size(); i++) {
