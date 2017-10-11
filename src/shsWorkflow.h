@@ -135,7 +135,7 @@ optional<vect> tryToOptimizeTS(GaussianProducer& molecule, vect structure, size_
 }
 
 
-bool shsTSTryRoutine(GaussianProducer& molecule, vect const& structure, ostream& output)
+optional<vect> shsTSTryRoutine(GaussianProducer& molecule, vect const& structure, ostream& output)
 {
     if (auto ts = tryToOptimizeTS(molecule, structure)) {
         auto valueGradHess = molecule.valueGradHess(*ts);
@@ -148,10 +148,10 @@ bool shsTSTryRoutine(GaussianProducer& molecule, vect const& structure, ostream&
         output << toChemcraftCoords(molecule.getCharges(), *ts, "final TS");
         output.flush();
 
-        return true;
+        return ts;
     }
 
-    return false;
+    return boost::none;
 }
 
 
@@ -180,16 +180,17 @@ shsPath(FuncT&& func, vect direction, size_t pathNumber, double deltaR, size_t c
                                  boost::str(boost::format("Paht %1% initial direction info") % pathNumber));
         }
 
-        if (step && step % 7 == 0 && shsTSTryRoutine(molecule, lastPoint, output)) {
-            LOG_INFO("Path #{} TS found. Break", pathNumber);
-            break;
+        if (step && step % 7 == 0) {
+            if (auto ts = shsTSTryRoutine(molecule, lastPoint, output)) {
+                LOG_INFO("Path #{} TS found. Break on {} iteration", pathNumber);
+                return make_tuple(trajectory, ts);
+            }
         }
 
         vect prev = direction;
         direction = direction / direction.norm() * (r + deltaR);
 
         bool converged = false;
-        bool tsFound = false;
         double currentDr = min(direction.norm(), deltaR);
 
         for (size_t convIter = 0; convIter < convIterLimit; convIter++, currentDr *= 0.5) {
@@ -211,19 +212,16 @@ shsPath(FuncT&& func, vect direction, size_t pathNumber, double deltaR, size_t c
 
                 converged = true;
                 break;
-            } else {
-                LOG_INFO("Path {} did not converged with", pathNumber);
-                if (convIter == 0 && shsTSTryRoutine(molecule, lastPoint, output)) {
-                    tsFound = true;
-                    converged = true;
-                    break;
+            }
+
+            LOG_INFO("Path {} did not converged with r = {}", pathNumber, currentDr);
+
+            if (convIter == 0) {
+                if (auto ts = shsTSTryRoutine(molecule, lastPoint, output)) {
+                    LOG_INFO("Path #{} TS found. Break on {} iteration", pathNumber);
+                    return make_tuple(trajectory, ts);
                 }
             }
-        }
-
-        if (tsFound) {
-            LOG_INFO("Path #{} TS found. Break", pathNumber);
-            break;
         }
 
         if (!converged) {
