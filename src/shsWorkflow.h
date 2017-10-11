@@ -589,7 +589,7 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
 
         auto inNormalCoords = remove6LesserHessValues(molecule, equilStruct);
 
-        auto minimaDirections = esId == 0 ? minimaElimination(inNormalCoords) : readTmp();
+        auto minimaDirections = esId ? minimaElimination(inNormalCoords) : readTmp();
 
         stringstream minimas;
         for (auto const& direction : minimaDirections) {
