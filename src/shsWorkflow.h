@@ -615,7 +615,7 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
         for (auto const& direction : minimaDirections)
             esDirsOutput << print(direction, 17) << endl;
 
-        molecule.setGaussianNProc(1);
+        inNormalCoords.getFullInnerFunction().setGaussianNProc(1);
         #pragma omp parallel for
         for (size_t i = 0; i < minimaDirections.size(); i++) {
             vector<vect> path;
@@ -623,35 +623,38 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
             tie(path, ts) = shsPath(inNormalCoords, minimaDirections[i], shsPathCounter + i, deltaR, iterLimit);
 
             bool isUniqueTS;
-            #pragma omp critical
-            isUniqueTS = uniqueTSs.addStructure(*ts);
-            if (ts && isUniqueTS) {
+            if (ts) {
                 #pragma omp critical
-                {
-                    infoLogger->info("Found new TS:{}\nsingular values: {}\nchemcraft:\n{}", print(*ts),
-                                     singularValues(molecule.hess(*ts)), toChemcraftCoords(charges, *ts));
-                    tsOutput << toChemcraftCoords(charges, *ts, to_string(uniqueTSs.size())) << flush;
-                }
-
-                vector<vect> pathFromTS;
-                optional<vect> firstES, secondES;
-                tie(pathFromTS, firstES, secondES) = twoWayTS(molecule, *ts);
-
-                #pragma omp critical
-                {
-                    printPathToFile(charges, pathFromTS, firstES, secondES, format("./paths/{}.xyz", pathCounter++));
-
-                    if (firstES && addToSetAndQueu(uniqueESs, que, *firstES)) {
-                        infoLogger->info("Found new ES:{}\nchemcraft:\n{}", print(*firstES),
-                                         toChemcraftCoords(charges, *firstES));
-
-                        esOutput << toChemcraftCoords(charges, *firstES, to_string(uniqueESs.size())) << flush;
+                isUniqueTS = uniqueTSs.addStructure(*ts);
+                if (isUniqueTS) {
+                    #pragma omp critical
+                    {
+                        infoLogger->info("Found new TS:{}\nsingular values: {}\nchemcraft:\n{}", print(*ts),
+                                         singularValues(molecule.hess(*ts)), toChemcraftCoords(charges, *ts));
+                        tsOutput << toChemcraftCoords(charges, *ts, to_string(uniqueTSs.size())) << flush;
                     }
-                    if (secondES && addToSetAndQueu(uniqueESs, que, *secondES)) {
-                        infoLogger->info("Found new ES:{}\nchemcraft:\n{}", print(*secondES),
-                                         toChemcraftCoords(charges, *secondES));
 
-                        esOutput << toChemcraftCoords(charges, *secondES, to_string(uniqueESs.size())) << flush;
+                    vector<vect> pathFromTS;
+                    optional<vect> firstES, secondES;
+                    tie(pathFromTS, firstES, secondES) = twoWayTS(molecule, *ts);
+
+                    #pragma omp critical
+                    {
+                        printPathToFile(charges, pathFromTS, firstES, secondES,
+                                        format("./paths/{}.xyz", pathCounter++));
+
+                        if (firstES && addToSetAndQueu(uniqueESs, que, *firstES)) {
+                            infoLogger->info("Found new ES:{}\nchemcraft:\n{}", print(*firstES),
+                                             toChemcraftCoords(charges, *firstES));
+
+                            esOutput << toChemcraftCoords(charges, *firstES, to_string(uniqueESs.size())) << flush;
+                        }
+                        if (secondES && addToSetAndQueu(uniqueESs, que, *secondES)) {
+                            infoLogger->info("Found new ES:{}\nchemcraft:\n{}", print(*secondES),
+                                             toChemcraftCoords(charges, *secondES));
+
+                            esOutput << toChemcraftCoords(charges, *secondES, to_string(uniqueESs.size())) << flush;
+                        }
                     }
                 }
             }
