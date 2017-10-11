@@ -78,12 +78,6 @@ bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, d
                 }
             }
 
-            stringstream point;
-            point.precision(13);
-            for (size_t i = 0; i < p.size(); i++)
-                point << fixed << p(i) << ", ";
-            LOG_INFO("{}", point.str());
-
             auto lastP = p;
             p = polar.getInnerFunction().transform(polar.transform(theta - experimentalInverse(hess) * grad));
             newPath.push_back(p);
@@ -251,7 +245,7 @@ shsPath(FuncT&& func, vect direction, size_t pathNumber, double deltaR, size_t c
         value = newValue;
     }
 
-    return make_tuple(trajectory, vect());
+    return make_tuple(trajectory, boost::none);
 };
 
 template<typename FuncT>
@@ -266,7 +260,7 @@ void shs(FuncT&& func)
     minsOnSphere >> cnt;
     vector<vect> directions;
     for (size_t i = 0; i < cnt; i++)
-        directions.push_back(readVect(minsOnSphere));
+        directions.push_back(readVect(minsOnSphere, 18));
 
     double const DELTA_R = 0.04;
     size_t const CONV_ITER_LIMIT = 10;
@@ -464,7 +458,7 @@ tuple<vector<vect>, optional<vect>> goDown(GaussianProducer& molecule, vect stru
 
         return make_tuple(path, optimized);
     } catch (GaussianException const& exc) {
-        return make_tuple(path, vect());
+        return make_tuple(path, boost::none);
     }
 }
 
@@ -552,6 +546,20 @@ void printPathToFile(vector<size_t> const& charges, vector<vect> const& path, op
 
 }
 
+vector<vect> readTmp()
+{
+    ifstream input("./read_tmp");
+
+    size_t cnt = 0;
+    input >> cnt;
+
+    vector<vect> result(cnt);
+    for (size_t i = 0; i < cnt; i++)
+        result[i] = readVect(input, 12);
+
+    return result;
+}
+
 void workflow(GaussianProducer& molecule, vect const& initialStruct, double deltaR, size_t iterLimit)
 {
     system("mkdir -p info_logs");
@@ -593,7 +601,7 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
 
         auto inNormalCoords = remove6LesserHessValues(molecule, equilStruct);
 
-        auto minimaDirections = minimaElimination(inNormalCoords);
+        auto minimaDirections = esId ? minimaElimination(inNormalCoords) : readTmp();
 
         stringstream minimas;
         for (auto const& direction : minimaDirections) {
@@ -601,11 +609,13 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
         }
         infoLogger->info("Found {} minima directions:\n{}", minimaDirections.size(), minimas.str());
 
-        ofstream esDirsOutput("./es_directions/{}", esId);
+        ofstream esDirsOutput(format("./es_directions/{}", esId));
         esDirsOutput << toChemcraftCoords(charges, equilStruct, "ES");
+        esDirsOutput << minimaDirections.size() << endl;
         for (auto const& direction : minimaDirections)
             esDirsOutput << print(direction, 17) << endl;
 
+        molecule.setGaussianNProc(1);
         #pragma omp parallel for
         for (size_t i = 0; i < minimaDirections.size(); i++) {
             vector<vect> path;

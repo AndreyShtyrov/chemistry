@@ -16,7 +16,7 @@ vect readVect(StreamT&& stream)
 }
 
 template<typename StreamT>
-vect readVect(size_t rows, StreamT&& stream)
+vect readVect(StreamT&& stream, size_t rows)
 {
     vect v(rows);
     for (size_t i = 0; i < rows; i++)
@@ -51,7 +51,7 @@ tuple<vector<size_t>, vect> readChemcraft(StreamT&& stream)
     vect structure(cnt * 3);
     for (size_t i = 0; i < cnt; i++) {
         stream >> charges[i];
-        structure.block(i * 3, 0, 3, 1) = readVect(3, stream);
+        structure.block(i * 3, 0, 3, 1) = readVect(stream, 3);
     }
 
     return make_tuple(charges, structure);
@@ -74,7 +74,7 @@ tuple<vector<vector<size_t>>, vector<vect>> readWholeChemcraft(StreamT&& stream)
         vect structure(cnt * 3);
         for (size_t i = 0; i < cnt; i++) {
             stream >> currentCharges[i];
-            structure.block(i * 3, 0, 3, 1) = readVect(3, stream);
+            structure.block(i * 3, 0, 3, 1) = readVect(stream, 3);
         }
 
         charges.push_back(currentCharges);
