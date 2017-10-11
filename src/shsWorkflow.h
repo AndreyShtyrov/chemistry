@@ -490,8 +490,11 @@ public:
     bool addStructure(vect const& structure) {
         auto distSpace = toDistanceSpace(structure);
         for (auto const& other : mStructs)
-            if (distance(toDistanceSpace(other), distSpace) < mDistSpaceEps)
+            if (distance(toDistanceSpace(other), distSpace) < mDistSpaceEps) {
+                LOG_ERROR("TOO CLOSE IN DISTANCE SPACE:\nfirst: {}\nsecond: {}\ndistance in dist space: {}",
+                          print(structure), print(other), distance(toDistanceSpace(other), distSpace));
                 return false;
+            }
 
         mStructs.push_back(structure);
 
@@ -560,8 +563,6 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
     StructureSet uniqueTSs(1e-3);
 
     queue<vect> que;
-
-    addToSetAndQueue(uniqueESs, que, initialStruct);
 
     size_t pathCounter = 0;
     size_t shsPathCounter = 0;
