@@ -428,7 +428,7 @@ vector<vect> minimaElimination(FuncT&& func) {
 
 tuple<vector<vect>, optional<vect>> goDown(GaussianProducer& molecule, vect structure) {
     vector<vect> path;
-    for (size_t step = 0; step < 100; step++) {
+    for (size_t step = 0; step < 300; step++) {
         auto fixed = remove6LesserHessValues2(molecule, structure);
         auto valueGrad = fixed.valueGrad(makeConstantVect(fixed.nDims, 0.));
         auto value = get<0>(valueGrad);
