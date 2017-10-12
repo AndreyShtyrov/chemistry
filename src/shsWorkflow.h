@@ -554,8 +554,8 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
     infoLogger->set_level(spdlog::level::debug);
     infoLogger->flush_on(spdlog::level::debug);
 
-    ofstream esOutput("./equilibrium_structures");
-    ofstream tsOutput("./transition_state_structures");
+    ofstream esOutput("./equilibrium_structures.xyz");
+    ofstream tsOutput("./transition_state_structures.xyz");
 
     auto const& charges = molecule.getCharges();
 
