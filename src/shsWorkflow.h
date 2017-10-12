@@ -647,5 +647,7 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
                 }
             }
         }
+
+        shsPathCounter += minimaDirections.size();
     }
 }
