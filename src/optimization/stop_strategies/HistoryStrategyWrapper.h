@@ -36,26 +36,6 @@ namespace optimization
             return mStopStrategy(iter, p, value, grad, hess, delta);
         }
 
-//        vect operator()(size_t iter, vect const& p, double value, vect const& grad, matrix const& hess)
-//        {
-//            LOG_INFO("Delta strategy iteration:\n\titeration: {}\n\tpoint: {}\n\tgrad: {}\n\thess values: {}", iter,
-//                     p.transpose(), grad.transpose(), Eigen::JacobiSVD<matrix>(hess).singularValues().transpose());
-//            mValues.push_back(value);you
-//            mGrads.push_back(grad);
-//
-//            return mStopStrategy(iter, p, value, grad, hess);
-//        }
-//
-//        vect operator()(size_t iter, vect const& p, double value, vect const& grad)
-//        {
-//            LOG_INFO("Delta strategy iteration:\n\titeration: {}\n\tpoint: {}\n\tgrad: {}\n", iter, p.transpose(),
-//                     grad.transpose());
-//            mValues.push_back(value);
-//            mGrads.push_back(grad);
-//
-//            return mStopStrategy(iter, p, value, grad);
-//        }
-
         vector<double> const& getValues() const
         {
             return mValues;

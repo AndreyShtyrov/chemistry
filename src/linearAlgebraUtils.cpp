@@ -7,10 +7,14 @@ matrix makeRandomMatrix(size_t rows, size_t cols)
     return matr;
 };
 
-vect makeRandomVect(size_t n)
+vect makeRandomVect(size_t n, mt19937& randomGen)
 {
+    uniform_real_distribution<double> uniform;
+
     vect v(n);
-    v.setRandom();
+    for (size_t i = 0; i < n; i++)
+        v(i) = uniform(randomGen);
+
     return v;
 };
 

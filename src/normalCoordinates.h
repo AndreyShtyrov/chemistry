@@ -42,20 +42,22 @@ auto remove6LesserHessValues(FuncT&& func, vect const& structure)
     for (size_t i = 0; i < vs.size(); i++)
         basis.block(0, i, func.nDims, 1) = vs[i];
 
+    mt19937 randomGen;
     for (size_t i = vs.size(); i < func.nDims; i++) {
-        auto v = makeRandomVect(func.nDims);
+        auto v = makeRandomVect(func.nDims, randomGen);
         vect x = basis.colPivHouseholderQr().solve(v);
 
         v = v - basis * x;
         basis = horizontalStack(basis, normalized(v));
     }
 
-    auto transformed = makeAffineTransfomation(func, structure,
-                                               basis.block(0, vs.size(), basis.rows(), basis.cols() - vs.size()));
+    matrix firstBasis = basis.block(0, vs.size(), basis.rows(), basis.cols() - vs.size());
+    auto transformed = makeAffineTransfomation(func, structure, firstBasis);
+    
     auto hess = transformed.hess(makeConstantVect(transformed.nDims, 0.));
-    auto A = linearizationNormalization(hess);
+    auto secondBasis = linearizationNormalization(hess);
 
-    return makeAffineTransfomation(transformed, A);
+    return makeAffineTransfomation(func, structure, firstBasis * secondBasis);
 }
 
 template<typename FuncT>

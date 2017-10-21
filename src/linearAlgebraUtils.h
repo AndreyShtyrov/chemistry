@@ -2,7 +2,7 @@
 
 #include "helper.h"
 
-vect makeRandomVect(size_t n);
+vect makeRandomVect(size_t n, mt19937& random = randomGen);
 
 vect makeRandomVect(vect const& lowerBound, vect const& upperBound);
 

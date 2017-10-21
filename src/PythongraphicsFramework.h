@@ -44,7 +44,7 @@ public:
     {
         auto vxs = createArray(xs);
         auto vys = createArray(ys);
-        mOutput << format("{}.plot({}, {}, label={})", axis, vxs, vys, label);
+        mOutput << format("{}.plot({}, {}, label={})", axis, vxs, vys, label) << endl;
     }
 
     template<typename MatrixT>

@@ -5,7 +5,7 @@
 template<typename StreamT>
 vect readVect(StreamT&& stream)
 {
-    size_t nDims;
+    size_t nDims = 0;
     stream >> nDims;
 
     vect v(nDims);

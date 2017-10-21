@@ -264,11 +264,10 @@ void shs(FuncT&& func) {
 }
 
 template<typename FuncT>
-vector<vect> minimaElimination(FuncT&& func) {
+vector<vect> minimaElimination(FuncT&& func, double r) {
     func.getFullInnerFunction().setGaussianNProc(3);
     auto zeroEnergy = func(makeConstantVect(func.nDims, 0));
 
-    double const r = .05;
     vector<double> values;
     vector<vect> directions;
 

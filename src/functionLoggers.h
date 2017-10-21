@@ -6,7 +6,7 @@
 #include "linearAlgebraUtils.h"
 
 template<typename FuncT>
-void logFunctionInfo(FuncT& func, vect const& p, string const& title = "")
+void logFunctionInfo(FuncT&& func, vect const& p, string const& title = "")
 {
     auto valueGradHess = func.valueGradHess(p);
     auto value = get<0>(valueGradHess);

@@ -558,18 +558,163 @@ int main()
 {
     initializeLogger();
 
+//    {
+//        vector<vect> structs;
+//        vector<vector<size_t>> _charges;
+//        tie(_charges, structs) = readWholeChemcraft(ifstream("./test.xyz"));
+//        auto charges = _charges[0];
+//        GaussianProducer molecule(charges, 3);
+//
+//        vector<double> values;
+//        vector<double> gradNorms;
+//
+//        for (size_t i = 0; i + 1 < structs.size(); i++) {
+//            auto from = structs[i];
+//            auto to = structs[i + 1];
+//
+//            auto angle = i ? angleCosine(from - structs[i - 1], to - from) : 0;
+//
+//            auto dist1 = distance(from, to);
+//
+////            auto removed = remove6LesserHessValues(molecule, from);
+////            auto hess = removed.hess(makeConstantVect(removed.nDims, 0.));
+//
+//            auto normalized = remove6LesserHessValues(molecule, from);
+//            auto fromNorm = normalized.backTransform(from);
+//            auto toNorm = normalized.backTransform(to);
+//
+//            auto valueGradHess = normalized.valueGradHess(makeConstantVect(normalized.nDims, 0.));
+//            SecondOrderFunction supplement(get<0>(valueGradHess), get<1>(valueGradHess), get<2>(valueGradHess));
+//            auto func = normalized - supplement;
+//
+////            auto onSphere = makePolarWithDirection(normalized, 0.05, toNorm - fromNorm);
+//
+//            auto dist2 = distance(from, to);
+//
+//            cerr << print(toNorm) << endl;
+//
+//            auto dir = ::normalized(toNorm - fromNorm);
+//            auto grad = normalized.grad(toNorm);
+//            double proj = grad.dot(dir);
+//            double nProj = sqrt(grad.norm() * grad.norm() - proj * proj);
+//
+//            auto grad2 = func.grad(toNorm);
+//            double proj2 = grad2.dot(dir);
+//            double nProj2 = sqrt(grad2.norm() * grad2.norm() - proj2 * proj2);
+//
+//            LOG_INFO("{}: angle = {:.7f}, dist1 = {:.7f}, dist2 = {:.7f}\ngrad info: len = {} proj = {} n_proj = {}\ngrad info: len = {} proj = {} n_proj = {}\n",
+//                     i, angle, dist1, dist2, grad.norm(), proj, nProj, grad2.norm(), proj2, nProj2);
+//
+//            logFunctionPolarInfo(func, toNorm - fromNorm, 0.05);
+//        }
+//
+//        for (auto const& structure : structs) {
+//            auto valueGrad = molecule.valueGrad(structure);
+//
+//            values.push_back(get<0>(valueGrad));
+//            gradNorms.push_back(get<1>(valueGrad).norm());
+//        }
+//
+//        framework.plot(framework.newPlot(), values);
+//        framework.plot(framework.newPlot(), gradNorms);
+//
+//        return 0;
+//    }
+
+
     ifstream C2H4("./C2H4");
-    vector<size_t> charges = readCharges(C2H4);
-    vect equilStruct = readVect(C2H4);
+    auto _charges = readCharges(C2H4);
+    auto equilStruct = readVect(C2H4);
 
-    GaussianProducer molecule(charges, 3);
-    workflow(molecule, equilStruct, .04, 10);
+    auto molecule = GaussianProducer(_charges, 3);
+    logFunctionInfo(molecule, equilStruct, "equil struct");
+    auto normalized = remove6LesserHessValues(molecule, equilStruct);
 
-//    minimaBruteForce(remove6LesserHessValues(molecule, equilStruct));
-//    shs(remove6LesserHessValues(molecule, equilStruct));
-//    minimaElimination(remove6LesserHessValues(molecule, equilStruct));
-//    researchPaths(remove6LesserHessValues(molecule, equilStruct));
-//    optimizeInterestingTSs();
+    minimaElimination(normalized, .01);
+
+    return 0;
+
+    ifstream minsOnSphere("./mins_on_sphere");
+    size_t cnt;
+    minsOnSphere >> cnt;
+    vector<vect> vs;
+    for (size_t i = 0; i < cnt; i++) {
+        vs.push_back(readVect(minsOnSphere));
+        if (i == 6)
+            logFunctionPolarInfo(normalized, vs.back(), 0.05, "LOL");
+    }
+
+//    double const firstR = 0.05;
+    double const deltaR = 0.05;
+//    double const R = .01;
+
+    auto const stopStrategy = makeHistoryStrategy(StopStrategy(1e-5, 1e-5));
+
+    auto direction = vs[6];
+    vect pos = equilStruct;
+    vector<vect> path;
+    path.push_back(pos);
+
+    cerr << normalized.getBasis() << endl;
+
+    for (size_t j = 0; j < 600; j++) {
+        logFunctionInfo(molecule, pos, "pos");
+        auto normalized2 = remove6LesserHessValues(molecule, pos);
+        auto valueGradHess = normalized2.valueGradHess(makeConstantVect(normalized2.nDims, 0.));
+        SecondOrderFunction supplement(get<0>(valueGradHess), get<1>(valueGradHess), get<2>(valueGradHess));
+        auto func = normalized2 - supplement;
+
+        cerr << normalized2.getBasis() << endl;
+
+        logFunctionPolarInfo(normalized2, vs[6], 0.05, "vs[6]");
+
+        if (!j) {
+            logFunctionPolarInfo(normalized2, direction, deltaR, "normalized");
+            logFunctionPolarInfo(supplement, direction, deltaR, "supplement");
+            logFunctionPolarInfo(func, direction, deltaR, "func");
+        }
+
+        return 0;
+
+        if (j) {
+            vect guess = path[path.size() - 1] * 2 - path[path.size() - 2];
+            vect dir = normalized.backTransform(guess);
+            vect normalizedDir = dir / dir.norm();
+            LOG_INFO("\n{}", dir.transpose());
+
+//            logFunctionPolarInfo(normalized, dir, deltaR, "normalized");
+//            logFunctionPolarInfo(supplement, dir, deltaR, "supplement");
+//            logFunctionPolarInfo(func, dir, deltaR, "func");
+
+//            direction = optimizeOnSphere(stopStrategy, func, normalizedDir * deltaR, deltaR, 50, 10).back();
+
+            bool converged = false;
+            for (double curR = deltaR;; curR *= .75) {
+//                vector<vect> optimizationPath;
+
+                auto optimizationPath = optimizeOnSphere(stopStrategy, func, normalizedDir * curR, curR, 100, 5);
+                if (!optimizationPath.empty()) {
+//                if (experimentalTryToConverge(stopStrategy, func, normalizedDir * curR, curR, optimizationPath, 30, 0, false)) {
+//                if (tryToConverge(stopStrategy, func, normalizedDir * curR, curR, optimizationPath, 10)) {
+                    LOG_INFO("Converged with r = {}", curR);
+                    direction = optimizationPath.back();
+
+                    break;
+                } else {
+                    LOG_INFO("Did not converged with r = {}", curR);
+                }
+            }
+        }
+
+        pos = normalized.fullTransform(direction);
+        path.push_back(pos);
+
+        {
+            ofstream output("./test.xyz");
+            for (size_t j = 0; j < path.size(); j++)
+                output << toChemcraftCoords(normalized.getFullInnerFunction().getCharges(), path[j], to_string(j));
+        }
+    }
 
     return 0;
 }

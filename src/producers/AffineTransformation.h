@@ -66,6 +66,7 @@ public:
 
     vect backTransform(vect const& x) const
     {
+        assert(x.size() == mDelta.size());
         return mBasis.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(x - mDelta);
 //        return mBasis.inverse() * (x - mDelta);
     }
