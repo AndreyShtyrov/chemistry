@@ -630,9 +630,6 @@ int main()
     logFunctionInfo(molecule, equilStruct, "equil struct");
     auto normalized = remove6LesserHessValues(molecule, equilStruct);
 
-    minimaElimination(normalized, .01);
-
-    return 0;
 
     ifstream minsOnSphere("./mins_on_sphere");
     size_t cnt;
@@ -640,51 +637,39 @@ int main()
     vector<vect> vs;
     for (size_t i = 0; i < cnt; i++) {
         vs.push_back(readVect(minsOnSphere));
-        if (i == 6)
-            logFunctionPolarInfo(normalized, vs.back(), 0.05, "LOL");
+        logFunctionPolarInfo(normalized, vs.back(), 0.01, "polar normalized in initial direction");
     }
 
 //    double const firstR = 0.05;
-    double const deltaR = 0.05;
+    double const deltaR = 0.01;
 //    double const R = .01;
 
     auto const stopStrategy = makeHistoryStrategy(StopStrategy(1e-5, 1e-5));
 
-    auto direction = vs[6];
+    auto direction = vs.back();
     vect pos = equilStruct;
     vector<vect> path;
     path.push_back(pos);
 
-    cerr << normalized.getBasis() << endl;
-
     for (size_t j = 0; j < 600; j++) {
-        logFunctionInfo(molecule, pos, "pos");
         auto normalized2 = remove6LesserHessValues(molecule, pos);
         auto valueGradHess = normalized2.valueGradHess(makeConstantVect(normalized2.nDims, 0.));
         SecondOrderFunction supplement(get<0>(valueGradHess), get<1>(valueGradHess), get<2>(valueGradHess));
         auto func = normalized2 - supplement;
 
-        cerr << normalized2.getBasis() << endl;
+        logFunctionInfo(molecule, pos, "molecule in pos");
 
-        logFunctionPolarInfo(normalized2, vs[6], 0.05, "vs[6]");
-
-        if (!j) {
-            logFunctionPolarInfo(normalized2, direction, deltaR, "normalized");
-            logFunctionPolarInfo(supplement, direction, deltaR, "supplement");
-            logFunctionPolarInfo(func, direction, deltaR, "func");
-        }
-
-        return 0;
+//        if (!j) {
+            logFunctionPolarInfo(normalized2, direction, deltaR, "polar normalized2 in direction");
+//            logFunctionPolarInfo(supplement, direction, deltaR, "supplement");
+//            logFunctionPolarInfo(func, direction, deltaR, "func");
+//        }
 
         if (j) {
             vect guess = path[path.size() - 1] * 2 - path[path.size() - 2];
             vect dir = normalized.backTransform(guess);
             vect normalizedDir = dir / dir.norm();
             LOG_INFO("\n{}", dir.transpose());
-
-//            logFunctionPolarInfo(normalized, dir, deltaR, "normalized");
-//            logFunctionPolarInfo(supplement, dir, deltaR, "supplement");
-//            logFunctionPolarInfo(func, dir, deltaR, "func");
 
 //            direction = optimizeOnSphere(stopStrategy, func, normalizedDir * deltaR, deltaR, 50, 10).back();
 
@@ -706,8 +691,11 @@ int main()
             }
         }
 
-        pos = normalized.fullTransform(direction);
+        LOG_INFO("direction norm = {}", direction.norm());
+        pos = normalized2.fullTransform(direction);
         path.push_back(pos);
+
+        LOG_INFO("delta dist = {}", distance(path[path.size() - 1], path[path.size() - 2]));
 
         {
             ofstream output("./test.xyz");
