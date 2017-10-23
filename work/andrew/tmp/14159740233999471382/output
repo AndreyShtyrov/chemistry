@@ -1,0 +1,199 @@
+ Entering Gaussian System, Link 0=/home/george/soft/gauss/g09/g09
+ Initial command:
+ /home/george/soft/gauss/g09/l1.exe "./tmp/14159740233999471382/Gau-19289.inp" -scrdir="./tmp/14159740233999471382/"
+ Entering Link 1 = /home/george/soft/gauss/g09/l1.exe PID=     19291.
+  
+ Copyright (c) 1988,1990,1992,1993,1995,1998,2003,2009,2013,
+            Gaussian, Inc.  All Rights Reserved.
+  
+ This is part of the Gaussian(R) 09 program.  It is based on
+ the Gaussian(R) 03 system (copyright 2003, Gaussian, Inc.),
+ the Gaussian(R) 98 system (copyright 1998, Gaussian, Inc.),
+ the Gaussian(R) 94 system (copyright 1995, Gaussian, Inc.),
+ the Gaussian 92(TM) system (copyright 1992, Gaussian, Inc.),
+ the Gaussian 90(TM) system (copyright 1990, Gaussian, Inc.),
+ the Gaussian 88(TM) system (copyright 1988, Gaussian, Inc.),
+ the Gaussian 86(TM) system (copyright 1986, Carnegie Mellon
+ University), and the Gaussian 82(TM) system (copyright 1983,
+ Carnegie Mellon University). Gaussian is a federally registered
+ trademark of Gaussian, Inc.
+  
+ This software contains proprietary and confidential information,
+ including trade secrets, belonging to Gaussian, Inc.
+  
+ This software is provided under written license and may be
+ used, copied, transmitted, or stored only in accord with that
+ written license.
+  
+ The following legend is applicable only to US Government
+ contracts under FAR:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, reproduction and disclosure by the US Government is
+ subject to restrictions as set forth in subparagraphs (a)
+ and (c) of the Commercial Computer Software - Restricted
+ Rights clause in FAR 52.227-19.
+  
+ Gaussian, Inc.
+ 340 Quinnipiac St., Bldg. 40, Wallingford CT 06492
+  
+  
+ ---------------------------------------------------------------
+ Warning -- This program may not be used in any manner that
+ competes with the business of Gaussian, Inc. or will provide
+ assistance to any competitor of Gaussian, Inc.  The licensee
+ of this program is prohibited from giving any competitor of
+ Gaussian, Inc. access to this program.  By using this program,
+ the user acknowledges that Gaussian, Inc. is engaged in the
+ business of creating and licensing software in the field of
+ computational chemistry and represents and warrants to the
+ licensee that it is not a competitor of Gaussian, Inc. and that
+ it will not use this program in any manner prohibited above.
+ ---------------------------------------------------------------
+  
+
+ Cite this work as:
+ Gaussian 09, Revision D.01,
+ M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, 
+ M. A. Robb, J. R. Cheeseman, G. Scalmani, V. Barone, B. Mennucci, 
+ G. A. Petersson, H. Nakatsuji, M. Caricato, X. Li, H. P. Hratchian, 
+ A. F. Izmaylov, J. Bloino, G. Zheng, J. L. Sonnenberg, M. Hada, 
+ M. Ehara, K. Toyota, R. Fukuda, J. Hasegawa, M. Ishida, T. Nakajima, 
+ Y. Honda, O. Kitao, H. Nakai, T. Vreven, J. A. Montgomery, Jr., 
+ J. E. Peralta, F. Ogliaro, M. Bearpark, J. J. Heyd, E. Brothers, 
+ K. N. Kudin, V. N. Staroverov, T. Keith, R. Kobayashi, J. Normand, 
+ K. Raghavachari, A. Rendell, J. C. Burant, S. S. Iyengar, J. Tomasi, 
+ M. Cossi, N. Rega, J. M. Millam, M. Klene, J. E. Knox, J. B. Cross, 
+ V. Bakken, C. Adamo, J. Jaramillo, R. Gomperts, R. E. Stratmann, 
+ O. Yazyev, A. J. Austin, R. Cammi, C. Pomelli, J. W. Ochterski, 
+ R. L. Martin, K. Morokuma, V. G. Zakrzewski, G. A. Voth, 
+ P. Salvador, J. J. Dannenberg, S. Dapprich, A. D. Daniels, 
+ O. Farkas, J. B. Foresman, J. V. Ortiz, J. Cioslowski, 
+ and D. J. Fox, Gaussian, Inc., Wallingford CT, 2013.
+ 
+ ******************************************
+ Gaussian 09:  AM64L-G09RevD.01 24-Apr-2013
+                23-Oct-2017 
+ ******************************************
+ %RWF=./tmp/14159740233999471382/rwf
+ %Int=./tmp/14159740233999471382/int
+ %D2E=./tmp/14159740233999471382/d2e
+ %Scr=./tmp/14159740233999471382/skr
+ %NoSave
+ %chk=./tmp/14159740233999471382/chk
+ %nproc=3
+ Will use up to    3 processors via shared memory.
+ %mem=1000mb
+ -------------------------
+ # B3lyp/3-21g nosym force
+ -------------------------
+ 1/10=7,30=1,38=1/1,3;
+ 2/12=2,15=1,17=6,18=5,40=1/2;
+ 3/5=5,11=2,16=1,25=1,30=1,71=1,74=-5/1,2,3;
+ 4//1;
+ 5/5=2,38=5/2;
+ 6/7=2,8=2,9=2,10=2,28=1/1;
+ 7/29=1,30=1/1,2,3,16;
+ 1/10=7,30=1/3;
+ 99//99;
+
+
+ Symbolic Z-matrix:
+ Charge =  0 Multiplicity = 1
+ 6                     0.01386   0.35919  -0.02508 
+ 7                     0.01223   0.12334   1.39272 
+ 7                     1.10165  -0.12374   2.03242 
+ 6                     2.35908  -0.35067   1.36379 
+ 6                    -1.19245   0.36775  -0.64686 
+ 1                    -2.08066   0.16807  -0.07105 
+ 1                    -1.27775   0.56574  -1.70112 
+ 6                     3.45317  -0.36049   2.09279 
+ 1                     3.39453  -0.16732   3.16528 
+ 1                     4.43915  -0.55251   1.66855 
+ 1                     2.38148  -0.57137   0.29049 
+ 1                     0.91767   0.5855   -0.56574 
+ 
+
+ GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
+ Berny optimization.
+ Initialization pass.
+ Trust Radius=3.00D-01 FncErr=1.00D-07 GrdErr=1.00D-07
+ Number of steps in this run=      2 maximum allowed number of steps=      2.
+ GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
+
+                          Input orientation:                          
+ ---------------------------------------------------------------------
+ Center     Atomic      Atomic             Coordinates (Angstroms)
+ Number     Number       Type             X           Y           Z
+ ---------------------------------------------------------------------
+      1          6           0        0.013856    0.359193   -0.025075
+      2          7           0        0.012226    0.123338    1.392717
+      3          7           0        1.101646   -0.123737    2.032421
+      4          6           0        2.359082   -0.350670    1.363786
+      5          6           0       -1.192449    0.367754   -0.646859
+      6          1           0       -2.080659    0.168069   -0.071054
+      7          1           0       -1.277752    0.565741   -1.701121
+      8          6           0        3.453173   -0.360492    2.092790
+      9          1           0        3.394528   -0.167320    3.165283
+     10          1           0        4.439148   -0.552509    1.668555
+     11          1           0        2.381481   -0.571365    0.290491
+     12          1           0        0.917668    0.585500   -0.565743
+ ---------------------------------------------------------------------
+                    Distance matrix (angstroms):
+                    1          2          3          4          5
+     1  C    0.000000
+     2  N    1.437277   0.000000
+     3  N    2.376930   1.287285   0.000000
+     4  C    2.816546   2.394422   1.442123   0.000000
+     5  C    1.357151   2.381355   3.561316   4.143936   0.000000
+     6  H    2.103719   2.554368   3.825810   4.694589   1.077193
+     7  H    2.126039   3.381064   4.480652   4.843555   1.076077
+     8  C    4.102706   3.544617   2.364186   1.314753   5.442225
+     9  H    4.678092   3.829679   2.557848   2.085943   5.988246
+    10  H    4.825225   4.486702   3.384548   2.111941   6.158158
+    11  H    2.563429   2.703865   2.207412   1.095979   3.812288
+    12  H    1.077225   2.206578   2.699504   2.584023   2.122872
+                    6          7          8          9         10
+     6  H    0.000000
+     7  H    1.860086   0.000000
+     8  C    5.965307   6.134599   0.000000
+     9  H    6.368991   6.785976   1.091328   0.000000
+    10  H    6.786262   6.729646   1.090409   1.865422   0.000000
+    11  H    4.537419   4.318507   2.107433   3.074728   2.476572
+    12  H    3.067398   2.471708   3.793611   4.541160   4.322959
+                   11         12
+    11  H    0.000000
+    12  H    2.052857   0.000000
+ Symmetry turned off by external request.
+ Stoichiometry    C4H6N2
+ Framework group  C1[X(C4H6N2)]
+ Deg. of freedom    30
+ Full point group                 C1      NOp   1
+ Rotational constants (GHZ):     15.0907323      1.7902360      1.6123587
+ Standard basis: 3-21G (6D, 7F)
+    66 basis functions,   108 primitive gaussians,    66 cartesian basis functions
+    22 alpha electrons       22 beta electrons
+       nuclear repulsion energy       201.5920348820 Hartrees.
+ NAtoms=   12 NActive=   12 NUniq=   12 SFac= 1.00D+00 NAtFMM=   60 NAOKFM=F Big=F
+ Integral buffers will be    131072 words long.
+ Raffenetti 2 integral format.
+ Two-electron integral symmetry is turned off.
+ One-electron integrals computed using PRISM.
+ NBasis=    66 RedAO= T EigKep=  9.04D-03  NBF=    66
+ NBsUse=    66 1.00D-06 EigRej= -1.00D+00 NBFU=    66
+ ExpMin= 1.83D-01 ExpMax= 2.43D+02 ExpMxC= 2.43D+02 IAcc=1 IRadAn=         1 AccDes= 0.00D+00
+ Harris functional with IExCor=  402 and IRadAn=       1 diagonalized for initial guess.
+ HarFok:  IExCor=  402 AccDes= 0.00D+00 IRadAn=         1 IDoV= 1 UseB2=F ITyADJ=14
+ ICtDFT=  3500011 ScaDFX=  1.000000  1.000000  1.000000  1.000000
+ FoFCou: FMM=F IPFlag=           0 FMFlag=      100000 FMFlg1=           0
+         NFxFlg=           0 DoJE=T BraDBF=F KetDBF=T FulRan=T
+         wScrn=  0.000000 ICntrl=     500 IOpCl=  0 I1Cent=   200000004 NGrid=           0
+         NMat0=    1 NMatS0=      1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
+ Symmetry not used in FoFCou.
+ Keep R1 ints in memory in canonical form, NReq=3363794.
+ Requested convergence on RMS density matrix=1.00D-08 within 128 cycles.
+ Requested convergence on MAX density matrix=1.00D-06.
+ Requested convergence on             energy=1.00D-06.
+ No special actions if energy rises.
+ Integral accuracy reduced to 1.0D-05 until final iterations.
