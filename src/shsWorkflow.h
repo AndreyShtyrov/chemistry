@@ -264,10 +264,11 @@ void shs(FuncT&& func) {
 }
 
 template<typename FuncT>
-vector<vect> minimaElimination(FuncT&& func, double r) {
+vector<vect> minimaElimination(FuncT&& func) {
     func.getFullInnerFunction().setGaussianNProc(3);
     auto zeroEnergy = func(makeConstantVect(func.nDims, 0));
 
+    double const r = .05;
     vector<double> values;
     vector<vect> directions;
 
@@ -572,6 +573,8 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
 
         esOutput << toChemcraftCoords(charges, initialStruct, to_string(uniqueESs.size())) << flush;
     }
+    else
+        assert(false);
 
     for (size_t esId = 0; !que.empty(); esId++) {
         auto equilStruct = que.front();
@@ -588,7 +591,7 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
 
         auto inNormalCoords = remove6LesserHessValues(molecule, equilStruct);
 
-        auto minimaDirections = esId ? minimaElimination(inNormalCoords, 0.05) : readTmp();
+        auto minimaDirections = minimaElimination(inNormalCoords);
 
         stringstream minimas;
         for (auto const& direction : minimaDirections) {

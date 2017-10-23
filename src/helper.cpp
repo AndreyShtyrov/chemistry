@@ -11,6 +11,9 @@ shared_ptr<spdlog::logger> logger;
 
 void initializeLogger()
 {
+    system("mkdir -p tmp");
+    system("mkdir -p logs");
+
     vector<spdlog::sink_ptr> sinks;
     auto stdout_sink = spdlog::sinks::stdout_sink_mt::instance();
     auto color_sink = std::make_shared<spdlog::sinks::ansicolor_sink>(stdout_sink);
@@ -26,4 +29,5 @@ void initializeLogger()
     logger->set_level(spdlog::level::debug);
     //todo: be careful with this flush strategy
     logger->flush_on(spdlog::level::debug);
+
 }
