@@ -9,6 +9,69 @@
 
 namespace optimization
 {
+    //todo: maybe remove inline
+    inline matrix experimentalInverse(matrix const& m) {
+        auto A = linearization(m);
+        matrix diag = A.transpose() * m * A;
+
+        for (size_t i = 0; i < diag.rows(); i++)
+            if (diag(i, i) < 0 && false)
+                diag(i, i) = 1;
+            else
+                diag(i, i) = 1 / abs(diag(i, i));
+
+        return A * diag * A.transpose();
+    }
+
+    template<typename FuncT, typename StopStrategy>
+    bool experimentalTryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path,
+                                   size_t iterLimit = 5, size_t globalIter = 0, bool needSingularTest = true) {
+        auto const theta = makeConstantVect(func.nDims - 1, M_PI / 2);
+        bool converged = false;
+
+        vector<vect> newPath;
+        try {
+            for (size_t i = 0; i < iterLimit; i++) {
+                auto polar = makePolarWithDirection(func, r, p);
+
+                auto valueGradHess = polar.valueGradHess(theta);
+                auto value = get<0>(valueGradHess);
+                auto grad = get<1>(valueGradHess);
+                auto hess = get<2>(valueGradHess);
+
+                if (needSingularTest) {
+                    auto sValues = singularValues(hess);
+                    for (size_t j = 0; j < sValues.size(); j++) {
+                        if (sValues(j) < 0) {
+                            LOG_INFO("singular values converge break, stop strategy with zero delta: {}",
+                                     stopStrategy(globalIter + i, p, value, grad, hess, p - p));
+                            return false;
+                        }
+                    }
+                }
+
+                auto lastP = p;
+                p = polar.getInnerFunction().transform(polar.transform(theta - experimentalInverse(hess) * grad));
+                newPath.push_back(p);
+
+                if (stopStrategy(globalIter + i, p, value, grad, hess, p - lastP)) {
+                    converged = true;
+                    break;
+                }
+            }
+        } catch (GaussianException const& exc) {
+            LOG_ERROR("GaussianException converge break");
+            return false;
+        }
+
+        if (converged) {
+            path.insert(path.end(), newPath.begin(), newPath.end());
+            return true;
+        }
+
+        return false;
+    };
+
     template<typename FuncT, typename StopStrategy>
     bool tryToConverge(StopStrategy stopStrategy, FuncT& func, vect p, double r, vector<vect>& path, size_t iterLimit=5, size_t globalIter=0, bool needSingularTest=true)
     {
@@ -75,7 +138,8 @@ namespace optimization
         }
 
         for (size_t iter = 0; ; iter++) {
-            if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, convergeIters, iter, true)) {
+//            if (iter % preHessIters == 0 && tryToConverge(stopStrategy, func, p, r, path, convergeIters, iter, true)) {
+            if (iter && iter % preHessIters == 0 && experimentalTryToConverge(stopStrategy, func, p, r, path, convergeIters, iter, false)) {
                 break;
             }
 
@@ -87,8 +151,9 @@ namespace optimization
 
             if (iter) {
                 double was = momentum.norm();
-                double factor = sqrt(max(0., angleCosine(momentum, grad)));
+                double factor = sqrt(max(0., angleCosine(momentum, grad) + 1e-2));
                 momentum = factor * momentum + grad / r;
+                LOG_DEBUG("factor {:.5f}, old momentum {}, new momentum {}", factor, was ,momentum.norm());
             }
             else
                 momentum = grad / r;

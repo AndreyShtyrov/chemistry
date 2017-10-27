@@ -13,8 +13,8 @@ void logFunctionInfo(FuncT&& func, vect const& p, string const& title = "")
     auto grad = get<1>(valueGradHess);
     auto hess = get<2>(valueGradHess);
 
-    LOG_INFO("{}\n\tposition: {}\n\tenergy: {}\n\tgradient: {} [{}]\n\thessian: {}\n\n", title, p.transpose(), value,
-             grad.norm(), grad.transpose(), singularValues(hess));
+    LOG_INFO("{}\n\tposition: {}\n\tenergy: {:.11f}\n\tgradient: {:.11f} [{}]\n\thessian: {}\n\n", title, p.transpose(), value,
+             grad.norm(), print(grad, 7), singularValues(hess));
 }
 
 template<typename FuncT>
@@ -27,7 +27,7 @@ void logFunctionPolarInfo(FuncT&& func, vect const& p, double r, string const& t
     auto grad = get<1>(valueGradHess);
     auto hess = get<2>(valueGradHess);
 
-    LOG_INFO("{}\n\tposition: {}\n\tenergy: {}\n\tgradient: {} [{}]\n\thessian: {}\n\n", title, p.transpose(), value,
-             grad.norm(), grad.transpose(), singularValues(hess));
+    LOG_INFO("{}\n\tposition: {}\n\tenergy: {:.11f}\n\tgradient: {:.11f} [{}]\n\thessian: {}\n\n", title, p.transpose(), value,
+             grad.norm(), print(grad, 7), singularValues(hess));
 }
 

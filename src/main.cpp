@@ -554,17 +554,84 @@ void explorPathTS(vector<size_t> numbers)
         LOG_INFO("\n{}", toChemcraftCoords(memCharges, equilStructure));
 }
 
+vector<vect> steepestGradientDescent(GaussianProducer& producer, vect structure, double r)
+{
+    auto const stopStrategy = makeHistoryStrategy(StopStrategy(1e-5, 1e-3));
+
+    ofstream output("../log.xyz");
+
+    for (size_t i = 0; ; i++) {
+        auto removed = remove6LesserHessValues2(producer, structure);
+        auto grad = removed.grad(makeConstantVect(removed.nDims, 0.));
+
+        auto path = optimizeOnSphere(stopStrategy, removed, normalized(grad) * r, r, 50, 5);
+        logFunctionInfo(removed, path.back(), "value after optimization");
+        structure = removed.fullTransform(path.back());
+
+        output << toChemcraftCoords(producer.getCharges(), structure, to_string(i));
+        output.flush();
+    }
+}
+
 int main()
 {
     initializeLogger();
 
-    ifstream structInput("./struct.xyz");
-    vect equilStruct;
+    vect ts;
     vector<size_t> charges;
-    tie(charges, equilStruct) = readChemcraft(structInput);
+    tie(charges, ts) = readChemcraft(ifstream("./transition_state_structures.xyz"));
+    GaussianProducer molecule(charges, 4);
 
-    GaussianProducer molecule(charges, 3);
-    workflow(molecule, equilStruct, .04, 10);
+    logFunctionInfo(molecule, ts, "transition state");
+
+    vector<vect> path;
+    optional<vect> es1, es2;
+
+    auto fixed = remove6LesserHessValues2(molecule, ts);
+
+    auto hess = fixed.hess(makeConstantVect(fixed.nDims, 0));
+    auto A = linearization(hess);
+
+    double const FACTOR = .1;
+
+    for (size_t i = 0; i < A.cols(); i++) {
+        vect v = A.col(i);
+
+        double value = v.transpose() * hess * v;
+        if (value < 0) {
+            auto first = fixed.fullTransform(-FACTOR * v);
+            auto second = fixed.fullTransform(FACTOR * v);
+
+            optional<vect> firstES, secondES;
+            vector<vect> firstPath, secondPath;
+
+            steepestGradientDescent(molecule, first, .03);
+//            tie(firstPath, firstES) = goDown(molecule, first);
+//            tie(secondPath, secondES) = goDown(molecule, second);
+//
+//            reverse(firstPath.begin(), firstPath.end());
+//            firstPath.insert(firstPath.end(), secondPath.begin(), secondPath.end());
+//
+//            return make_tuple(firstPath, firstES, secondES);
+        }
+    }
+
+//    tie(path, es1, es2) = twoWayTS(molecule, ts);
+//    printPathToFile(charges, path, es1, es2, "../test.xyz");
+
+
+
+
+
+
+
+//    ifstream structInput("./struct.xyz");
+//    vect equilStruct;
+//    vector<size_t> charges;
+//    tie(charges, equilStruct) = readChemcraft(structInput);
+//
+//    GaussianProducer molecule(charges, 3);
+//    workflow(molecule, equilStruct, .04, 10);
 
 //    {
 //        vector<vect> structs;
