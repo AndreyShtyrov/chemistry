@@ -17,7 +17,7 @@ string const SCF_METHOD = "scf";
 string const FORCE_METHOD = "force";
 //string const FORCE_METHOD = "freq=ReadFC";
 string const HESS_METHOD = "freq";
-
+string const OPT_METHOD = "FOpt";
 
 GaussianProducer::GaussianProducer(vector<size_t> charges, size_t nProc, size_t mem) : FunctionProducer(
    charges.size() * 3), mCharges(move(charges)), mNProc(nProc), mMem(mem)
@@ -66,7 +66,7 @@ matrix GaussianProducer::hess(vect const& x)
     return get<2>(valueGradHess(x));
 };
 
-ifstream GaussianProducer::runGaussian(vect const& x, string const& method)
+ifstream GaussianProducer::runGaussian(vect const& x, string const& method) const
 {
     auto fileMask = createInputFile(x, method);
 
@@ -79,6 +79,12 @@ ifstream GaussianProducer::runGaussian(vect const& x, string const& method)
     }
 
     return ifstream(fileMask + "chk.fchk");
+}
+
+vect GaussianProducer::optimize(vect const& structure) const
+{
+    auto result = runGaussian(structure, OPT_METHOD);
+    return parseStructure(result);
 }
 
 vector<size_t> const& GaussianProducer::getCharges() const
@@ -116,7 +122,7 @@ GaussianProducer& GaussianProducer::getFullInnerFunction()
     return *this;
 }
 
-string GaussianProducer::createInputFile(vect const& x, string const& method)
+string GaussianProducer::createInputFile(vect const& x, string const& method) const
 {
     string fileMask = format("./tmp/{}/", std::hash<std::thread::id>()(this_thread::get_id()));
 
@@ -137,7 +143,7 @@ string GaussianProducer::createInputFile(vect const& x, string const& method)
     return fileMask;
 }
 
-double GaussianProducer::parseValue(ifstream& input)
+double GaussianProducer::parseValue(ifstream& input) const
 {
     string s;
     while (!boost::starts_with(s, "Total Energy"))
@@ -151,7 +157,7 @@ double GaussianProducer::parseValue(ifstream& input)
     return value;
 }
 
-vect GaussianProducer::parseGrad(ifstream& input)
+vect GaussianProducer::parseGrad(ifstream& input) const
 {
     string s;
     while (!boost::starts_with(s, "Cartesian Gradient"))
@@ -166,7 +172,7 @@ vect GaussianProducer::parseGrad(ifstream& input)
     return grad;
 }
 
-matrix GaussianProducer::parseHess(ifstream& input)
+matrix GaussianProducer::parseHess(ifstream& input) const
 {
     string s;
     while (!boost::starts_with(s, "Cartesian Force Constants"))
@@ -181,4 +187,20 @@ matrix GaussianProducer::parseHess(ifstream& input)
         }
 
     return hess;
+}
+
+vect GaussianProducer::parseStructure(ifstream& input) const
+{
+    string s;
+    while (!boost::starts_with(s, "Current cartesian coordinates"))
+        getline(input, s);
+
+
+    vect structure(nDims);
+    for (size_t i = 0; i < nDims; i++) {
+        input >> structure(i);
+        structure(i) /= MAGIC_CONSTANT;
+    }
+
+    return structure;
 }

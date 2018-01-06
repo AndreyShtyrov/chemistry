@@ -143,6 +143,10 @@ namespace optimization
                 break;
             }
 
+            if (iter > 500) {
+                LOG_WARN("optimizeOnSphere max iteration break");
+                return vector<vect>();
+            }
             auto polar = makePolarWithDirection(func, r, p);
 
             auto valueGrad = polar.valueGrad(theta);

@@ -9,6 +9,7 @@ extern string const GAUSSIAN_HEADER;
 extern string const SCF_METHOD;
 extern string const FORCE_METHOD;
 extern string const HESS_METHOD;
+extern string const OPT_METHOD;
 
 class GaussianException : public exception
 {
@@ -34,6 +35,8 @@ public:
     tuple<double, vect> valueGrad(vect const& x) override;
     tuple<double, vect, matrix> valueGradHess(vect const& x) override;
 
+    vect optimize(vect const&) const;
+
     vector<size_t> const& getCharges() const;
     vect transform(vect from) const;
     vect fullTransform(vect from) const;
@@ -49,10 +52,11 @@ private:
 
     vector<size_t> mCharges;
 
-    ifstream runGaussian(vect const& x, string const& method);
-    string createInputFile(vect const &x, string const& method);
-    double parseValue(ifstream& input);
-    vect parseGrad(ifstream& input);
-    matrix parseHess(ifstream& input);
+    ifstream runGaussian(vect const& x, string const& method) const;
+    string createInputFile(vect const &x, string const& method) const;
+    double parseValue(ifstream& input) const;
+    vect parseGrad(ifstream& input) const;
+    matrix parseHess(ifstream& input) const;
+    vect parseStructure(ifstream& input) const;
 };
 

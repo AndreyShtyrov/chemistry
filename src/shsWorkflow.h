@@ -230,6 +230,10 @@ vector<vect> minimaElimination(FuncT&& func) {
             int sign = 2 * ((int) iter % 2) - 1;
             vect startingDirection = r * sign * eye(func.nDims, iter / 2);
             auto path = optimizeOnSphere(stopStrategy, withSupplement, startingDirection, r, 50, 5);
+
+            if (path.empty())
+                continue;
+
             auto direction = path.back();
 
             logFunctionPolarInfo(withSupplement, direction, r, "func in new direction");
@@ -390,7 +394,7 @@ tuple<vector<vect>, optional<vect>> goDown(GaussianProducer& molecule, vect stru
 }
 
 
-tuple<vector<vect>, optional<vect>, optional<vect>> twoWayTS(GaussianProducer& molecule, vect const& structure) {
+tuple<vector<vect>, optional<vect>, optional<vect>> twoWayTSOld(GaussianProducer& molecule, vect const& structure) {
     auto fixed = remove6LesserHessValues2(molecule, structure);
 
     auto hess = fixed.hess(makeConstantVect(fixed.nDims, 0));
@@ -419,6 +423,51 @@ tuple<vector<vect>, optional<vect>, optional<vect>> twoWayTS(GaussianProducer& m
         }
     }
 }
+
+optional<vect> optimize(GaussianProducer& molecule, vect const& structure)
+{
+    try {
+        return molecule.optimize(structure);
+    }
+    catch (GaussianException const& exc)
+    {
+        return boost::none;
+    }
+}
+
+tuple<vector<vect>, optional<vect>, optional<vect>> twoWayTS(GaussianProducer& molecule, vect const& structure) {
+    auto fixed = remove6LesserHessValues2(molecule, structure);
+
+    auto hess = fixed.hess(makeConstantVect(fixed.nDims, 0));
+    auto A = linearization(hess);
+
+    double const FACTOR = .5;
+
+    for (size_t i = 0; i < A.cols(); i++) {
+        vect v = A.col(i);
+
+        double value = v.transpose() * hess * v;
+        if (value < 0) {
+            auto first = fixed.fullTransform(-FACTOR * v);
+            auto second = fixed.fullTransform(FACTOR * v);
+
+            optional<vect> firstES = optimize(molecule, first);
+            optional<vect> secondES = optimize(molecule, second);
+
+            vector<vect> path;
+            if (firstES)
+                path.push_back(*firstES);
+            path.push_back(structure);
+            if (secondES)
+                path.push_back(*secondES);
+
+            return make_tuple(path, firstES, secondES);
+        }
+    }
+
+    assert(false);
+}
+
 
 
 struct StructureSet {
@@ -458,7 +507,7 @@ bool addToSetAndQueue(StructureSet& set, queue<vect>& que, vect const& structure
 }
 
 void printPathToFile(vector<size_t> const& charges, vector<vect> const& path, optional<vect> const& startES,
-                     optional<vect> const& endES, string output_path) {
+                     optional<vect> const& endES, string const& output_path) {
     ofstream output(output_path);
     if (startES)
         output << toChemcraftCoords(charges, *startES, "start ES");
@@ -466,7 +515,6 @@ void printPathToFile(vector<size_t> const& charges, vector<vect> const& path, op
         output << toChemcraftCoords(charges, path[j], to_string(j));
     if (endES)
         output << toChemcraftCoords(charges, *endES, "end ES");
-
 }
 
 vector<vect> readTmp() {
@@ -529,7 +577,13 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
 
         auto inNormalCoords = remove6LesserHessValues(molecule, equilStruct);
 
-        auto minimaDirections = readTmp();//minimaElimination(inNormalCoords);
+//        vector<vect> minimaDirections;
+//        if (esId == 0)
+//            minimaDirections = readTmp();
+//        else
+//            minimaDirections = minimaElimination(inNormalCoords);
+
+        auto minimaDirections = minimaElimination(inNormalCoords);
 
         stringstream minimas;
         for (auto const& direction : minimaDirections) {
@@ -589,7 +643,5 @@ void workflow(GaussianProducer& molecule, vect const& initialStruct, double delt
         }
 
         shsPathCounter += minimaDirections.size();
-
-        return;
     }
 }
